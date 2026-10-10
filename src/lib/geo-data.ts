@@ -1,0 +1,285 @@
+export interface NorthernState {
+  code: string;
+  name: string;
+  capital: string;
+  zone: "North-West" | "North-East" | "North-Central";
+  lgas: string[];
+}
+
+export const NORTHERN_STATES: NorthernState[] = [
+  {
+    code: "AD",
+    name: "Adamawa",
+    capital: "Yola",
+    zone: "North-East",
+    lgas: [
+      "Demsa", "Fufore", "Ganye", "Girei", "Gombi", "Guyuk", "Hong", "Jada",
+      "Lamurde", "Madagali", "Maiha", "Mayo-Belwa", "Michika", "Mubi North",
+      "Mubi South", "Numan", "Shelleng", "Song", "Toungo", "Yola North", "Yola South"
+    ],
+  },
+  {
+    code: "BA",
+    name: "Bauchi",
+    capital: "Bauchi",
+    zone: "North-East",
+    lgas: [
+      "Alkaleri", "Bauchi", "Bogoro", "Damban", "Darazo", "Dass", "Gamawa",
+      "Ganjuwa", "Giade", "Itas/Gadau", "Jama'are", "Katagum", "Kirfi",
+      "Misau", "Ningi", "Shira", "Tafawa Balewa", "Toro", "Warji", "Zaki"
+    ],
+  },
+  {
+    code: "BN",
+    name: "Benue",
+    capital: "Makurdi",
+    zone: "North-Central",
+    lgas: [
+      "Ado", "Agatu", "Apa", "Buruku", "Gboko", "Guma", "Gwer East", "Gwer West",
+      "Katsina-Ala", "Konshisha", "Kwande", "Logo", "Makurdi", "Obi", "Ogbadibo",
+      "Ohimini", "Oju", "Okpokwu", "Otukpo", "Tarka", "Ukum", "Ushongo", "Vandeikya"
+    ],
+  },
+  {
+    code: "BO",
+    name: "Borno",
+    capital: "Maiduguri",
+    zone: "North-East",
+    lgas: [
+      "Abadam", "Askira/Uba", "Bama", "Bayo", "Biu", "Chibok", "Damboa", "Dikwa",
+      "Gubio", "Guzamala", "Gwoza", "Hawul", "Jere", "Kaga", "Kala/Balge",
+      "Konduga", "Kukawa", "Kwaya Kusar", "Mafa", "Magumeri", "Maiduguri",
+      "Marte", "Mobbar", "Monguno", "Ngala", "Nganzai", "Shani"
+    ],
+  },
+  {
+    code: "FCT",
+    name: "FCT (Abuja)",
+    capital: "Abuja",
+    zone: "North-Central",
+    lgas: [
+      "Abaji", "Bwari", "Gwagwalada", "Kuje", "Kwali", "Municipal Area Council (AMAC)"
+    ],
+  },
+  {
+    code: "GM",
+    name: "Gombe",
+    capital: "Gombe",
+    zone: "North-East",
+    lgas: [
+      "Akko", "Balanga", "Billiri", "Dukku", "Funakaye", "Gombe",
+      "Kaltungo", "Kwami", "Nafada", "Shongom", "Yamaltu/Deba"
+    ],
+  },
+  {
+    code: "JG",
+    name: "Jigawa",
+    capital: "Dutse",
+    zone: "North-West",
+    lgas: [
+      "Auyo", "Babura", "Biriniwa", "Birnin Kudu", "Buji", "Dutse", "Gagarawa",
+      "Garki", "Gumel", "Guri", "Gwaram", "Gwiwa", "Hadejia", "Jahun", "Kafin Hausa",
+      "Kaugama", "Kazaure", "Kiri Kasama", "Kiyawa", "Maigatari", "Malam Madori",
+      "Miga", "Ringim", "Roni", "Sule Tankarkar", "Taura", "Yankwashi"
+    ],
+  },
+  {
+    code: "KD",
+    name: "Kaduna",
+    capital: "Kaduna",
+    zone: "North-West",
+    lgas: [
+      "Birnin Gwari", "Chikun", "Giwa", "Igabi", "Ikara", "Jaba", "Jema'a",
+      "Kachia", "Kaduna North", "Kaduna South", "Kagarko", "Kajuru", "Kaura",
+      "Kauru", "Kubau", "Kudan", "Lere", "Makarfi", "Sabon Gari", "Sanga",
+      "Soba", "Zangon Kataf", "Zaria"
+    ],
+  },
+  {
+    code: "KN",
+    name: "Kano",
+    capital: "Kano",
+    zone: "North-West",
+    lgas: [
+      "Ajingi", "Albasu", "Bagwai", "Bebeji", "Bichi", "Bunkure", "Dala", "Dambatta",
+      "Dawakin Kudu", "Dawakin Tofa", "Doguwa", "Fagge", "Gabasawa", "Garko",
+      "Garun Mallam", "Gaya", "Gezawa", "Gwale", "Gwarzo", "Kabo", "Kano Municipal",
+      "Karaye", "Kibiya", "Kiru", "Kumbotso", "Kunchi", "Kura", "Madobi", "Makoda",
+      "Minjibir", "Nasarawa", "Rano", "Rimin Gado", "Rogo", "Shanono", "Sumaila",
+      "Takai", "Tarauni", "Tofa", "Tsanyawa", "Tudun Wada", "Ungogo", "Warawa", "Wudil"
+    ],
+  },
+  {
+    code: "KT",
+    name: "Katsina",
+    capital: "Katsina",
+    zone: "North-West",
+    lgas: [
+      "Bakori", "Batagarawa", "Batsari", "Baure", "Bindawa", "Charanchi", "Dandume",
+      "Danja", "Dan Musa", "Daura", "Dutsin Ma", "Faskari", "Funtua", "Ingawa",
+      "Jibia", "Kafur", "Kaita", "Kankara", "Kankia", "Katsina", "Kurfi", "Kusada",
+      "Mai'Adua", "Malumfashi", "Mani", "Mashi", "Matazu", "Musawa", "Rimi",
+      "Sabuwa", "Safana", "Sandamu", "Zango"
+    ],
+  },
+  {
+    code: "KB",
+    name: "Kebbi",
+    capital: "Birnin Kebbi",
+    zone: "North-West",
+    lgas: [
+      "Aleiro", "Arewa Dandi", "Argungu", "Augie", "Bagudo", "Birnin Kebbi",
+      "Bunza", "Dandi", "Fakai", "Gwandu", "Jega", "Kalgo", "Koko/Besse",
+      "Maiyama", "Ngaski", "Sakaba", "Shanga", "Suru", "Danko/Wasagu", "Yauri", "Zuru"
+    ],
+  },
+  {
+    code: "KG",
+    name: "Kogi",
+    capital: "Lokoja",
+    zone: "North-Central",
+    lgas: [
+      "Adavi", "Ajaokuta", "Ankpa", "Bassa", "Dekina", "Ibaji", "Idah", "Igalamela-Odolu",
+      "Ijumu", "Kabba/Bunu", "Kogi", "Lokoja", "Mopa-Muro", "Ofu", "Ogori/Magongo",
+      "Okehi", "Okene", "Olamaboro", "Omala", "Yagba East", "Yagba West"
+    ],
+  },
+  {
+    code: "KW",
+    name: "Kwara",
+    capital: "Ilorin",
+    zone: "North-Central",
+    lgas: [
+      "Asa", "Baruten", "Edu", "Ekiti", "Ifelodun", "Ilorin East", "Ilorin South",
+      "Ilorin West", "Irepodun", "Isin", "Kaiama", "Moro", "Offa", "Oke Ero",
+      "Oyun", "Pategi"
+    ],
+  },
+  {
+    code: "NS",
+    name: "Nasarawa",
+    capital: "Lafia",
+    zone: "North-Central",
+    lgas: [
+      "Akwanga", "Awe", "Doma", "Karu", "Keana", "Keffi", "Kokona", "Lafia",
+      "Nasarawa", "Nasarawa Egon", "Obi", "Toto", "Wamba"
+    ],
+  },
+  {
+    code: "NG",
+    name: "Niger",
+    capital: "Minna",
+    zone: "North-Central",
+    lgas: [
+      "Agaie", "Agwara", "Bida", "Borgu", "Bosso", "Chanchaga", "Edati", "Gbako",
+      "Gurara", "Katcha", "Kontagora", "Lapai", "Lavun", "Magama", "Mariga",
+      "Mashegu", "Mokwa", "Moya", "Paikoro", "Rafi", "Rijau", "Shiroro",
+      "Suleja", "Tafa", "Wushishi"
+    ],
+  },
+  {
+    code: "PL",
+    name: "Plateau",
+    capital: "Jos",
+    zone: "North-Central",
+    lgas: [
+      "Barkin Ladi", "Bassa", "Bokkos", "Jos East", "Jos North", "Jos South",
+      "Kanam", "Kanke", "Langtang North", "Langtang South", "Mangu", "Mikang",
+      "Pankshin", "Qua'an Pan", "Riyom", "Shendam", "Wase"
+    ],
+  },
+  {
+    code: "SK",
+    name: "Sokoto",
+    capital: "Sokoto",
+    zone: "North-West",
+    lgas: [
+      "Binji", "Bodinga", "Dange Shuni", "Gada", "Goronyo", "Gudu", "Gawabawa",
+      "Illela", "Isa", "Kebbe", "Kware", "Rabah", "Sabon Birni", "Shagari",
+      "Silame", "Sokoto North", "Sokoto South", "Tambuwal", "Tangaza", "Tureta",
+      "Wamako", "Wurno", "Yabo"
+    ],
+  },
+  {
+    code: "TR",
+    name: "Taraba",
+    capital: "Jalingo",
+    zone: "North-East",
+    lgas: [
+      "Ardo Kola", "Bali", "Donga", "Gashaka", "Gassol", "Ibi", "Jalingo",
+      "Karim Lamido", "Kurmi", "Lau", "Sardauna", "Takum", "Ussa", "Wukari",
+      "Yorro", "Zing"
+    ],
+  },
+  {
+    code: "YB",
+    name: "Yobe",
+    capital: "Damaturu",
+    zone: "North-East",
+    lgas: [
+      "Bade", "Bursari", "Damaturu", "Fika", "Fune", "Geidam", "Gujba", "Gulani",
+      "Jakusko", "Karasuwa", "Machina", "Nangere", "Nguru", "Potiskum", "Tarmuwa",
+      "Yunusari", "Yusufari"
+    ],
+  },
+  {
+    code: "ZM",
+    name: "Zamfara",
+    capital: "Gusau",
+    zone: "North-West",
+    lgas: [
+      "Anka", "Bakura", "Birnin Magaji/Kiyaw", "Bukkuyum", "Bungudu", "Gummi",
+      "Gusau", "Kaura Namoda", "Maradun", "Maru", "Shinkafi", "Talata Mafara",
+      "Chafe", "Zurmi"
+    ],
+  },
+];
+
+export const TERTIARY_INSTITUTIONS = [
+  "Ahmadu Bello University (ABU), Zaria",
+  "Bayero University Kano (BUK), Kano",
+  "University of Maiduguri (UNIMAID), Borno",
+  "Usmanu Danfodiyo University (UDUS), Sokoto",
+  "University of Jos (UNIJOS), Plateau",
+  "Federal University of Technology (FUT), Minna",
+  "Abubakar Tafawa Balewa University (ATBU), Bauchi",
+  "Federal University, Dutse (FUD), Jigawa",
+  "Federal University, Kashere (FUK), Gombe",
+  "Federal University, Lokoja (FULOKOJA), Kogi",
+  "Federal University, Lafia (FULAFIA), Nasarawa",
+  "Federal University, Wukari (FUWUKARI), Taraba",
+  "Federal University, Gashua (FUGA), Yobe",
+  "Federal University, Gusau (FUGUS), Zamfara",
+  "Federal University, Birnin Kebbi (FUBK), Kebbi",
+  "Federal University, Dutsin-Ma (FUDMA), Katsina",
+  "Kaduna State University (KASU), Kaduna",
+  "Kano University of Science and Technology (KUST), Wudil",
+  "Yusuf Maitama Sule University (NWU), Kano",
+  "Taraba State University (TSU), Jalingo",
+  "Benue State University (BSU), Makurdi",
+  "Nasarawa State University (NSUK), Keffi",
+  "Plateau State University (PLASU), Bokkos",
+  "Bauchi State University, Gadau (BASUG), Bauchi",
+  "Gombe State University (GSU), Gombe",
+  "Yobe State University (YSU), Damaturu",
+  "Kogi State University (Prince Abubakar Audu Univ), Anyigba",
+  "Kwara State University (KWASU), Malete",
+  "Umaru Musa Yar'adua University (UMYU), Katsina",
+  "Sokoto State University (SSU), Sokoto",
+  "Kebbi State University of Science and Technology (KSUSTA), Aliero",
+  "Zamfara State University (ZAMSUT), Talata Mafara",
+  "Federal Polytechnic, Bida",
+  "Federal Polytechnic, Bauchi",
+  "Federal Polytechnic, Kaura Namoda",
+  "Federal Polytechnic, Damaturu",
+  "Federal Polytechnic, Mubi",
+  "Federal Polytechnic, Idah",
+  "Federal Polytechnic, Nasarawa",
+  "Kaduna Polytechnic (KADPOLY), Kaduna",
+  "Kano State Polytechnic, Kano",
+  "Ramat Polytechnic, Maiduguri",
+  "Abdu Gusau Polytechnic, Talata Mafara",
+  "Nuhu Bamalli Polytechnic, Zaria",
+  "Kwara State Polytechnic, Ilorin",
+  "Other Accredited Northern Tertiary Institution",
+];
