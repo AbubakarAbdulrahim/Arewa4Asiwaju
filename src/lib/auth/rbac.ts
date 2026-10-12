@@ -1,4 +1,4 @@
-import { UserRole } from "@/types/database";
+import type { UserRole } from "@/types/database";
 
 export type Permission =
   | "members:read_all"
@@ -39,16 +39,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "privacy:manage",
     "settings:manage",
   ],
-  auditor: [
-    "members:read_all",
-    "cards:read",
-    "audit:read",
-  ],
-  data_protection_officer: [
-    "members:read_all",
-    "privacy:manage",
-    "audit:read",
-  ],
+  auditor: ["audit:read"],
+  data_protection_officer: ["privacy:manage", "audit:read"],
   membership_officer: [
     "members:read_all",
     "members:write",
@@ -57,11 +49,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "cards:revoke",
     "members:export",
   ],
-  content_editor: [
-    "content:draft",
-    "content:publish",
-    "content:delete",
-  ],
+  content_editor: ["content:draft", "content:publish", "content:delete"],
   state_coordinator: [
     "members:read_scoped",
     "cards:read",
@@ -69,59 +57,57 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "events:edit",
     "events:attendance",
   ],
-  lga_coordinator: [
-    "members:read_scoped",
-    "cards:read",
-    "events:attendance",
-  ],
-  chapter_coordinator: [
-    "members:read_scoped",
-    "cards:read",
-    "events:attendance",
-  ],
-  event_manager: [
-    "events:create",
-    "events:edit",
-    "events:attendance",
-  ],
+  lga_coordinator: ["members:read_scoped", "cards:read", "events:attendance"],
+  chapter_coordinator: ["members:read_scoped", "cards:read", "events:attendance"],
+  event_manager: ["events:create", "events:edit", "events:attendance"],
   member: [],
   public_visitor: [],
 };
 
-/**
- * Checks if a user role has a specific permission
- */
 export function hasPermission(role: UserRole, permission: Permission): boolean {
-  const permissions = ROLE_PERMISSIONS[role] || [];
-  return permissions.includes(permission);
+  return ROLE_PERMISSIONS[role].includes(permission);
 }
 
+export interface RoleScope {
+  org_unit_id?: string | null;
+  state_code?: string | null;
+  lga_name?: string | null;
+}
+
+export interface TargetScope extends RoleScope {
+  /** Unit IDs between this target and the hierarchy root, including itself. */
+  ancestor_unit_ids?: readonly string[];
+}
+
+const NATIONAL_MEMBERSHIP_ROLES: UserRole[] = ["super_admin", "membership_officer"];
+
 /**
- * Validates if an actor has scope access over a target entity
- * - Super admin, Auditor, DPO, Membership Officer have national scope
- * - State coordinator is strictly bounded by their state_code
- * - LGA coordinator is strictly bounded by their LGA
+ * Evaluate whether a role assignment covers the target. Callers must obtain
+ * scope data from trusted database rows; this helper is not an authorization boundary.
  */
 export function verifyScopeAccess(
   actorRole: UserRole,
-  actorScope: { state_code?: string | null; lga_name?: string | null },
-  targetScope: { state_code?: string | null; lga_name?: string | null }
+  actorScope: RoleScope,
+  targetScope: TargetScope,
 ): boolean {
-  if (actorRole === "super_admin" || actorRole === "auditor" || actorRole === "membership_officer" || actorRole === "data_protection_officer") {
-    return true;
-  }
+  if (NATIONAL_MEMBERSHIP_ROLES.includes(actorRole)) return true;
 
-  if (actorRole === "state_coordinator") {
-    return !!actorScope.state_code && actorScope.state_code === targetScope.state_code;
-  }
-
-  if (actorRole === "lga_coordinator") {
-    return (
-      !!actorScope.state_code &&
-      actorScope.state_code === targetScope.state_code &&
-      !!actorScope.lga_name &&
-      actorScope.lga_name.toLowerCase() === (targetScope.lga_name || "").toLowerCase()
-    );
+  if (["state_coordinator", "lga_coordinator", "chapter_coordinator"].includes(actorRole)) {
+    if (actorScope.org_unit_id && targetScope.ancestor_unit_ids) {
+      return targetScope.ancestor_unit_ids.includes(actorScope.org_unit_id);
+    }
+    if (actorRole === "state_coordinator") {
+      return Boolean(actorScope.state_code && actorScope.state_code === targetScope.state_code);
+    }
+    if (actorRole === "lga_coordinator") {
+      return Boolean(
+        actorScope.state_code &&
+        actorScope.state_code === targetScope.state_code &&
+        actorScope.lga_name &&
+        actorScope.lga_name.toLocaleLowerCase("en") ===
+          (targetScope.lga_name ?? "").toLocaleLowerCase("en"),
+      );
+    }
   }
 
   return false;

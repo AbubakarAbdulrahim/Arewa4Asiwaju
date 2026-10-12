@@ -1,55 +1,46 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { env } from "@/lib/env";
+
+const description =
+  "Arewa for Asiwaju Student Wing is part of a political mobilisation and advocacy movement working across Northern Nigeria.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
   title: {
-    template: "%s | Arewa4Asiwaju",
-    default: "Arewa4Asiwaju | Official Northern Digital Civic Platform",
+    template: "%s | Arewa for Asiwaju Student Wing",
+    default: "Arewa for Asiwaju Student Wing",
   },
-  description:
-    "Official digital mobilization, verified membership registration, and chapter administration platform for Arewa4Asiwaju student and youth wing across the 19 Northern Nigerian States and FCT.",
-  keywords: [
-    "Arewa4Asiwaju",
-    "Northern Nigeria Youth",
-    "Digital Membership",
-    "Arewa Civic Engagement",
-    "Student Mobilisation",
-    "Kano",
-    "Kaduna",
-    "Abuja",
-  ],
-  authors: [{ name: "Arewa4Asiwaju Directorate of Digital Media" }],
+  description,
+  applicationName: "Arewa for Asiwaju Student Wing",
+  icons: { icon: "/brand/arewa-for-asiwaju-a4a.jpg" },
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "en_NG",
-    url: "https://arewa4asiwaju.org",
-    title: "Arewa4Asiwaju | Official Northern Digital Civic Platform",
-    description:
-      "Join the official digital movement for Northern youth development, leadership, and progressive civic engagement.",
-    siteName: "Arewa4Asiwaju",
+    title: "Arewa for Asiwaju Student Wing",
+    description,
+    siteName: "Arewa for Asiwaju Student Wing",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Arewa4Asiwaju | Official Northern Digital Civic Platform",
-    description: "Official digital platform for Arewa4Asiwaju across the 19 Northern States & FCT.",
-  },
+  twitter: { card: "summary", title: "Arewa for Asiwaju Student Wing", description },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
-  themeColor: "#0B4619",
+  themeColor: "#046735",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className="min-h-screen bg-[#FBF9F5] text-[#121713] antialiased selection:bg-[#0B4619] selection:text-white">
+    <html lang="en">
+      <body className="min-h-screen bg-paper text-ink antialiased">
+        <a
+          href="#main-content"
+          className="sr-only fixed left-3 top-3 z-50 rounded-sm bg-white px-4 py-3 font-bold text-brand-forest focus:not-sr-only"
+        >
+          Skip to content
+        </a>
         {children}
       </body>
     </html>

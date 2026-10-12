@@ -1,25 +1,30 @@
 # AREWA4ASIWAJU DIGITAL PLATFORM
+
 ## Phase 0: Repository Audit and Product Discovery Deliverable
 
 **Author:** Principal Software Architect & Technical Lead  
 **Date:** October 9, 2026  
 **Status:** Approved & Baselined  
 **Project:** Arewa4Asiwaju Digital Platform  
-**Target Environment:** Next.js (App Router), Supabase (PostgreSQL, Auth, Storage, RLS), Vercel, Cloudflare  
+**Target Environment:** Next.js (App Router), Supabase (PostgreSQL, Auth, Storage, RLS), Vercel, Cloudflare
 
 ---
 
 ## 1. Executive Summary & Repository Audit
 
 ### 1.1 Project Context & Nature
-**Arewa4Asiwaju** is an enterprise-grade digital civic mobilisation, membership management, and chapter governance platform for the student and youth wing across the 19 Northern Nigerian States and the Federal Capital Territory (FCT). 
+
+**Arewa4Asiwaju** is an enterprise-grade digital civic mobilisation, membership management, and chapter governance platform for the student and youth wing across the 19 Northern Nigerian States and the Federal Capital Territory (FCT).
 
 The platform serves dual core purposes:
+
 1. **Public Citizenry & Supporter Engagement:** High-credibility, authentic digital presence detailing ideology, leadership, news, events, and transparent membership verification.
 2. **Administrative & Operational Engine:** Scalable, secure membership onboarding, concurrency-safe digital ID card generation with cryptographic verification, granular hierarchical chapter governance (National → State → LGA → Ward → Campus/Chapter), event ticketing, and NDPR (Nigeria Data Protection Regulation/Act 2023) compliant data governance.
 
 ### 1.2 Repository Inspection & Technical Baseline
+
 An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
+
 - **Repository State:** Greenfield Git repository initialized on branch `dev` (tracking `origin/dev`), with an initial commit containing a minimal `README.md` and standard `.gitignore`.
 - **Runtime Environment:**
   - Node.js: `v22.19.0` (LTS active)
@@ -39,24 +44,25 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
 
 ### 2.1 Functional Requirements Matrix
 
-| Module ID | Module Name | Core Capabilities | Critical Edge Cases |
-| :--- | :--- | :--- | :--- |
-| **MOD-A** | **Public Web Platform** | • Informative homepage establishing mission, core pillars, and national credibility.<br>• Leadership directory with bios and regional portfolios.<br>• Verified news, media gallery, FAQs, and contact desk.<br>• Public card verification portal via secure opaque token.<br>• Hausa localisation-ready i18n structure. | • Slow 2G/3G connectivity in rural northern corridors.<br>• Image weight and layout shifts on budget Android devices.<br>• Safe fallback for unverified cards without disclosing private data. |
-| **MOD-B** | **Public Registration** | • Multi-step accessible onboarding (Personal Info, Geo-hierarchy down to Ward/Campus, Contact Verification).<br>• Photo capture/upload with client-side compression.<br>• NDPR consent recording with immutable timestamp and IP hash.<br>• Duplicate detection (Phone, Email, NIN/Voter ID hash). | • Interrupted registrations.<br>• Concurrent identical phone/NIN registrations.<br>• Enumeration attacks (public error messages must never confirm whether an account exists). |
-| **MOD-C** | **Automated Digital ID Engine** | • Concurrency-safe ID sequence generator: `A4A-{YEAR}-{ST_CODE}-{SEQ_6DIGIT}`.<br>• High-resolution vector PDF generation & WebP/PNG preview.<br>• Dynamic QR code containing opaque HMAC-signed verification URL.<br>• Private storage with short-lived signed URLs.<br>• Card lifecycle: Active, Suspended, Revoked, Reissued. | • Race conditions during peak mobilisation rallies.<br>• Re-issuance preserving history and incrementing card version.<br>• Tamper-evident verification without exposing member PII. |
-| **MOD-D** | **Member Self-Service Portal** | • Supabase Auth (Passwordless OTP / Email magic link / Password).<br>• Live digital ID card viewing, wallet download, and printable PDF.<br>• Event discovery, RSVP, and unique QR ticket generation.<br>• Profile details update with audit trail.<br>• Communication preferences & NDPR data subject access/deletion requests. | • Session invalidation across devices.<br>• Strict isolation: Member can only view their own records (RLS). |
-| **MOD-E** | **Central Administration Portal** | • Scoped dashboard metrics (State, LGA, Chapter counts).<br>• Member directory with complex filtering, pagination, and status management.<br>• Duplicate investigation triage.<br>• Card suspension/revocation controls.<br>• Content Management System (News, Events, Media, FAQs).<br>• Role assignment and audit log explorer. | • Role escalation prevention.<br>• Bulk export security (restricted by role and purpose).<br>• Coordinator access strictly bounded by geographic scope. |
-| **MOD-F** | **Hierarchical Governance** | • 5-Tier Organizational Hierarchy: National → State → LGA → Ward → Campus Chapter.<br>• Coordinator appointments with scoped permissions.<br>• Transfer workflows for students relocating or graduating. | • Circular parent-child relationships in org units.<br>• Cross-state data leakage among coordinators. |
-| **MOD-G** | **Events & Mobilisation** | • Event scheduling, venue/virtual links, capacity caps.<br>• Scoped attendance check-in via QR ticket scanning.<br>• Post-event media and attendance metrics. | • Oversubscription handling.<br>• Duplicate check-ins. |
-| **MOD-H** | **Content Management System** | • Editorial workflow: Draft → In Review → Published → Archived.<br>• Rich media asset management with alt-text and categorization.<br>• Leadership profiles and press statements. | • Unauthorised publication of unvetted announcements.<br>• XSS prevention in rich text rendering. |
-| **MOD-I** | **Reporting & Analytics** | • Anonymized demographic, geographic, and temporal trend analytics.<br>• Card issuance success vs. failure rates.<br>• No raw sensitive political data exposed in aggregate feeds. | • Query timeouts on massive member tables (indexes required). |
-| **MOD-J** | **Notification Engine & Outbox** | • Transactional email dispatch (Welcome, Card Ready, Event RSVP).<br>• Outbox pattern in database for reliable delivery & retries.<br>• Support ticket submission and administrative responses. | • Outbound provider rate limits and transient network drops. |
+| Module ID | Module Name                       | Core Capabilities                                                                                                                                                                                                                                                                                                                 | Critical Edge Cases                                                                                                                                                                            |
+| :-------- | :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **MOD-A** | **Public Web Platform**           | • Informative homepage establishing mission, core pillars, and national credibility.<br>• Leadership directory with bios and regional portfolios.<br>• Verified news, media gallery, FAQs, and contact desk.<br>• Public card verification portal via secure opaque token.<br>• Hausa localisation-ready i18n structure.          | • Slow 2G/3G connectivity in rural northern corridors.<br>• Image weight and layout shifts on budget Android devices.<br>• Safe fallback for unverified cards without disclosing private data. |
+| **MOD-B** | **Public Registration**           | • Multi-step accessible onboarding (Personal Info, Geo-hierarchy down to Ward/Campus, Contact Verification).<br>• Photo capture/upload with client-side compression.<br>• NDPR consent recording with immutable timestamp and IP hash.<br>• Duplicate detection (Phone, Email, NIN/Voter ID hash).                                | • Interrupted registrations.<br>• Concurrent identical phone/NIN registrations.<br>• Enumeration attacks (public error messages must never confirm whether an account exists).                 |
+| **MOD-C** | **Automated Digital ID Engine**   | • Concurrency-safe ID sequence generator: `A4A-{YEAR}-{ST_CODE}-{SEQ_6DIGIT}`.<br>• High-resolution vector PDF generation & WebP/PNG preview.<br>• Dynamic QR code containing opaque HMAC-signed verification URL.<br>• Private storage with short-lived signed URLs.<br>• Card lifecycle: Active, Suspended, Revoked, Reissued.  | • Race conditions during peak mobilisation rallies.<br>• Re-issuance preserving history and incrementing card version.<br>• Tamper-evident verification without exposing member PII.           |
+| **MOD-D** | **Member Self-Service Portal**    | • Supabase Auth (Passwordless OTP / Email magic link / Password).<br>• Live digital ID card viewing, wallet download, and printable PDF.<br>• Event discovery, RSVP, and unique QR ticket generation.<br>• Profile details update with audit trail.<br>• Communication preferences & NDPR data subject access/deletion requests.  | • Session invalidation across devices.<br>• Strict isolation: Member can only view their own records (RLS).                                                                                    |
+| **MOD-E** | **Central Administration Portal** | • Scoped dashboard metrics (State, LGA, Chapter counts).<br>• Member directory with complex filtering, pagination, and status management.<br>• Duplicate investigation triage.<br>• Card suspension/revocation controls.<br>• Content Management System (News, Events, Media, FAQs).<br>• Role assignment and audit log explorer. | • Role escalation prevention.<br>• Bulk export security (restricted by role and purpose).<br>• Coordinator access strictly bounded by geographic scope.                                        |
+| **MOD-F** | **Hierarchical Governance**       | • 5-Tier Organizational Hierarchy: National → State → LGA → Ward → Campus Chapter.<br>• Coordinator appointments with scoped permissions.<br>• Transfer workflows for students relocating or graduating.                                                                                                                          | • Circular parent-child relationships in org units.<br>• Cross-state data leakage among coordinators.                                                                                          |
+| **MOD-G** | **Events & Mobilisation**         | • Event scheduling, venue/virtual links, capacity caps.<br>• Scoped attendance check-in via QR ticket scanning.<br>• Post-event media and attendance metrics.                                                                                                                                                                     | • Oversubscription handling.<br>• Duplicate check-ins.                                                                                                                                         |
+| **MOD-H** | **Content Management System**     | • Editorial workflow: Draft → In Review → Published → Archived.<br>• Rich media asset management with alt-text and categorization.<br>• Leadership profiles and press statements.                                                                                                                                                 | • Unauthorised publication of unvetted announcements.<br>• XSS prevention in rich text rendering.                                                                                              |
+| **MOD-I** | **Reporting & Analytics**         | • Anonymized demographic, geographic, and temporal trend analytics.<br>• Card issuance success vs. failure rates.<br>• No raw sensitive political data exposed in aggregate feeds.                                                                                                                                                | • Query timeouts on massive member tables (indexes required).                                                                                                                                  |
+| **MOD-J** | **Notification Engine & Outbox**  | • Transactional email dispatch (Welcome, Card Ready, Event RSVP).<br>• Outbox pattern in database for reliable delivery & retries.<br>• Support ticket submission and administrative responses.                                                                                                                                   | • Outbound provider rate limits and transient network drops.                                                                                                                                   |
 
 ---
 
 ## 3. Route & Module Inventory
 
 ### 3.1 Public Routes (`(public)`)
+
 - `/` — Homepage: Hero, Mission, Impact Pillars, Live Verification CTA, Latest News, Upcoming Events.
 - `/about` — Detailed organisational background, manifesto, and governance structure.
 - `/leadership` — National, Zonal, and State leadership directories.
@@ -74,6 +80,7 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
 - `/register/success` — Registration acknowledgment, verification confirmation, and portal redirect.
 
 ### 3.2 Authentication Routes (`(auth)`)
+
 - `/auth/login` — Unified Member and Staff login with MFA readiness.
 - `/auth/forgot-password` — Password recovery request.
 - `/auth/reset-password` — Password reset completion via secure token.
@@ -81,6 +88,7 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
 - `/auth/callback` — Supabase Auth session exchange and route dispatcher.
 
 ### 3.3 Member Self-Service Portal (`(portal)`)
+
 - `/portal` — Member Dashboard: Current status, quick card view, upcoming events, notifications.
 - `/portal/id-card` — High-fidelity Digital ID Card, PDF download, print mode, QR refresh.
 - `/portal/profile` — Personal information, educational institution, chapter details, photo update.
@@ -89,6 +97,7 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
 - `/portal/privacy` — Data rights request submission (export data, rectify, or request erasure).
 
 ### 3.4 Administrative Dashboard (`(admin)`)
+
 - `/admin` — Central Executive Overview: Key metrics, regional activity heatmap, issuance rates.
 - `/admin/members` — Member Master Registry: Multi-filter, fuzzy search, state/LGA facets, status actions.
 - `/admin/members/[id]` — Deep member dossier, ID card history, audit logs, status controls.
@@ -106,6 +115,7 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
 - `/admin/settings` — System parameters, maintenance mode, notification credentials check.
 
 ### 3.5 API & Route Handlers (`/api/...`)
+
 - `/api/auth/webhook` — Supabase Auth event listener for profile synchronization.
 - `/api/register` — Validated server-side registration endpoint with abuse rate limiting.
 - `/api/cards/generate` — Server-side idempotent ID card rendering (PDF generation and storage commit).
@@ -119,6 +129,7 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
 ## 4. Technical Architecture Proposal
 
 ### 4.1 Frontend Stack & Component Strategy
+
 - **Core:** Next.js 15 (App Router), React 19, TypeScript strict mode (`noImplicitAny`, `strictNullChecks`).
 - **Styling Architecture:** Tailwind CSS with bespoke custom design tokens. Zero generic UI templates.
 - **Component Primitives:** Accessible primitives based on Radix UI / shadcn/ui patterns.
@@ -126,6 +137,7 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
 - **Iconography:** Lucide React icons, chosen for visual consistency and clean SVG rendering.
 
 ### 4.2 Brand & Visual Design Identity
+
 - **Primary Brand Palette:**
   - **Arewa Emerald Deep:** `#0B4619` (Symbolising northern agrarian vitality, dignity, and national flag heritage)
   - **Arewa Savanna Gold / Ochre:** `#C59B27` (Symbolising northern richness, leadership, and optimism)
@@ -134,11 +146,12 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
   - **Neutral Border Slate:** `#E2E6E2` (Subtle, refined borders eliminating heavy visual clutter)
   - **Accent Status Colors:** Success `#15803D`, Warning `#B45309`, Danger `#B91C1C`, Info `#0369A1`
 - **Typography:**
-  - Headings: *Outfit* / *Cabinet Grotesk* (commanding, modern civic typography).
-  - Body: *Inter* / *Figtree* (crystal clear legibility at 14px–16px on mobile Android screens).
-  - Monospace: *JetBrains Mono* (used for Membership Numbers, Verification Tokens, and Audit IDs).
+  - Headings: _Outfit_ / _Cabinet Grotesk_ (commanding, modern civic typography).
+  - Body: _Inter_ / _Figtree_ (crystal clear legibility at 14px–16px on mobile Android screens).
+  - Monospace: _JetBrains Mono_ (used for Membership Numbers, Verification Tokens, and Audit IDs).
 
 ### 4.3 Database Architecture & Data Integrity (PostgreSQL)
+
 - **Primary Keys:** UUID v4 for all domain entities.
 - **Sequential Concurrency:** Atomic PostgreSQL counter sequence per year/state to guarantee gapless, race-condition-free membership numbers (`A4A-2026-KN-000142`).
 - **Data Access:** 100% of tables protected by Row Level Security (RLS). No public read/write grants on core tables.
@@ -146,6 +159,7 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
 - **Sensitive Data Handling:** PII hashing, encrypted storage pointers for member photos and ID cards, zero plain-text personal credentials in QR payloads.
 
 ### 4.4 Automated Digital ID Card Subsystem
+
 - **Engine:** Server-side PDF generation using `pdf-lib` / vector canvas compositing.
 - **Dimensions:** ISO/IEC 7810 ID-1 standard (85.60 mm × 53.98 mm, standard credit/voter card aspect ratio 1.586).
 - **Features on Card:**
@@ -153,21 +167,21 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
   - Back: Movement Code of Conduct summary, Emergency hotline, Non-transferable legal notice, Return address.
 - **Cryptographic QR Code:**
   - Target URL: `https://arewa4asiwaju.org/verify-card?token={OPAQUE_CRYPTO_TOKEN}`.
-  - Token is a 256-bit secure random identifier linked to the active card issuance record.
+  - Token is a 244-bit cryptographically random identifier linked to the active card issuance record.
   - Verification endpoint confirms: Status (VALID / SUSPENDED / REVOKED), Member First Name + Initial, State/Chapter, Issue Year. **Zero phone numbers, full addresses, or NINs are returned.**
 
 ---
 
 ## 5. Initial Risk Register & Mitigation Strategy
 
-| Risk ID | Risk Category | Risk Description | Severity | Mitigation Strategy |
-| :--- | :--- | :--- | :--- | :--- |
-| **RSK-01** | **Security / Abuse** | Mass bot submissions during public registration leading to DB bloat. | High | Cloudflare Turnstile bot verification + Redis/In-memory IP rate limiting + unique phone/email database check constraints. |
-| **RSK-02** | **Concurrency** | Multiple concurrent registrations allocating the same membership sequence. | Critical | Atomic PostgreSQL transaction lock via `SELECT FOR UPDATE` on state sequence records or native PostgreSQL sequences. |
-| **RSK-03** | **Privacy / NDPR** | Political affiliation and supporter information exposed through unauthenticated APIs. | Critical | Strict Supabase RLS on all tables; public verification returns strictly obfuscated minimal metadata; signed short-lived storage URLs. |
-| **RSK-04** | **Performance** | Sluggish load times on 2G/3G mobile networks across northern rural areas. | High | Next.js Server Components, static generation for public pages, Next/Image WebP compression, lightweight CSS footprint (<50KB). |
-| **RSK-05** | **Security / RBAC** | State/LGA coordinators viewing or modifying records outside their assigned jurisdiction. | High | Server-side organisational scope guard enforced in both Supabase RLS policies and Next.js Server Action middleware. |
-| **RSK-06** | **Operational** | PDF card generation failing under sudden serverless timeout or memory limits. | Medium | Lightweight vector PDF synthesis using `pdf-lib` (zero headless Chrome overhead), idempotent retry queue via outbox. |
+| Risk ID    | Risk Category        | Risk Description                                                                         | Severity | Mitigation Strategy                                                                                                                   |
+| :--------- | :------------------- | :--------------------------------------------------------------------------------------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| **RSK-01** | **Security / Abuse** | Mass bot submissions during public registration leading to DB bloat.                     | High     | Cloudflare Turnstile bot verification + Redis/In-memory IP rate limiting + unique phone/email database check constraints.             |
+| **RSK-02** | **Concurrency**      | Multiple concurrent registrations allocating the same membership sequence.               | Critical | Atomic PostgreSQL transaction lock via `SELECT FOR UPDATE` on state sequence records or native PostgreSQL sequences.                  |
+| **RSK-03** | **Privacy / NDPR**   | Political affiliation and supporter information exposed through unauthenticated APIs.    | Critical | Strict Supabase RLS on all tables; public verification returns strictly obfuscated minimal metadata; signed short-lived storage URLs. |
+| **RSK-04** | **Performance**      | Sluggish load times on 2G/3G mobile networks across northern rural areas.                | High     | Next.js Server Components, static generation for public pages, Next/Image WebP compression, lightweight CSS footprint (<50KB).        |
+| **RSK-05** | **Security / RBAC**  | State/LGA coordinators viewing or modifying records outside their assigned jurisdiction. | High     | Server-side organisational scope guard enforced in both Supabase RLS policies and Next.js Server Action middleware.                   |
+| **RSK-06** | **Operational**      | PDF card generation failing under sudden serverless timeout or memory limits.            | Medium   | Lightweight vector PDF synthesis using `pdf-lib` (zero headless Chrome overhead), idempotent retry queue via outbox.                  |
 
 ---
 
@@ -198,3 +212,13 @@ An exhaustive audit of the workspace (`c:\arewa4asiwaju`) was executed:
 - [x] Critical architectural uncertainties documented in Risk Register.
 - [x] Complete route and module inventory established.
 - [x] Detailed 14-phase roadmap locked.
+
+---
+
+## 8. Phase 1 Evidence Correction (October 10, 2026)
+
+Phase 1 review found that parts of the initial discovery document and early public screens presented unverified assumptions as established facts. In particular, the 419 LGA and 85+ campus chapter counts, planned events, attendee counts, program names and benefits, public contact address/phone, compliance claims, sample leaders/member details, campus expansion, and digital card issuance were not supported by approved movement materials. Treat those as removed or unverified; do not seed or publish them as real information.
+
+The user supplied _Arewa for Asiwaju (A4A) Comprehensive Strategic Blueprint, Governance Structure, and Campaign Framework_ during Phase 1. It describes A4A as a political mobilisation and advocacy group supporting the current administration, aligning work with the Renewed Hope Agenda, and operating across the 19 northern states and the FCT through state, youth/student, and grassroots ward structures. The Phase 1 site copy now follows that supplied positioning. The blueprint's names and office-holder statuses have not been published pending a dated, confirmed roster.
+
+The original audit's “exhaustive” and “approved & baselined” status was too strong: it did not distinguish repository facts from assumptions. This correction supersedes conflicting assumptions in the earlier sections. See `docs/design/phase_1_design_system.md` for the revised interface direction and open dependencies.

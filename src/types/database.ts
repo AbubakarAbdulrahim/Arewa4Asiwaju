@@ -12,26 +12,12 @@ export type UserRole =
   | "super_admin";
 
 export type MembershipStatus =
-  | "pending_verification"
-  | "active"
-  | "suspended"
-  | "flagged"
-  | "revoked";
+  "pending_verification" | "active" | "suspended" | "flagged" | "revoked";
 
-export type CardStatus =
-  | "active"
-  | "suspended"
-  | "revoked"
-  | "replaced";
+export type CardStatus = "active" | "suspended" | "revoked" | "replaced";
 
 export type OrgUnitType =
-  | "national"
-  | "zone"
-  | "state"
-  | "lga"
-  | "ward"
-  | "campus_chapter"
-  | "support_group";
+  "national" | "zone" | "state" | "lga" | "ward" | "campus_chapter" | "support_group";
 
 export interface Profile {
   id: string; // Supabase Auth user ID
@@ -44,6 +30,8 @@ export interface Profile {
   date_of_birth?: string | null;
   gender?: "male" | "female" | "other" | null;
   photo_url?: string | null;
+  /** Private Storage object path. Do not use directly as a public image URL. */
+  photo_storage_path?: string | null;
   avatar_url?: string | null;
   state_of_origin?: string | null;
   state_of_residence: string;
@@ -52,8 +40,14 @@ export interface Profile {
   address?: string | null;
   institution_type?: "tertiary" | "artisan" | "youth_corps" | "general" | null;
   institution_name?: string | null;
+  institution_campus?: string | null;
+  department?: string | null;
   course_of_study?: string | null;
+  study_level?: string | null;
   graduation_year?: number | null;
+  occupation?: string | null;
+  is_student?: boolean | null;
+  voter_card_status?: "yes" | "no" | "prefer_not_to_say" | null;
   created_at: string;
   updated_at: string;
 }
@@ -66,25 +60,29 @@ export interface Membership {
   state_code: string;
   org_unit_id?: string | null;
   verified_at?: string | null;
-  verification_token?: string | null;
   created_at: string;
   updated_at: string;
 }
 
+/** Browser-visible card metadata; it deliberately excludes all bearer tokens and storage paths. */
 export interface IdCard {
   id: string;
   membership_id: string;
-  card_version: number; // 1, 2, 3...
-  verification_token: string; // Opaque cryptographic token for QR code
-  qr_code_svg?: string | null;
-  pdf_storage_path?: string | null;
-  preview_storage_path?: string | null;
+  card_version: number;
   status: CardStatus;
   issued_at: string;
   expires_at: string;
   revoked_at?: string | null;
-  revocation_reason?: string | null;
   created_at: string;
+}
+
+/** Server-only storage record. Never send this type directly to a browser. */
+export interface PrivateIdCardRecord extends IdCard {
+  verification_token: string;
+  qr_code_svg?: string | null;
+  pdf_storage_path?: string | null;
+  preview_storage_path?: string | null;
+  revocation_reason?: string | null;
 }
 
 export interface OrganisationalUnit {
@@ -97,6 +95,18 @@ export interface OrganisationalUnit {
   lga_name?: string | null;
   description?: string | null;
   created_at: string;
+  updated_at?: string;
+}
+
+export interface ConsentRecord {
+  id: string;
+  profile_id: string | null;
+  consent_purpose: string;
+  is_granted: boolean;
+  policy_version?: string | null;
+  policy_sha256?: string | null;
+  source: "legacy" | "self_service" | "admin_recorded";
+  consented_at: string;
 }
 
 export interface RoleAssignment {

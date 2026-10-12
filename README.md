@@ -1,34 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arewa for Asiwaju (A4A)
 
-## Getting Started
+Next.js App Router foundation for the Arewa for Asiwaju public website and future member and administration services. Public registration, card issuance, and verification remain unavailable until their verified Supabase workflows are implemented.
 
-First, run the development server:
+## Local development
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Requirements: Node.js 22 and npm 10 or later.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Install dependencies with `npm ci`.
+2. Copy `.env.example` to `.env.local` (PowerShell: `Copy-Item .env.example .env.local`). The public site runs without Supabase credentials; leave both public Supabase variables blank in that case.
+3. Start the app with `npm run dev` and visit `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Before submitting changes, run `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`.
 
-## Learn More
+## Environments
 
-To learn more about Next.js, take a look at the following resources:
+Use a separate Supabase project and distinct credentials for local development, staging, and production. Set `APP_ENV` and `NEXT_PUBLIC_APP_URL` for each environment. In Vercel, configure environment variables separately for Development, Preview (staging), and Production; production secrets must not be copied into preview deployments. Store `SUPABASE_SERVICE_ROLE_KEY` only as a server-side environment variable. Never commit `.env.local`, provider credentials, or production data.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+See [docs/development/project-structure.md](docs/development/project-structure.md) for the module map, environment policy, CI, and branch conventions. Supabase migrations live in `supabase/migrations/`; apply changes through reviewed, versioned migrations. The administration workspace, procedures, scope rules, and staging checklist are documented in [docs/development/administration.md](docs/development/administration.md).
 
-## Deploy on Vercel
+## Current scope
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The public shell, About page, registration preview, and card verification explanation are present. Registration and ID-card APIs intentionally return unavailable responses until server-side verification, database constraints, RLS, and idempotent issuance are completed. Do not use this foundation as a live membership system yet.

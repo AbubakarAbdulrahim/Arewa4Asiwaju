@@ -1,239 +1,169 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { FormEvent, useCallback, useEffect, useState } from "react";
+import { CalendarDays, CheckCircle2, ShieldAlert, ShieldCheck } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import {
-  ShieldCheck,
-  ShieldAlert,
-  Search,
-  CheckCircle2,
-  Lock,
-  Calendar,
-  MapPin,
-  Clock,
-  Sparkles,
-} from "lucide-react";
 
-interface VerificationResult {
+type VerificationResult = {
   isValid: boolean;
-  status: string;
-  initials?: string;
-  stateName?: string;
+  status: "active" | "invalid" | "unavailable";
   membershipMasked?: string;
   issueYear?: number;
   expiresAt?: string;
   verifiedAt?: string;
   message?: string;
-}
+};
 
-export default function VerifyCardPage() {
-  const searchParams = useSearchParams();
-  const urlToken = searchParams.get("token") || "";
-
-  const [inputToken, setInputToken] = useState(urlToken);
-  const [loading, setLoading] = useState(false);
+function VerifyCardContent() {
+  const [token, setToken] = useState("");
   const [result, setResult] = useState<VerificationResult | null>(null);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleVerify = async (tokenToVerify: string) => {
-    if (!tokenToVerify.trim()) return;
+  const verify = useCallback(async (candidate: string) => {
+    const cleanToken = candidate.trim();
+    if (!/^[a-fA-F0-9]{64}$/.test(cleanToken)) {
+      setResult({
+        isValid: false,
+        status: "invalid",
+        message: "Enter a 64-character card QR token.",
+      });
+      return;
+    }
     setLoading(true);
-    setHasSearched(true);
-
+    setResult(null);
     try {
-      const res = await fetch(`/api/verify-token?token=${encodeURIComponent(tokenToVerify.trim())}`);
-      const data = await res.json();
+      const response = await fetch("/api/verify-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({ token: cleanToken }),
+      });
+      const data = (await response.json()) as VerificationResult;
       setResult(data);
     } catch {
       setResult({
         isValid: false,
-        status: "error",
-        message: "Failed to connect to verification authority. Please retry.",
+        status: "unavailable",
+        message: "Verification is temporarily unavailable. Please retry.",
       });
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    if (urlToken) {
-      setInputToken(urlToken);
-      handleVerify(urlToken);
+    const tokenFromUrl = window.location.hash.slice(1);
+    if (tokenFromUrl) {
+      window.history.replaceState(window.history.state, "", "/verify-card");
+      const timer = window.setTimeout(() => void verify(tokenFromUrl), 0);
+      return () => window.clearTimeout(timer);
     }
-  }, [urlToken]);
+  }, [verify]);
+
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void verify(token);
+  }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBF9F5]">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-
-      <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto space-y-8">
-          {/* Header */}
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0B4619]/10 text-[#0B4619] text-xs font-bold border border-[#0B4619]/20">
-              <Lock className="h-3.5 w-3.5" />
-              Official Cryptographic Verification
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0B4619] tracking-tight">
-              Verify Digital Membership ID Card
-            </h1>
-            <p className="text-sm sm:text-base text-[#121713]/70 max-w-xl mx-auto">
-              Scan the QR code printed on the physical card or enter the security verification token below to instantly confirm member legitimacy.
-            </p>
+      <main id="main-content" className="site-container flex-1 py-12 sm:py-16">
+        <header className="mx-auto mb-8 max-w-2xl text-center">
+          <div className="eyebrow inline-flex items-center gap-2">
+            <ShieldCheck aria-hidden="true" className="h-4 w-4" /> Public card check
           </div>
-
-          {/* Search Box */}
-          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-[#E2E6E2] shadow-sm space-y-4">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleVerify(inputToken);
-              }}
-              className="flex flex-col sm:flex-row gap-3"
-            >
-              <div className="relative flex-1">
-                <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-[#64748B]" />
-                <input
-                  type="text"
-                  placeholder="Enter 32-character QR Token or Scan Token..."
-                  value={inputToken}
-                  onChange={(e) => setInputToken(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E2E6E2] focus:outline-none focus:ring-2 focus:ring-[#0B4619] text-sm bg-[#FBF9F5]/40"
-                />
+          <h1 className="mt-3 text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+            Verify a membership card
+          </h1>
+          <p className="mt-4 text-base leading-relaxed text-muted">
+            Scan the QR code or enter the card token to check whether it is currently active. This
+            check does not reveal a member’s name or contact details.
+          </p>
+        </header>
+        <section className="surface mx-auto max-w-2xl p-5 sm:p-7">
+          <form onSubmit={submit} className="space-y-4">
+            <div>
+              <label className="field-label" htmlFor="verification-token">
+                Card QR token
+              </label>
+              <input
+                id="verification-token"
+                className="field-control font-mono"
+                value={token}
+                onChange={(event) => setToken(event.target.value)}
+                autoComplete="off"
+                inputMode="text"
+                maxLength={64}
+                minLength={64}
+                pattern="[a-fA-F0-9]{64}"
+                required
+                aria-describedby="token-help"
+              />
+              <p id="token-help" className="mt-1 text-xs text-muted">
+                The token is a random code printed as a QR code on the card.
+              </p>
+            </div>
+            <button type="submit" className="button-primary w-full sm:w-auto" disabled={loading}>
+              {loading ? "Checking card…" : "Check card status"}
+            </button>
+          </form>
+          <div className="mt-6 border-t border-line pt-5" aria-live="polite">
+            {loading && (
+              <p role="status" className="text-sm text-muted">
+                Checking the current membership record…
+              </p>
+            )}
+            {!loading && result?.status === "active" && result.isValid && (
+              <div role="status" className="rounded-sm border border-green-300 bg-green-50 p-4">
+                <div className="flex items-center gap-2 font-bold text-green-900">
+                  <CheckCircle2 aria-hidden="true" className="h-5 w-5" />
+                  Active membership card
+                </div>
+                <p className="mt-2 text-sm text-green-950">{result.message}</p>
+                <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
+                  <div>
+                    <dt className="text-xs font-bold uppercase text-muted">Membership</dt>
+                    <dd className="mt-1 font-mono font-bold">{result.membershipMasked}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-bold uppercase text-muted">Issued</dt>
+                    <dd className="mt-1">{result.issueYear}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-bold uppercase text-muted">Expires</dt>
+                    <dd className="mt-1 flex items-center gap-1">
+                      <CalendarDays aria-hidden="true" className="h-4 w-4" />
+                      {result.expiresAt ? new Date(result.expiresAt).getFullYear() : "Not stated"}
+                    </dd>
+                  </div>
+                </dl>
               </div>
-              <button
-                type="submit"
-                disabled={loading || !inputToken.trim()}
-                className="btn-primary py-3 px-6 whitespace-nowrap"
-              >
-                {loading ? "Verifying..." : "Verify Credential"}
-              </button>
-            </form>
-
-            <div className="flex items-center justify-between text-xs text-[#64748B] pt-2 border-t border-[#E2E6E2]">
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#0B4619]" />
-                Zero Personal Data Leakage (NDPR Compliant)
-              </span>
-              <button
-                type="button"
-                onClick={() => {
-                  const demoToken = "arewa4asiwaju-verification-token-sample";
-                  setInputToken(demoToken);
-                  handleVerify(demoToken);
-                }}
-                className="text-[#0B4619] font-semibold hover:underline"
-              >
-                Try Sample Token
-              </button>
-            </div>
+            )}
+            {!loading && result?.status === "invalid" && (
+              <div role="status" className="rounded-sm border border-red-300 bg-red-50 p-4">
+                <div className="flex items-center gap-2 font-bold text-red-900">
+                  <ShieldAlert aria-hidden="true" className="h-5 w-5" />
+                  No active card found
+                </div>
+                <p className="mt-2 text-sm text-red-950">{result.message}</p>
+              </div>
+            )}
+            {!loading && result?.status === "unavailable" && (
+              <div role="status" className="notice">
+                <p className="font-bold text-ink">Verification is temporarily unavailable</p>
+                <p className="mt-1 text-sm text-muted">{result.message}</p>
+              </div>
+            )}
           </div>
-
-          {/* Verification Result Card */}
-          {hasSearched && (
-            <div className="transition-all animate-in fade-in slide-in-from-bottom-4 duration-300">
-              {loading ? (
-                <div className="bg-white p-8 rounded-2xl border border-[#E2E6E2] text-center space-y-3">
-                  <div className="h-10 w-10 border-4 border-[#0B4619] border-t-transparent rounded-full animate-spin mx-auto" />
-                  <p className="text-sm font-semibold text-[#121713]">
-                    Querying cryptographic ledger...
-                  </p>
-                </div>
-              ) : result && result.isValid ? (
-                <div className="bg-white rounded-2xl border-2 border-[#0B4619] p-6 sm:p-8 shadow-lg space-y-6 relative overflow-hidden">
-                  {/* Decorative badge */}
-                  <div className="absolute top-0 right-0 bg-[#0B4619] text-[#C59B27] py-1.5 px-6 rounded-bl-2xl font-bold text-xs tracking-wider flex items-center gap-1.5">
-                    <Sparkles className="h-3.5 w-3.5" /> OFFICIAL REGISTRY
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="h-14 w-14 rounded-2xl bg-[#0B4619] text-[#C59B27] flex items-center justify-center shrink-0 shadow">
-                      <ShieldCheck className="h-8 w-8 text-[#C59B27]" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="badge-emerald">AUTHENTIC & ACTIVE</span>
-                        <span className="text-xs text-[#64748B]">Issued {result.issueYear}</span>
-                      </div>
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-[#0B4619] mt-1">
-                        Legitimate Arewa4Asiwaju Credential
-                      </h2>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-[#FBF9F5] border border-[#E2E6E2]">
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-[#64748B] block">
-                        Member Initials
-                      </span>
-                      <span className="text-base font-bold text-[#121713]">
-                        {result.initials || "A. B."}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-[#64748B] block">
-                        State Chapter
-                      </span>
-                      <span className="text-base font-bold text-[#0B4619] flex items-center gap-1">
-                        <MapPin className="h-3.5 w-3.5 text-[#C59B27]" />
-                        {result.stateName || "Kano"}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-[#64748B] block">
-                        Membership Code
-                      </span>
-                      <span className="text-base font-mono font-bold text-[#121713]">
-                        {result.membershipMasked}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-[#64748B] block">
-                        Expiry Date
-                      </span>
-                      <span className="text-base font-bold text-[#121713] flex items-center gap-1">
-                        <Calendar className="h-3.5 w-3.5 text-[#64748B]" />
-                        {result.expiresAt
-                          ? new Date(result.expiresAt).getFullYear()
-                          : "2030"}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="text-xs text-[#64748B] flex items-center justify-between pt-2 border-t border-[#E2E6E2]">
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3.5 w-3.5" />
-                      Verified at: {result.verifiedAt ? new Date(result.verifiedAt).toLocaleTimeString() : "Just now"}
-                    </span>
-                    <span className="text-[#0B4619] font-medium">
-                      National Membership Directorate
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-white rounded-2xl border-2 border-red-500 p-6 sm:p-8 shadow-sm space-y-4">
-                  <div className="flex items-center gap-3 text-red-600">
-                    <ShieldAlert className="h-8 w-8 shrink-0" />
-                    <div>
-                      <h3 className="text-lg font-bold">Unverified or Invalid Credential</h3>
-                      <p className="text-sm text-red-600/80">
-                        {result?.message || "This card token is not recognized in our national database or has been revoked."}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        </section>
       </main>
-
       <Footer />
     </div>
   );
+}
+
+export default function VerifyCardPage() {
+  return <VerifyCardContent />;
 }

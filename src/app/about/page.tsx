@@ -1,105 +1,157 @@
-import React from "react";
+import type { Metadata } from "next";
+import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { ShieldCheck, Target, Users, BookOpen, Compass, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Landmark, MapPinned, Megaphone, UsersRound } from "lucide-react";
 
-export const metadata = {
-  title: "About Movement & Manifesto",
-  description: "Learn about Arewa4Asiwaju's mission, values, and grassroots youth leadership structure.",
+export const metadata: Metadata = {
+  title: "About the Arewa for Asiwaju Student Wing",
+  description:
+    "The purpose, objectives, and organising structure of the Arewa for Asiwaju Student Wing.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About the Arewa for Asiwaju Student Wing",
+    description: "The purpose, objectives, and organising structure of the Student Wing.",
+  },
 };
+
+const objectives = [
+  [
+    "Grassroots mobilisation",
+    "Develop movement structures down to ward level across the 19 northern states and the FCT.",
+  ],
+  [
+    "Policy advocacy",
+    "Explain federal programmes and the Renewed Hope Agenda in ways that connect with local priorities.",
+  ],
+  [
+    "Public information",
+    "Share information about federal activity in infrastructure, agriculture, security, and other areas, with clear sourcing for published claims.",
+  ],
+  [
+    "Youth and student inclusion",
+    "Support youth and student participation, civic learning, and leadership development within the movement.",
+  ],
+];
+
+const structure = [
+  {
+    title: "State chapters",
+    text: "Coordinate movement activity and provide a consistent structure across state lines.",
+    icon: MapPinned,
+  },
+  {
+    title: "Youth and student wings",
+    text: "Create participation routes for young people through town halls, rallies, and digital awareness work.",
+    icon: UsersRound,
+  },
+  {
+    title: "Grassroots wards",
+    text: "Bring campaign information into communities and support communication in relevant local languages.",
+    icon: Megaphone,
+  },
+];
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBF9F5]">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-
-      <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
-        {/* Header */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0B4619]/10 text-[#0B4619] text-xs font-bold border border-[#0B4619]/20">
-            <Compass className="h-3.5 w-3.5" />
-            Our Heritage & Vision
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#0B4619] tracking-tight">
-            About Arewa4Asiwaju
+      <main id="main-content" className="site-container flex-1 py-12 sm:py-16">
+        <header className="max-w-3xl border-b border-line pb-9">
+          <p className="eyebrow">Movement overview</p>
+          <h1 className="mt-3 text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+            Arewa for Asiwaju Student Wing
           </h1>
-          <p className="text-base sm:text-lg text-[#121713]/70 max-w-2xl mx-auto">
-            A coalition of progressive students, emerging professionals, and grassroots youth organizers dedicated to northern development and national unity.
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
+            The Student Wing is part of Arewa for Asiwaju, a political mobilisation and advocacy
+            movement working across Northern Nigeria to connect federal priorities with grassroots
+            communities.
           </p>
-        </div>
+          <p className="mt-4 text-sm text-muted">
+            Its work is aligned with the Renewed Hope Agenda and organised across the 19 northern
+            states and the Federal Capital Territory.
+          </p>
+        </header>
 
-        {/* Mission & Vision Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white p-8 rounded-2xl border border-[#E2E6E2] shadow-sm space-y-4">
-            <div className="h-12 w-12 rounded-xl bg-[#0B4619] text-[#C59B27] flex items-center justify-center font-bold">
-              <Target className="h-6 w-6" />
+        <section
+          className="grid gap-10 border-b border-line py-10 lg:grid-cols-[.7fr_1.3fr]"
+          aria-labelledby="objectives-title"
+        >
+          <div>
+            <p className="eyebrow">What guides the work</p>
+            <h2 id="objectives-title" className="section-title mt-3">
+              Strategic objectives
+            </h2>
+          </div>
+          <ol className="divide-y divide-line border-y border-line">
+            {objectives.map(([title, text], index) => (
+              <li key={title} className="grid grid-cols-[2.5rem_1fr] gap-3 py-4">
+                <span className="pt-0.5 font-mono text-xs font-bold text-brand-ochre">
+                  0{index + 1}
+                </span>
+                <div>
+                  <h3 className="font-bold text-ink">{title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted">{text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section
+          className="grid gap-10 border-b border-line py-10 lg:grid-cols-[.7fr_1.3fr]"
+          aria-labelledby="policy-title"
+        >
+          <div>
+            <p className="eyebrow">Policy alignment</p>
+            <h2 id="policy-title" className="section-title mt-3">
+              Advocacy informed by public priorities
+            </h2>
+          </div>
+          <div className="space-y-5 text-sm leading-relaxed text-muted">
+            <div className="flex gap-3">
+              <Landmark aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-brand-forest" />
+              <p>
+                <strong className="text-ink">Renewed Hope Agenda.</strong> A4A’s campaign framework
+                centres on interpreting its policies for northern communities, including agriculture
+                and food security, education initiatives, and regional infrastructure.
+              </p>
             </div>
-            <h2 className="text-2xl font-bold text-[#121713]">Our Core Mission</h2>
-            <p className="text-sm text-[#121713]/80 leading-relaxed">
-              To organize, mobilize, and empower the student and youth population across the 19 Northern Nigerian States and the Federal Capital Territory through education, technological advancement, civic education, and policy advocacy.
+            <p>
+              Regional messaging may also reflect sub-regional priorities. The movement overview
+              identifies the HEARTS Agenda as one example for North Central. Specific policy claims
+              on this site should be linked to reliable sources before publication.
             </p>
           </div>
+        </section>
 
-          <div className="bg-white p-8 rounded-2xl border border-[#E2E6E2] shadow-sm space-y-4">
-            <div className="h-12 w-12 rounded-xl bg-[#C59B27] text-[#121713] flex items-center justify-center font-bold">
-              <Compass className="h-6 w-6" />
-            </div>
-            <h2 className="text-2xl font-bold text-[#121713]">Our Long-Term Vision</h2>
-            <p className="text-sm text-[#121713]/80 leading-relaxed">
-              A united, prosperous Northern Nigeria where every student and young professional has verifiable institutional representation, direct access to economic opportunities, and the digital tools required to excel on global stages.
-            </p>
-          </div>
-        </div>
-
-        {/* Strategic Manifesto & Principles */}
-        <div className="bg-white p-8 rounded-2xl border border-[#E2E6E2] shadow-sm space-y-6">
-          <h2 className="text-2xl font-bold text-[#0B4619]">
-            The 4 Foundational Pillars of the Movement
+        <section className="py-10" aria-labelledby="structure-title">
+          <p className="eyebrow">How A4A is organised</p>
+          <h2 id="structure-title" className="section-title mt-3 max-w-2xl">
+            A connected structure from state chapters to local communities
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="h-5 w-5 text-[#0B4619] shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-bold text-sm text-[#121713]">Academic Welfare & Subsidy Access</h3>
-                <p className="text-xs text-[#64748B] mt-1 leading-relaxed">
-                  Facilitating federal student loan enrollments (NELFUND), tuition assistance schemes, and campus hostel renovations.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="h-5 w-5 text-[#0B4619] shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-bold text-sm text-[#121713]">Digital Transformation & AI Literacy</h3>
-                <p className="text-xs text-[#64748B] mt-1 leading-relaxed">
-                  Setting up regional coding hubs, software engineering incubators, and remote work employment pipelines.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="h-5 w-5 text-[#0B4619] shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-bold text-sm text-[#121713]">Grassroots Democratic Inclusion</h3>
-                <p className="text-xs text-[#64748B] mt-1 leading-relaxed">
-                  Empowering elected campus directors and LGA coordinators with decentralized decision-making authority.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="h-5 w-5 text-[#0B4619] shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-bold text-sm text-[#121713]">Agro-Allied Youth Entrepreneurship</h3>
-                <p className="text-xs text-[#64748B] mt-1 leading-relaxed">
-                  Supporting young graduates in modernized irrigation farming, grain storage tech, and livestock value chains.
-                </p>
-              </div>
-            </div>
+          <div className="mt-7 divide-y divide-line border-y border-line">
+            {structure.map(({ title, text, icon: Icon }) => (
+              <article key={title} className="flex gap-4 py-5">
+                <Icon aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-brand-forest" />
+                <div>
+                  <h3 className="font-bold text-ink">{title}</h3>
+                  <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted">{text}</p>
+                </div>
+              </article>
+            ))}
           </div>
+        </section>
+
+        <div className="notice mt-2 flex flex-col gap-3 rounded-r-md sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-ink">
+            Interested in participating? Register your interest with A4A.
+          </p>
+          <Link className="button-primary w-full sm:w-auto" href="/register">
+            Registration <ArrowRight aria-hidden="true" className="h-4 w-4" />
+          </Link>
         </div>
       </main>
-
       <Footer />
     </div>
   );

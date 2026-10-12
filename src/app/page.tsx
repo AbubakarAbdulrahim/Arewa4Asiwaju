@@ -1,430 +1,213 @@
-import React from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import {
-  ShieldCheck,
-  ArrowRight,
-  GraduationCap,
-  Users,
-  MapPin,
-  Calendar,
-  CheckCircle2,
-  Award,
-  Sparkles,
-  Search,
-  ExternalLink,
-  BookOpen,
-  Briefcase,
-  Layers,
-} from "lucide-react";
+import { BannerTemplatePreview } from "@/components/banner/BannerTemplatePreview";
+import { PhotoCarousel } from "@/components/public/PhotoCarousel";
+import { ArrowRight, BookOpen, Map, UsersRound } from "lucide-react";
+import { ContentStatus } from "@/components/public/PublicPage";
+import { AnnouncementCard, EventCard } from "@/components/public/ContentCards";
+import { getAnnouncements, getEvents } from "@/lib/content/public-content";
 
-export default function HomePage() {
-  const stats = [
-    { label: "Northern States & FCT", value: "20", sub: "Complete regional coverage" },
-    { label: "Local Government Areas", value: "419", sub: "Grassroots mobilization" },
-    { label: "Tertiary Campus Chapters", value: "85+", sub: "Universities & Polytechnics" },
-    { label: "ID Verification", value: "100%", sub: "Cryptographic QR security" },
-  ];
+const priorities = [
+  {
+    number: "01",
+    title: "Organise locally",
+    copy: "Build connected state and ward structures that carry movement activity into local communities.",
+    icon: Map,
+  },
+  {
+    number: "02",
+    title: "Explain policy",
+    copy: "Translate federal priorities, including the Renewed Hope Agenda, into clear information for northern communities.",
+    icon: BookOpen,
+  },
+  {
+    number: "03",
+    title: "Include young people",
+    copy: "Create meaningful routes for youth and students to take part in advocacy, civic activity, and leadership.",
+    icon: UsersRound,
+  },
+];
 
-  const pillars = [
-    {
-      icon: GraduationCap,
-      title: "Student Welfare & Grants",
-      desc: "Advocating for educational subsidies, digital learning infrastructure, and student bursaries across all northern tertiary institutions.",
-    },
-    {
-      icon: Sparkles,
-      title: "Digital Skills & Tech Hubs",
-      desc: "Training over 100,000 northern youth in software engineering, AI, robotics, and digital marketing to power the emerging economy.",
-    },
-    {
-      icon: Users,
-      title: "Grassroots Civic Representation",
-      desc: "Organizing transparent, democratic youth councils from ward levels to the national secretariat, ensuring young voices guide policy.",
-    },
-    {
-      icon: Briefcase,
-      title: "Agri-Tech & Enterprise Grants",
-      desc: "Bridging modern agricultural mechanization and capital funding for ambitious youth farmers across the savannas and river basins.",
-    },
-  ];
+const featuredPhotos = [
+  {
+    src: "/brand/grand-patron-tinubu-760w.jpg",
+    alt: "Arewa for Asiwaju grand patron Bola Ahmed Tinubu",
+    objectPosition: "center 26%",
+  },
+];
 
-  const upcomingEvents = [
-    {
-      id: "arewa-youth-leadership-summit-2026",
-      title: "Arewa Youth Leadership & Digital Economy Summit 2026",
-      date: "OCT 24, 2026",
-      venue: "International Conference Centre (ICC), Central Area, Abuja",
-      tag: "National Summit",
-      badge: "badge-emerald",
-    },
-    {
-      id: "buk-campus-civic-symposium",
-      title: "BUK Campus Civic Mobilization Symposium",
-      date: "NOV 02, 2026",
-      venue: "Musa Abdullahi Auditorium, Bayero University Kano (New Campus)",
-      tag: "Campus Townhall",
-      badge: "badge-gold",
-    },
-  ];
-
-  const recentNews = [
-    {
-      slug: "launch-of-central-digital-portal",
-      title: "Arewa4Asiwaju Launches Central Digital Supporter Portal and High-Security Digital ID System",
-      date: "October 07, 2026",
-      category: "Press Release",
-      excerpt: "The official student and youth movement has unveiled its automated digital membership platform across the 19 northern states and the FCT.",
-    },
-    {
-      slug: "national-youth-leadership-tech-summit",
-      title: "National Youth Leadership & Tech Innovation Summit Announced for Abuja",
-      date: "October 04, 2026",
-      category: "Announcement",
-      excerpt: "Over 5,000 delegates from student union bodies, artisan councils, and youth directorates set to convene at the ICC Abuja.",
-    },
-  ];
-
+export default async function HomePage() {
+  const [news, events] = await Promise.all([getAnnouncements(), getEvents()]);
+  const upcomingEvents =
+    events.state === "ready"
+      ? events.items.filter((event) => new Date(event.end_date) >= new Date()).slice(0, 2)
+      : [];
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBF9F5]">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-
-      <main className="flex-1">
-        {/* HERO SECTION */}
-        <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 border-b border-[#E2E6E2]">
-          <div className="absolute inset-0 bg-[radial-gradient(#0B4619_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.04] pointer-events-none" />
-
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-              {/* Left Column: Headlines */}
-              <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0B4619]/10 text-[#0B4619] text-xs font-bold border border-[#0B4619]/20 shadow-sm">
-                  <ShieldCheck className="h-4 w-4 text-[#0B4619]" />
-                  <span>The Official Northern Student & Youth Wing</span>
-                </div>
-
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#121713] tracking-tight leading-[1.12]">
-                  Uniting Progressive Youth Across the{" "}
-                  <span className="text-[#0B4619]">19 Northern States</span> & FCT.
-                </h1>
-
-                <p className="text-base sm:text-lg text-[#121713]/75 max-w-2xl leading-relaxed">
-                  Join Nigeria&apos;s most organized grassroots student and youth movement. We champion student welfare, educational reform, technological skill acquisition, and economic inclusion under one authentic digital canopy.
-                </p>
-
-                {/* CTAs */}
-                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                  <Link
-                    href="/register"
-                    className="btn-primary w-full sm:w-auto text-base px-7 py-3.5 shadow-md hover:shadow-lg"
-                  >
-                    Join Movement & Get Digital ID
-                    <ArrowRight className="h-5 w-5" />
-                  </Link>
-
-                  <Link
-                    href="/verify-card"
-                    className="btn-outline w-full sm:w-auto text-base px-7 py-3.5 bg-white/60"
-                  >
-                    <Search className="h-4 w-4" />
-                    Verify Any Member ID Card
-                  </Link>
-                </div>
-
-                {/* Trust Badges */}
-                <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-[#64748B] font-medium">
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#0B4619]" />
-                    Instant Vector PDF Issuance
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#0B4619]" />
-                    NDPA 2023 Data Compliant
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#0B4619]" />
-                    Campus Chapter Verified
-                  </span>
-                </div>
+      <main id="main-content" className="flex-1">
+        <section className="border-b border-line bg-paper py-10 sm:py-14 lg:py-16">
+          <div className="site-container grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+            <div className="max-w-3xl">
+              <p className="eyebrow mb-5">AREWA FOR ASIWAJU STUDENT WING</p>
+              <h1 className="display-title max-w-3xl text-ink">
+                Organising Northern students to make policy matter locally.
+              </h1>
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
+                A4A connects young people with the Renewed Hope Agenda through grassroots organising,
+                policy advocacy, and meaningful student participation.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link className="button-primary" href="/register">
+                  Join the Student Wing <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </Link>
+                <Link className="button-secondary" href="/banner-generator">
+                  Create your banner
+                </Link>
               </div>
+            </div>
+            <PhotoCarousel slides={featuredPhotos} />
+          </div>
+        </section>
 
-              {/* Right Column: Interactive ID Card Hero Preview */}
-              <div className="lg:col-span-5 flex justify-center">
-                <div className="w-full max-w-md bg-white p-6 rounded-3xl border border-[#E2E6E2] shadow-xl relative space-y-5">
-                  <div className="flex items-center justify-between border-b border-[#E2E6E2] pb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded-full bg-red-400" />
-                      <div className="h-3 w-3 rounded-full bg-amber-400" />
-                      <div className="h-3 w-3 rounded-full bg-emerald-400" />
-                    </div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#0B4619]">
-                      Cryptographic Smart Credential
-                    </span>
-                  </div>
-
-                  {/* Visual ID Card Card Mock */}
-                  <div className="aspect-[85.6/53.98] rounded-2xl bg-gradient-to-br from-[#0B4619] to-[#06260d] text-white p-5 shadow-lg relative overflow-hidden flex flex-col justify-between border border-[#C59B27]/40">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-lg bg-[#C59B27] text-[#121713] font-bold text-xs flex items-center justify-center">
-                          A4A
-                        </div>
-                        <div>
-                          <p className="text-[11px] font-bold leading-tight">AREWA4ASIWAJU</p>
-                          <p className="text-[8px] text-[#C59B27] tracking-wider uppercase">
-                            Official Student Wing
-                          </p>
-                        </div>
-                      </div>
-                      <span className="text-[9px] font-bold bg-[#C59B27]/20 border border-[#C59B27]/40 px-2 py-0.5 rounded-full text-[#C59B27]">
-                        ACTIVE 2026
-                      </span>
-                    </div>
-
-                    <div className="my-auto grid grid-cols-12 gap-3 items-center">
-                      <div className="col-span-4 aspect-[3/4] bg-white/10 rounded-lg border border-[#C59B27]/50 flex flex-col items-center justify-center text-center">
-                        <div className="h-7 w-7 rounded-full bg-[#C59B27] text-[#121713] font-bold text-[10px] flex items-center justify-center mb-0.5">
-                          U
-                        </div>
-                        <span className="text-[7.5px] font-bold text-[#C59B27]">OFFICIAL</span>
-                      </div>
-                      <div className="col-span-8 space-y-1">
-                        <div>
-                          <span className="text-[7px] text-white/60 uppercase block">Name</span>
-                          <span className="text-xs font-bold">UMAR FAROUQ BELLO</span>
-                        </div>
-                        <div>
-                          <span className="text-[7px] text-white/60 uppercase block">Membership ID</span>
-                          <span className="text-xs font-mono font-bold text-[#C59B27]">
-                            A4A-2026-KN-000142
-                          </span>
-                        </div>
-                        <div className="text-[8px] text-white/80">
-                          <span>KANO STATE / BUK CHAPTER</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between text-[7px] text-white/60 pt-1 border-t border-white/10">
-                      <span>SECURE QR ENABLED</span>
-                      <span className="text-[#C59B27]">AREWA4ASIWAJU.ORG</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-xs text-[#64748B] text-center">
-                      Every verified supporter receives this digital credential with high-resolution vector PDF and tamper-proof verification QR code.
-                    </p>
-                    <Link
-                      href="/register"
-                      className="block text-center py-2.5 px-4 rounded-xl bg-[#0B4619]/10 text-[#0B4619] font-bold text-xs hover:bg-[#0B4619]/15 transition-colors"
-                    >
-                      Get Your Card in 2 Minutes →
-                    </Link>
-                  </div>
-                </div>
-              </div>
+        <section className="border-b border-line bg-surface py-5" aria-label="A4A reach and structure">
+          <div className="site-container grid gap-4 py-2 sm:grid-cols-3 sm:gap-0">
+            <div className="border-line sm:border-r sm:px-5 sm:first:pl-0">
+              <p className="font-bold text-brand-forest">19 Northern states + FCT</p>
+              <p className="mt-1 text-xs text-muted">A regional network with national reach</p>
+            </div>
+            <div className="border-line sm:border-r sm:px-5">
+              <p className="font-bold text-brand-forest">Grassroots organising</p>
+              <p className="mt-1 text-xs text-muted">Connecting state, LGA, and ward activity</p>
+            </div>
+            <div className="sm:px-5 sm:pr-0">
+              <p className="font-bold text-brand-forest">Student participation</p>
+              <p className="mt-1 text-xs text-muted">Creating meaningful routes for young people</p>
             </div>
           </div>
         </section>
 
-        {/* METRICS & STATS SECTION */}
-        <section className="py-12 bg-white border-b border-[#E2E6E2]">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-              {stats.map((st) => (
-                <div key={st.label} className="text-center p-4 rounded-2xl bg-[#FBF9F5] border border-[#E2E6E2]">
-                  <p className="text-3xl sm:text-4xl font-extrabold text-[#0B4619]">
-                    {st.value}
-                  </p>
-                  <p className="text-sm font-bold text-[#121713] mt-1">{st.label}</p>
-                  <p className="text-xs text-[#64748B] mt-0.5">{st.sub}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CORE PILLARS & INITIATIVES */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#C59B27]">
-              Strategic Foundations
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0B4619] tracking-tight">
-              Empowering Northern Nigerian Youth Through Purposeful Action
+        <section className="site-container py-14 sm:py-20" aria-labelledby="priorities-heading">
+          <div className="max-w-2xl">
+            <p className="eyebrow">Our priorities</p>
+            <h2 id="priorities-heading" className="section-title mt-3">
+              A movement built to connect policy and people
             </h2>
-            <p className="text-sm sm:text-base text-[#121713]/70">
-              Arewa4Asiwaju provides an organized platform that bridges grassroots youth aspirations directly with progressive governance policies.
-            </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {pillars.map((pillar) => {
-              const Icon = pillar.icon;
-              return (
-                <div
-                  key={pillar.title}
-                  className="card-elevated p-6 space-y-4 flex flex-col justify-between"
-                >
-                  <div className="space-y-4">
-                    <div className="h-12 w-12 rounded-xl bg-[#0B4619]/10 text-[#0B4619] flex items-center justify-center">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <h3 className="text-lg font-bold text-[#121713]">
-                      {pillar.title}
-                    </h3>
-                    <p className="text-sm text-[#121713]/70 leading-relaxed">
-                      {pillar.desc}
-                    </p>
-                  </div>
-                  <div className="pt-2 border-t border-[#E2E6E2]">
-                    <span className="text-xs font-bold text-[#0B4619] flex items-center gap-1">
-                      Priority Initiative <ArrowRight className="h-3 w-3" />
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <ol className="mt-9 grid gap-8 border-y border-line py-7 md:grid-cols-3 md:gap-6">
+            {priorities.map(({ number, title, copy, icon: Icon }) => (
+              <li key={number} className="min-w-0">
+                <span className="font-mono text-sm font-bold text-brand-ochre">{number}</span>
+                <h3 className="mt-3 flex items-center gap-2 text-lg font-bold text-ink">
+                  <Icon aria-hidden="true" className="h-5 w-5 shrink-0 text-brand-forest" />
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{copy}</p>
+              </li>
+            ))}
+          </ol>
         </section>
 
-        {/* LATEST NEWS & ANNOUNCEMENTS */}
-        <section className="py-20 bg-white border-y border-[#E2E6E2]">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <section className="pb-14 sm:pb-20" aria-labelledby="banner-heading">
+          <div className="site-container">
+            <div className="flex items-center justify-between gap-6 overflow-hidden rounded-xl bg-brand-forest p-6 text-white sm:p-9 lg:p-12">
+              <div className="max-w-2xl">
+                <p className="text-xs font-bold uppercase tracking-[.12em] text-white/75">
+                  Share your support
+                </p>
+                <h2 id="banner-heading" className="mt-2 text-2xl font-bold leading-tight sm:text-3xl">
+                  Put your name on the A4A Student Wing banner.
+                </h2>
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/80">
+                  Create a personalised campaign banner with your photo and name, then download it
+                  to share.
+                </p>
+                <Link href="/banner-generator" className="button-secondary mt-5">
+                  Make your banner <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </Link>
+              </div>
+              <div className="hidden shrink-0 sm:block">
+                <BannerTemplatePreview />
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          className="border-y border-line bg-surface py-12 sm:py-16"
+          aria-labelledby="updates-heading"
+        >
+          <div className="site-container">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#C59B27]">
-                  Directorate of Media
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B4619]">
-                  Verified News & Press Statements
+                <p className="eyebrow">From A4A</p>
+                <h2 id="updates-heading" className="section-title mt-2">
+                  Updates and activities
                 </h2>
               </div>
-              <Link
-                href="/news"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0B4619] hover:underline"
-              >
-                View all news & releases <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {recentNews.map((item) => (
-                <article
-                  key={item.slug}
-                  className="p-6 rounded-2xl bg-[#FBF9F5] border border-[#E2E6E2] space-y-3 hover:border-[#0B4619]/40 transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="badge-emerald">{item.category}</span>
-                    <span className="text-xs text-[#64748B]">{item.date}</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#121713] hover:text-[#0B4619] transition-colors">
-                    <Link href={`/news/${item.slug}`}>{item.title}</Link>
-                  </h3>
-                  <p className="text-sm text-[#121713]/70 leading-relaxed">
-                    {item.excerpt}
-                  </p>
-                  <Link
-                    href={`/news/${item.slug}`}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-[#0B4619] hover:underline pt-2"
-                  >
-                    Read full statement <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* UPCOMING EVENTS */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-[#C59B27]">
-                Civic Mobilization Calendar
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B4619]">
-                Upcoming Summits & Campus Rallies
-              </h2>
-            </div>
-            <Link
-              href="/events"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0B4619] hover:underline"
-            >
-              Browse event schedule <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {upcomingEvents.map((evt) => (
-              <div
-                key={evt.id}
-                className="bg-white p-6 rounded-2xl border border-[#E2E6E2] shadow-sm flex flex-col justify-between space-y-4 hover:shadow-md transition-shadow"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className={evt.badge}>{evt.tag}</span>
-                    <span className="text-xs font-bold text-[#0B4619] flex items-center gap-1">
-                      <Calendar className="h-3.5 w-3.5" />
-                      {evt.date}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#121713]">
-                    {evt.title}
-                  </h3>
-                  <p className="text-xs text-[#64748B] flex items-start gap-1.5">
-                    <MapPin className="h-4 w-4 text-[#C59B27] shrink-0 mt-0.5" />
-                    <span>{evt.venue}</span>
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-[#E2E6E2] flex items-center justify-between">
-                  <span className="text-xs text-[#64748B]">Digital Member Pass Required</span>
-                  <Link
-                    href={`/events/${evt.id}`}
-                    className="btn-primary py-2 px-4 text-xs"
-                  >
-                    RSVP Attendance
-                  </Link>
-                </div>
+              <div className="flex gap-4 text-sm font-bold text-brand-forest">
+                <Link className="underline-offset-4 hover:underline" href="/news">
+                  All news
+                </Link>
+                <Link className="underline-offset-4 hover:underline" href="/events">
+                  All events
+                </Link>
               </div>
-            ))}
+            </div>
+            <div className="mt-7 grid gap-10 md:grid-cols-2">
+              <section aria-labelledby="latest-news-heading">
+                <h3 id="latest-news-heading" className="font-bold text-ink">
+                  Latest news
+                </h3>
+                <div className="mt-2">
+                  {news.state !== "ready" ? (
+                    <ContentStatus state={news.state} />
+                  ) : news.items.length === 0 ? (
+                    <ContentStatus state="empty" />
+                  ) : (
+                    news.items
+                      .slice(0, 2)
+                      .map((item) => <AnnouncementCard key={item.id} item={item} />)
+                  )}
+                </div>
+              </section>
+              <section aria-labelledby="upcoming-events-heading">
+                <h3 id="upcoming-events-heading" className="font-bold text-ink">
+                  Upcoming events
+                </h3>
+                <div className="mt-2">
+                  {events.state !== "ready" ? (
+                    <ContentStatus state={events.state} />
+                  ) : upcomingEvents.length === 0 ? (
+                    <ContentStatus state="empty" />
+                  ) : (
+                    upcomingEvents.map((event) => <EventCard key={event.id} item={event} />)
+                  )}
+                </div>
+              </section>
+            </div>
           </div>
         </section>
 
-        {/* BOTTOM CALL TO ACTION BANNER */}
-        <section className="bg-[#0B4619] text-white py-16 px-4 sm:px-6 lg:px-8 border-t border-[#C59B27]/40">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
-            <span className="badge-gold">
-              BECOME PART OF PROGRESSIVE HISTORY
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-              Ready to Represent Your Campus and Community?
-            </h2>
-            <p className="text-base text-white/80 max-w-2xl mx-auto leading-relaxed">
-              Register now to receive your official membership number, secure digital identification card, and gain voting representation in your chapter.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-              <Link
-                href="/register"
-                className="btn-secondary text-base px-8 py-3.5 w-full sm:w-auto shadow-lg"
-              >
-                Start Supporter Registration
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center justify-center px-6 py-3.5 text-base font-semibold text-white border border-white/30 rounded-lg hover:bg-white/10 w-full sm:w-auto transition-colors"
-              >
-                Learn More About A4A
-              </Link>
+        <section className="bg-brand-forest py-12 text-white sm:py-16">
+          <div className="site-container flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs font-bold uppercase tracking-[.12em] text-white/75">
+                Take part
+              </p>
+              <h2 className="mt-2 text-2xl font-bold leading-tight sm:text-3xl">
+                Join the conversation and connect with A4A.
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-white/80">
+                Use the registration form to share your interest in the movement.
+              </p>
             </div>
+            <Link className="button-secondary w-full shrink-0 sm:w-auto" href="/register">
+              Register your interest <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </Link>
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   );

@@ -1,139 +1,139 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, ShieldCheck, UserCheck, ArrowRight } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
+
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Leadership", href: "/leadership" },
+  { label: "News", href: "/news" },
+  { label: "Events", href: "/events" },
+  { label: "Contact", href: "/contact" },
+];
 
 export function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Leadership", href: "/leadership" },
-    { label: "News & Media", href: "/news" },
-    { label: "Events", href: "/events" },
-    { label: "Verify ID Card", href: "/verify-card" },
-    { label: "FAQ", href: "/faq" },
-  ];
-
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
-  };
+  useEffect(() => {
+    if (!open) return;
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#E2E6E2] bg-[#FBF9F5]/95 backdrop-blur-md transition-all">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-20">
-        {/* Brand Lockup */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative flex h-11 w-11 items-center justify-center rounded-lg bg-[#0B4619] text-white shadow-md transition-transform group-hover:scale-105">
-            <span className="font-bold text-lg tracking-wider text-[#C59B27]">A4A</span>
-            <div className="absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#C59B27]" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-xl leading-tight text-[#0B4619] tracking-tight">
-              AREWA<span className="text-[#C59B27]">4</span>ASIWAJU
+    <header className="sticky top-0 z-40 border-b border-line bg-paper">
+      <div className="brand-stripe" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="site-container flex min-h-14 items-center justify-between gap-3">
+        <Link
+          href="/"
+          className="rounded-sm py-2 leading-tight no-underline"
+          aria-label="Arewa for Asiwaju Student Wing home"
+        >
+          <span className="flex items-center gap-2.5">
+            <Image
+              src="/brand/arewa-for-asiwaju-a4a.jpg"
+              alt=""
+              width={40}
+              height={40}
+              preload
+              className="h-10 w-10 rounded-full object-cover"
+            />
+            <span>
+              <span className="block text-base font-extrabold tracking-tight text-brand-forest sm:text-lg">
+                AREWA FOR ASIWAJU
+              </span>
+              <span className="block text-[.6rem] font-bold tracking-[.14em] text-muted">
+                STUDENT WING
+              </span>
             </span>
-            <span className="text-[11px] font-semibold tracking-wider text-[#64748B] uppercase">
-              Student & Youth Movement
-            </span>
-          </div>
+          </span>
         </Link>
 
-        {/* Desktop Nav Links */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-          {navLinks.map((link) => {
-            const active = isActive(link.href);
+        <nav aria-label="Main navigation" className="hidden items-center gap-0.5 lg:flex">
+          {navLinks.map(({ label, href }) => {
+            const active = href === "/" ? pathname === href : pathname.startsWith(href);
             return (
               <Link
-                key={link.href}
-                href={link.href}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  active
-                    ? "text-[#0B4619] bg-[#0B4619]/8 font-semibold"
-                    : "text-[#121713]/80 hover:text-[#0B4619] hover:bg-black/5"
-                }`}
+                key={href}
+                href={href}
+                aria-current={active ? "page" : undefined}
+                className={`rounded-sm px-2 py-1.5 text-xs font-semibold no-underline transition-colors ${active ? "text-brand-forest underline decoration-2 underline-offset-[.45rem]" : "text-ink hover:bg-[#e9eee9]"}`}
               >
-                {link.label}
+                {label}
               </Link>
             );
           })}
         </nav>
 
-        {/* Desktop Action CTAs */}
-        <div className="hidden sm:flex items-center gap-3">
-          <Link
-            href="/portal"
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-[#0B4619] hover:bg-[#0B4619]/10 rounded-md transition-colors"
-          >
-            <UserCheck className="h-4 w-4" />
-            Portal
+        <div className="hidden items-center gap-1.5 lg:flex">
+          <Link href="/admin-login" className="button-secondary px-3 py-2 text-xs">
+            Login
           </Link>
-          <Link
-            href="/register"
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#0B4619] hover:bg-[#06260d] rounded-lg shadow-sm hover:shadow transition-all"
-          >
-            Join Movement
-            <ArrowRight className="h-4 w-4" />
+          <Link href="/register" className="button-primary px-3 py-2 text-xs">
+            Join the movement <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
           </Link>
         </div>
 
-        {/* Mobile Hamburger Button */}
         <button
           type="button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-[#121713] hover:bg-black/5 focus:outline-none"
-          aria-label="Toggle navigation menu"
+          className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-sm border border-line bg-surface text-ink hover:bg-[#e9eee9] focus-visible:outline lg:hidden"
+          aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
+          onClick={() => setOpen((value) => !value)}
         >
-          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {open ? (
+            <X aria-hidden="true" className="h-5 w-5" />
+          ) : (
+            <Menu aria-hidden="true" className="h-5 w-5" />
+          )}
         </button>
       </div>
-
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-[#E2E6E2] bg-[#FBF9F5] px-4 pt-2 pb-6 space-y-2 shadow-lg">
-          <div className="space-y-1">
-            {navLinks.map((link) => {
-              const active = isActive(link.href);
+      {open && (
+        <nav
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+          className="border-t border-line bg-paper px-4 py-3 lg:hidden"
+        >
+          <div className="site-container flex flex-col gap-1">
+            {navLinks.map(({ label, href }) => {
+              const active = href === "/" ? pathname === href : pathname.startsWith(href);
               return (
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-3 py-2.5 rounded-md text-base font-medium ${
-                    active
-                      ? "text-[#0B4619] bg-[#0B4619]/10 font-semibold"
-                      : "text-[#121713] hover:bg-black/5"
-                  }`}
+                  key={href}
+                  href={href}
+                  aria-current={active ? "page" : undefined}
+                  onClick={() => setOpen(false)}
+                  className={`rounded-sm px-3 py-3 text-base font-semibold no-underline ${active ? "bg-[#e9eee9] text-brand-forest" : "text-ink hover:bg-[#e9eee9]"}`}
                 >
-                  {link.label}
+                  {label}
                 </Link>
               );
             })}
-          </div>
-
-          <div className="pt-4 border-t border-[#E2E6E2] space-y-2">
             <Link
-              href="/portal"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg font-semibold text-[#0B4619] border border-[#0B4619] hover:bg-[#0B4619]/5"
+              href="/admin-login"
+              onClick={() => setOpen(false)}
+              className="button-secondary mt-1 w-full"
             >
-              <UserCheck className="h-4 w-4" />
-              Member Portal Sign In
+              Login
             </Link>
-            <Link
-              href="/register"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg font-semibold text-white bg-[#0B4619] hover:bg-[#06260d]"
-            >
-              Register & Get Digital ID Card
-              <ArrowRight className="h-4 w-4" />
+            <Link href="/register" onClick={() => setOpen(false)} className="button-primary mt-2">
+              Join the Student Wing <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Link>
           </div>
-        </div>
+        </nav>
       )}
     </header>
   );
