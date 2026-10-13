@@ -51,7 +51,7 @@ export function Navbar() {
               className="h-10 w-10 rounded-full object-cover"
             />
             <span>
-              <span className="block text-base font-extrabold tracking-tight text-brand-forest sm:text-lg">
+              <span className="block text-base font-extrabold tracking-tight text-brand-forest sm:text-sm">
                 AREWA FOR ASIWAJU
               </span>
               <span className="block text-[.6rem] font-bold tracking-[.14em] text-muted">
@@ -69,7 +69,7 @@ export function Navbar() {
                 key={href}
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`rounded-sm px-2 py-1.5 text-xs font-semibold no-underline transition-colors ${active ? "text-brand-forest underline decoration-2 underline-offset-[.45rem]" : "text-ink hover:bg-[#e9eee9]"}`}
+                className={`rounded-sm px-2 py-1.5 text-sm font-semibold no-underline transition-colors ${active ? "text-brand-forest underline decoration-2 underline-offset-[.45rem]" : "text-ink hover:bg-[#e9eee9]"}`}
               >
                 {label}
               </Link>

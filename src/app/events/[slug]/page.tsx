@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PublicPage } from "@/components/public/PublicPage";
+import { PublicContentImage } from "@/components/public/ContentCards";
 import { getEvent } from "@/lib/content/public-content";
 
 export async function generateMetadata({
@@ -40,6 +41,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-ink sm:text-5xl">
           {event.title}
         </h1>
+        <PublicContentImage src={event.banner_url} alt={`${event.title} event flyer`} />
         <dl className="mt-7 grid gap-4 border-y border-line py-5 sm:grid-cols-2">
           <div>
             <dt className="text-xs font-bold uppercase tracking-wide text-muted">Starts</dt>

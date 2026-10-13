@@ -36,6 +36,7 @@ const eventSchema = z.object({
   startDate: z.string().datetime({ offset: true }),
   endDate: z.string().datetime({ offset: true }),
   capacity: z.number().int().positive().nullable().optional(),
+  bannerUrl: z.string().url().startsWith("https://").max(1000).nullable().optional(),
   isPublished: z.boolean(),
   orgUnitId: optionalUuid,
 });
@@ -50,7 +51,7 @@ const contentSchema = z.object({
   excerpt: z.string().trim().min(5).max(500),
   content: z.string().trim().min(10).max(30000),
   category: z.enum(["announcement", "press_release", "campaign", "editorial"]),
-  coverImage: z.string().url().max(1000).nullable().optional(),
+  coverImage: z.string().url().startsWith("https://").max(1000).nullable().optional(),
   isPublished: z.boolean(),
   authorName: z.string().trim().min(2).max(150),
 });
@@ -177,7 +178,7 @@ export async function POST(request: NextRequest) {
       });
       break;
     case "event.save":
-      result = await supabase.rpc("admin_save_event", {
+      result = await supabase.rpc("admin_save_event_with_banner", {
         p_id: input.id ?? null,
         p_title: input.title,
         p_slug: input.slug,
@@ -193,6 +194,7 @@ export async function POST(request: NextRequest) {
         p_capacity: input.capacity ?? null,
         p_is_published: input.isPublished,
         p_org_unit_id: input.orgUnitId ?? null,
+        p_banner_url: input.bannerUrl ?? null,
       });
       break;
     case "content.save":

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PublicPage } from "@/components/public/PublicPage";
+import { PublicContentImage } from "@/components/public/ContentCards";
 import { getAnnouncement } from "@/lib/content/public-content";
 
 export async function generateMetadata({
@@ -36,6 +37,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-ink sm:text-5xl">
           {item.title}
         </h1>
+        <PublicContentImage src={item.cover_image} alt={`${item.title} news image`} />
         {item.published_at && (
           <time className="mt-4 block text-sm text-muted" dateTime={item.published_at}>
             {new Intl.DateTimeFormat("en-NG", {

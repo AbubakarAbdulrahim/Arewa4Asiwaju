@@ -17,7 +17,7 @@ export function BannerTemplatePreview() {
         canvas,
         {
           name: "Your Name",
-          position: "Coordinator Students Wing, A4A",
+          position: "",
           photo: null,
           logo,
           zoom: 1,

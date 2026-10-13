@@ -8,6 +8,7 @@ export type AdminField = {
   required?: boolean;
   options?: string[];
   placeholder?: string;
+  helpText?: string;
 };
 
 export function AdminActionForm({
@@ -98,6 +99,11 @@ export function AdminActionForm({
                     placeholder={field.placeholder}
                     className="mt-1 block min-h-11 w-full rounded-sm border border-line bg-white px-3 font-normal"
                   />
+                )}
+                {field.helpText && (
+                  <span className="mt-1 block text-xs font-normal leading-5 text-muted">
+                    {field.helpText}
+                  </span>
                 )}
               </>
             )}

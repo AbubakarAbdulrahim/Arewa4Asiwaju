@@ -89,8 +89,8 @@ export function DigitalIdCard({
                   <div className="h-9 w-9 rounded-full bg-[#0B4619] text-[#C59B27] font-bold text-xs flex items-center justify-center shadow">
                     {fullName.charAt(0)}
                   </div>
-                  <span className="text-[9px] font-bold text-[#0B4619] mt-1">PHOTO</span>
-                  <span className="text-[8px] text-[#64748B]">MEMBER</span>
+                  {/* <span className="text-[9px] font-bold text-[#0B4619] mt-1">PHOTO</span>
+                  <span className="text-[8px] text-[#64748B]">MEMBER</span> */}
                 </div>
               </div>
 
@@ -165,7 +165,7 @@ export function DigitalIdCard({
               <span className="text-[#0B4619] font-semibold flex items-center gap-1">
                 <RefreshCw className="h-2.5 w-2.5" /> Membership details
               </span>
-              <span>EXPIRES: {formattedExpiry}</span>
+              {/* <span>EXPIRES: {formattedExpiry}</span> */}
             </div>
           </div>
 

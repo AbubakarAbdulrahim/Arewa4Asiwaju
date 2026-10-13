@@ -53,6 +53,12 @@ export default async function EventsAdminPage() {
               options: ["rally", "symposium", "training", "outreach", "meeting"],
             },
             { name: "venue", label: "Venue or meeting details", required: true },
+            {
+              name: "bannerUrl",
+              label: "Event photo or flyer URL",
+              type: "url",
+              helpText: "Use a public HTTPS image URL from the configured Supabase Storage project.",
+            },
             { name: "stateCode", label: "State code", required: true },
             { name: "lgaName", label: "LGA" },
             { name: "orgUnitId", label: "Organisational unit UUID" },

@@ -22,7 +22,7 @@ export default async function NewsPage() {
       {result.state !== "ready" || result.items.length === 0 ? (
         <ContentStatus state={result.state === "ready" ? "empty" : result.state} />
       ) : (
-        <div className="divide-y divide-line">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {result.items.map((item) => (
             <AnnouncementCard key={item.id} item={item} />
           ))}

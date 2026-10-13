@@ -439,7 +439,7 @@ export function drawBanner(
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.font = "700 27px Georgia, serif";
-  ctx.fillText("Coordinator Students Wing, A4A", 382, 972);
+  ctx.fillText("Student Wing, A4A", 382, 972);
   ctx.restore();
   drawSocialFooter(ctx);
 }

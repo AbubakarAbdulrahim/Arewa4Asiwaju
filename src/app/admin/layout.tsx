@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AdminMfaGate } from "@/components/admin/AdminMfaGate";
 import { getAdminSession, isAdministrator } from "@/lib/admin/server";
@@ -21,6 +22,9 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
       </main>
     );
   }
+  // Admin pages depend on the current request's authenticated Supabase session.
+  // Keep request-time auth work out of the prerendered shell.
+  await connection();
   const { supabase, user, name, roles } = await getAdminSession();
   if (!user) redirect("/admin-login");
   if (!isAdministrator(roles)) {

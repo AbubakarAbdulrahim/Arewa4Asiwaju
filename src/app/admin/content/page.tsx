@@ -50,7 +50,12 @@ export default async function ContentAdminPage() {
               options: ["announcement", "press_release", "campaign", "editorial"],
             },
             { name: "authorName", label: "Byline", required: true },
-            { name: "coverImage", label: "Cover image URL", type: "url" },
+            {
+              name: "coverImage",
+              label: "Cover image URL",
+              type: "url",
+              helpText: "Use a public HTTPS image URL from the configured Supabase Storage project.",
+            },
             { name: "isPublished", label: "Publish now", type: "checkbox" },
             { name: "excerpt", label: "Short summary", type: "textarea", required: true },
             { name: "content", label: "Article content", type: "textarea", required: true },

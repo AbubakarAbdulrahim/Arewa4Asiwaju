@@ -25,7 +25,7 @@ export default async function EventsPage() {
       {result.state !== "ready" || upcoming.length === 0 ? (
         <ContentStatus state={result.state === "ready" ? "empty" : result.state} />
       ) : (
-        <div className="divide-y divide-line">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {upcoming.map((event) => (
             <EventCard key={event.id} item={event} />
           ))}
