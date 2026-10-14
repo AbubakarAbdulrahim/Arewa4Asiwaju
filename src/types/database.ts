@@ -48,6 +48,7 @@ export interface Profile {
   occupation?: string | null;
   is_student?: boolean | null;
   voter_card_status?: "yes" | "no" | "prefer_not_to_say" | null;
+  voter_card_number?: string | null;
   created_at: string;
   updated_at: string;
 }

@@ -9,6 +9,7 @@ export interface CardGenerationInput {
   stateName: string;
   stateCode: string;
   lgaName: string;
+  wardName?: string | null;
   institutionName?: string | null;
   photoBytes?: Uint8Array | null;
   issuedAt: Date | string;
@@ -254,7 +255,24 @@ export async function generateMembershipCardPdfTemplate(
     color: ink,
   });
 
-  const institutionLabelY = locationLabelY - 26;
+  const wardLabelY = locationLabelY - 26;
+  front.drawText("WARD", {
+    x: detailsX,
+    y: wardLabelY,
+    size: 6.5,
+    font: bold,
+    color: muted,
+  });
+  drawFittedText(front, input.wardName?.toUpperCase() || "NOT RECORDED", bold, {
+    x: detailsX,
+    y: wardLabelY - 12,
+    size: 8.5,
+    minSize: 7,
+    maxWidth: detailsWidth,
+    color: ink,
+  });
+
+  const institutionLabelY = locationLabelY - 52;
   if (input.institutionName) {
     front.drawText("INSTITUTION", {
       x: detailsX,
@@ -326,7 +344,7 @@ export async function generateMembershipCardPdfTemplate(
   drawCenteredText(back, "MEMBERSHIP IDENTIFIER", bold, 6.5, 125, forest);
   drawCenteredText(back, "This number identifies your membership; it is not a password.", regular, 7.5, 108, ink);
   drawCenteredText(back, "Not a national identity card or government-issued credential.", regular, 7, 71, muted);
-  drawCenteredText(back, "Support: 09122628654  |  009013113304", bold, 7.5, 51, forest);
+  drawCenteredText(back, "Support: 09122628654  |  09013113304", bold, 7.5, 51, forest);
   drawCenteredText(back, "Keep your card and verification QR private.", regular, 6.5, 31, muted);
   back.drawRectangle({ x: 0, y: 0, width, height: 6, color: forest });
 

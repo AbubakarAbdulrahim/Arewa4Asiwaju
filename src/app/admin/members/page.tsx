@@ -15,11 +15,11 @@ export default async function AdminMembersPage({
   const canChangeStatus = canAdminister(roles, ["super_admin", "membership_officer"]);
   return (
     <div>
-      <p className="eyebrow">Membership</p>
-      <h2 className="section-title mt-2">Member records</h2>
+      <p className="eyebrow">People</p>
+      <h2 className="section-title mt-2">Members</h2>
       <p className="mt-2 max-w-3xl text-sm text-muted">
-        Searches and filters run in the database. Results are limited to 25 records per page and to
-        your assigned organisational scope.
+        Find a member by name or membership number. Results are limited to 25 per page and only
+        include the areas assigned to your account.
       </p>
       <div className="mt-5">
         <MembersWorkspace

@@ -20,6 +20,35 @@ const statuses: MembershipStatus[] = [
   "flagged",
   "revoked",
 ];
+const statusLabels: Record<MembershipStatus, string> = {
+  pending_verification: "Awaiting review",
+  active: "Active",
+  suspended: "Suspended",
+  flagged: "Needs attention",
+  revoked: "Revoked",
+};
+const states = [
+  ["AD", "Adamawa"],
+  ["BA", "Bauchi"],
+  ["BN", "Benue"],
+  ["BO", "Borno"],
+  ["GO", "Gombe"],
+  ["JI", "Jigawa"],
+  ["KD", "Kaduna"],
+  ["KN", "Kano"],
+  ["KT", "Katsina"],
+  ["KE", "Kebbi"],
+  ["KO", "Kogi"],
+  ["KW", "Kwara"],
+  ["NA", "Nasarawa"],
+  ["NI", "Niger"],
+  ["PL", "Plateau"],
+  ["SO", "Sokoto"],
+  ["TA", "Taraba"],
+  ["YO", "Yobe"],
+  ["ZA", "Zamfara"],
+  ["FCT", "FCT (Abuja)"],
+];
 
 export function MembersWorkspace({
   canChangeStatus,
@@ -158,19 +187,25 @@ export function MembersWorkspace({
             <option value="">All statuses</option>
             {statuses.map((item) => (
               <option key={item} value={item}>
-                {item.replaceAll("_", " ")}
+                {statusLabels[item]}
               </option>
             ))}
           </select>
         </label>
         <label className="text-sm font-semibold">
-          State code
-          <input
+          State
+          <select
             value={state}
-            onChange={(event) => setState(event.target.value.toUpperCase())}
-            maxLength={10}
-            className="mt-1 min-h-11 w-full rounded-sm border border-line px-3 font-normal"
-          />
+            onChange={(event) => setState(event.target.value)}
+            className="mt-1 min-h-11 w-full rounded-sm border border-line bg-white px-3 font-normal"
+          >
+            <option value="">All states in your area</option>
+            {states.map(([code, name]) => (
+              <option key={code} value={code}>
+                {name}
+              </option>
+            ))}
+          </select>
         </label>
         <button type="submit" className="button-primary self-end">
           Search
@@ -239,20 +274,32 @@ export function MembersWorkspace({
                   <td className="px-3 py-3">
                     {new Date(member.created_at).toLocaleDateString("en-NG")}
                   </td>
-                  <td className="px-3 py-3 capitalize">{member.status.replaceAll("_", " ")}</td>
+                  <td className="px-3 py-3">
+                    <span className="rounded-full bg-[#f0f3f0] px-2.5 py-1 text-xs font-semibold">
+                      {statusLabels[member.status]}
+                    </span>
+                  </td>
                   {canChangeStatus && (
                     <td className="px-3 py-3">
                       <select
                         aria-label={`New status for ${member.membership_number}`}
                         defaultValue={member.status}
-                        onChange={(event) =>
-                          void setMemberStatus(member.id, event.target.value as MembershipStatus)
-                        }
+                        onChange={(event) => {
+                          const nextStatus = event.target.value as MembershipStatus;
+                          if (
+                            nextStatus !== member.status &&
+                            window.confirm(
+                              `Change ${member.full_name}'s status to ${statusLabels[nextStatus]}?`,
+                            )
+                          )
+                            void setMemberStatus(member.id, nextStatus);
+                          else event.target.value = member.status;
+                        }}
                         className="min-h-10 rounded-sm border border-line bg-white px-2"
                       >
                         {statuses.map((item) => (
                           <option key={item} value={item}>
-                            {item.replaceAll("_", " ")}
+                            {statusLabels[item]}
                           </option>
                         ))}
                       </select>

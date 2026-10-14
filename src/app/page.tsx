@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
 import { BannerTemplatePreview } from "@/components/banner/BannerTemplatePreview";
 import { PhotoCarousel } from "@/components/public/PhotoCarousel";
 import { RegionalReach } from "@/components/public/RegionalReach";
@@ -338,13 +339,14 @@ export default async function HomePage() {
                 Use the registration form to share your interest in the movement.
               </p>
             </div>
-            <Link className="button-secondary w-full shrink-0 sm:w-auto" href="/register">
+            <Link className="button-secondary button-on-green w-full shrink-0 sm:w-auto" href="/register">
               Register your interest <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Link>
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer reserveFloatingActionSpace />
+      <WhatsAppFab />
     </div>
   );
 }

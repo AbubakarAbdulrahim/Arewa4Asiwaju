@@ -5,6 +5,8 @@ export default async function LeadershipAdminPage() {
   const { supabase } = await getAdminSession();
   const { data, error } = await supabase.rpc("admin_list_leadership");
   const rows = !error && Array.isArray(data) ? (data as unknown as Record<string, unknown>[]) : [];
+  const { data: unitsData } = await supabase.rpc("admin_list_units");
+  const units = Array.isArray(unitsData) ? (unitsData as Record<string, unknown>[]) : [];
   return (
     <div>
       <p className="eyebrow">Public information</p>
@@ -15,19 +17,13 @@ export default async function LeadershipAdminPage() {
       </p>
       {error && (
         <p role="status" className="notice mt-4">
-          Leadership management is pending the Phase 7 database migration.
+          Leadership information is not available right now. Refresh this page or contact the system
+          administrator.
         </p>
       )}
       <div className="mt-5">
         <AdminDataTable
-          columns={[
-            "id",
-            "full_name",
-            "title",
-            "organisational_unit_id",
-            "display_order",
-            "is_published",
-          ]}
+          columns={["full_name", "title", "is_published", "display_order"]}
           rows={rows}
         />
       </div>
@@ -35,11 +31,25 @@ export default async function LeadershipAdminPage() {
         <AdminActionForm
           title="Create or update a leadership profile"
           action="leadership.save"
+          records={rows}
           fields={[
-            { name: "id", label: "Profile UUID when updating" },
+            {
+              name: "id",
+              label: "Profile to update (leave blank to create)",
+              type: "select",
+              options: rows.map((row) => ({
+                value: String(row.id),
+                label: `${String(row.full_name)} · ${String(row.title)}`,
+              })),
+            },
             { name: "fullName", label: "Full name", required: true },
             { name: "title", label: "Official title", required: true },
-            { name: "orgUnitId", label: "Organisational unit UUID" },
+            {
+              name: "orgUnitId",
+              label: "Organisational area",
+              type: "select",
+              options: units.map((unit) => ({ value: String(unit.id), label: String(unit.name) })),
+            },
             { name: "displayOrder", label: "Display order", type: "number", required: true },
             { name: "photoUrl", label: "Approved photo URL", type: "url" },
             { name: "isPublished", label: "Publish after verification", type: "checkbox" },

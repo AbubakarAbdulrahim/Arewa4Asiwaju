@@ -51,7 +51,7 @@ export function Navbar() {
               className="h-10 w-10 rounded-full object-cover"
             />
             <span>
-              <span className="block text-base font-extrabold tracking-tight text-brand-forest sm:text-sm">
+              <span className="block text-sm font-extrabold tracking-tight text-brand-forest">
                 AREWA FOR ASIWAJU
               </span>
               <span className="block text-[.6rem] font-bold tracking-[.14em] text-muted">
@@ -78,11 +78,11 @@ export function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-1.5 lg:flex">
-          <Link href="/admin-login" className="button-secondary px-3 py-2 text-xs">
+          <Link href="/login" className="button-secondary px-3 py-2 text-xs">
             Login
           </Link>
           <Link href="/register" className="button-primary px-3 py-2 text-xs">
-            Join the movement <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
+            Join the Student Wing <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
           </Link>
         </div>
 
@@ -123,7 +123,7 @@ export function Navbar() {
               );
             })}
             <Link
-              href="/admin-login"
+              href="/login"
               onClick={() => setOpen(false)}
               className="button-secondary mt-1 w-full"
             >

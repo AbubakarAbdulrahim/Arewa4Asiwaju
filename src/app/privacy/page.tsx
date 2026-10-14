@@ -40,7 +40,7 @@ export default function PrivacyPage() {
             Membership and consent records are kept while membership is active and for up to 24
             months after it ends, then securely deleted or de-identified unless a legal requirement
             or unresolved claim requires longer. You can ask about your information or request
-            access, correction or deletion by calling 09122628654 or 009013113304.
+            access, correction or deletion by calling 09122628654 or 09013113304.
           </p>
         </section>
         <p>

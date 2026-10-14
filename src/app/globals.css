@@ -153,6 +153,14 @@ a {
 .btn-primary:hover {
   background: var(--brand-forest-dark);
 }
+.button-primary.button-on-dark {
+  background: #fff;
+  color: var(--brand-forest);
+}
+.button-primary.button-on-dark:hover {
+  background: #edf4ef;
+  color: var(--brand-forest-dark);
+}
 .button-primary:disabled,
 .btn-primary:disabled {
   cursor: not-allowed;
@@ -170,6 +178,16 @@ a {
 .btn-secondary:hover,
 .btn-outline:hover {
   border-color: var(--brand-forest);
+  color: var(--brand-forest);
+}
+.button-on-green {
+  border-color: rgb(255 255 255 / 75%);
+  background: transparent;
+  color: #fff;
+}
+.button-on-green:hover {
+  border-color: #fff;
+  background: #fff;
   color: var(--brand-forest);
 }
 .button-secondary:disabled,
@@ -217,7 +235,8 @@ a {
   color: #62410f;
 }
 
-.field-control {
+.field-control,
+.field-input {
   width: 100%;
   min-height: 2.875rem;
   border: 1px solid #89948c;
@@ -253,10 +272,12 @@ a {
   outline: 3px solid color-mix(in srgb, var(--focus) 30%, transparent);
   outline-offset: 1px;
 }
-.field-control::placeholder {
+.field-control::placeholder,
+.field-input::placeholder {
   color: #647067;
 }
-.field-control:focus-visible {
+.field-control:focus-visible,
+.field-input:focus-visible {
   border-color: var(--focus);
   outline: 3px solid color-mix(in srgb, var(--focus) 30%, transparent);
   outline-offset: 1px;

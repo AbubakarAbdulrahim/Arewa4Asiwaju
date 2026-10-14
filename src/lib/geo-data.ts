@@ -6,6 +6,37 @@ export interface NorthernState {
   lgas: string[];
 }
 
+import wardOptions from "./northern-ward-options.json";
+
+type WardOptions = Record<string, string[]>;
+const WARD_OPTIONS = wardOptions as WardOptions;
+
+export function getWardOptions(stateCode: string, lgaName: string): string[] {
+  return WARD_OPTIONS[`${stateCode}|${lgaName}`] ?? [];
+}
+
+function baseLgaCode(lgaName: string): string {
+  const tokens = lgaName.toUpperCase().match(/[A-Z0-9]+/g) ?? [];
+  const initials = [...tokens, "COUNCIL"].map((token) => token[0]).join("").slice(0, 3);
+  const letters = lgaName.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  let code = initials;
+  for (const letter of letters) {
+    if (code.length >= 3) break;
+    if (!code.includes(letter)) code += letter;
+  }
+  return code;
+}
+
+export function getLgaMembershipCode(stateCode: string, lgaName: string): string | null {
+  const state = NORTHERN_STATES.find((item) => item.code === stateCode);
+  if (!state?.lgas.includes(lgaName)) return null;
+  const base = baseLgaCode(lgaName);
+  const colliding = state.lgas
+    .filter((candidate) => baseLgaCode(candidate) === base)
+    .sort((left, right) => left.localeCompare(right, "en"));
+  return colliding.length > 1 ? `${base}${colliding.indexOf(lgaName) + 1}` : base;
+}
+
 export const NORTHERN_STATES: NorthernState[] = [
   {
     code: "AD",
