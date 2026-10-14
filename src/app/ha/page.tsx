@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
 import { getMessages } from "@/messages";
 
 export const metadata: Metadata = {
@@ -54,7 +55,8 @@ export default function HausaHomePage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer reserveFloatingActionSpace />
+      <WhatsAppFab />
     </div>
   );
 }

@@ -5,33 +5,48 @@ export default async function OrganisationPage() {
   const { supabase, roles } = await getAdminSession();
   const { data, error } = await supabase.rpc("admin_list_units");
   const units = !error && Array.isArray(data) ? (data as unknown as Record<string, unknown>[]) : [];
+  const unitNames = new Map(units.map((unit) => [String(unit.id), String(unit.name)]));
+  const displayUnits = units.map((unit) => ({
+    ...unit,
+    parent_name: unit.parent_id ? (unitNames.get(String(unit.parent_id)) ?? "Parent group") : "—",
+  }));
   const canCreate = canAdminister(roles, ["super_admin"]);
   return (
     <div>
       <p className="eyebrow">Organisation</p>
       <h2 className="section-title mt-2">Organisational hierarchy</h2>
       <p className="mt-2 text-sm text-muted">
-        National, zone, state, LGA, ward, campus chapter, and support group units. Parent and state
-        consistency are enforced by database constraints.
+        Manage the national-to-local structure. Choose a parent group from its name; the system
+        checks the hierarchy when you save.
       </p>
       {error && (
         <p role="status" className="notice mt-4">
-          Organisational records are unavailable until the Phase 7 migration is applied.
+          Group information is not available right now. Refresh this page or contact the system
+          administrator.
         </p>
       )}
       <div className="mt-5">
         <AdminDataTable
-          columns={["id", "name", "code", "type", "parent_id", "state_code", "lga_name"]}
-          rows={units}
+          columns={["name", "code", "type", "parent_name", "state_code", "lga_name"]}
+          rows={displayUnits}
         />
       </div>
       {canCreate && (
         <div className="mt-6">
           <AdminActionForm
-            title="Create an organisational unit"
+            title="Create or update a group"
             action="unit.save"
+            records={units}
             fields={[
-              { name: "id", label: "Unit UUID when updating" },
+              {
+                name: "id",
+                label: "Group to update (leave blank to create)",
+                type: "select",
+                options: units.map((unit) => ({
+                  value: String(unit.id),
+                  label: `${String(unit.name)} · ${String(unit.type).replaceAll("_", " ")}`,
+                })),
+              },
               { name: "name", label: "Unit name", required: true },
               { name: "code", label: "Unique unit code", required: true },
               {
@@ -49,9 +64,17 @@ export default async function OrganisationPage() {
                   "support_group",
                 ],
               },
-              { name: "parentId", label: "Parent unit UUID" },
-              { name: "stateCode", label: "State code" },
-              { name: "lgaName", label: "LGA name" },
+              {
+                name: "parentId",
+                label: "Parent group",
+                type: "select",
+                options: units.map((unit) => ({
+                  value: String(unit.id),
+                  label: `${String(unit.name)} · ${String(unit.type).replaceAll("_", " ")}`,
+                })),
+              },
+              { name: "stateCode", label: "State abbreviation", placeholder: "e.g. KN" },
+              { name: "lgaName", label: "Local government area" },
               { name: "description", label: "Description", type: "textarea" },
             ]}
           />

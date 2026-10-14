@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CardReissueButton } from "@/components/cards/CardReissueButton";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export const instant = false;
@@ -45,10 +46,7 @@ export default async function MemberCardPage() {
         </div>
       ) : (
         <div className="mt-5">
-          <p className="text-sm">
-            Card version {card.card_version} · expires{" "}
-            {new Date(card.expires_at).toLocaleDateString("en-NG", { dateStyle: "long" })}
-          </p>
+          <p className="text-sm">Card version {card.card_version}</p>
           <div className="mt-4 overflow-hidden border border-line bg-white">
             <iframe
               title="Private preview of your A4A membership card"
@@ -64,6 +62,10 @@ export default async function MemberCardPage() {
             <p className="self-center text-xs text-muted">
               Membership number: <span className="font-mono">{membership.membership_number}</span>
             </p>
+          </div>
+          <div className="mt-4">
+            <CardReissueButton />
+            <p className="mt-2 text-xs text-muted">A replacement card is limited to two requests per day.</p>
           </div>
         </div>
       )}

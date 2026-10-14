@@ -10,25 +10,21 @@ export default async function AdminAuditPage() {
   const rows = !error && Array.isArray(result?.items) ? result.items : [];
   return (
     <div>
-      <p className="eyebrow">Governance</p>
-      <h2 className="section-title mt-2">Audit log</h2>
-      <p className="mt-2 text-sm text-muted">
-        Sensitive actions are recorded as they occur. Audit access is restricted to super
-        administrators, auditors, and the data-protection officer.
+      <p className="text-sm leading-6 text-muted">
+        Review when important changes happened, what was changed, and the action performed. Access
+        is limited to authorised oversight roles.
       </p>
       {error && (
         <p role="status" className="notice mt-4">
-          Audit data is unavailable. Apply the Phase 7 migration and confirm this account’s audit
-          permission.
+          Activity information is not available right now. Refresh this page or contact the system
+          administrator.
         </p>
       )}
-      <p className="my-4 text-sm">
-        {Number(result?.total_count ?? 0).toLocaleString()} total records · latest 50 shown
+      <p className="my-4 text-sm text-muted">
+        Showing the latest 50 of {Number(result?.total_count ?? 0).toLocaleString()} activity
+        records
       </p>
-      <AdminDataTable
-        columns={["created_at", "actor_id", "action", "target_type", "target_id", "details"]}
-        rows={rows}
-      />
+      <AdminDataTable columns={["created_at", "action", "target_type", "details"]} rows={rows} />
     </div>
   );
 }

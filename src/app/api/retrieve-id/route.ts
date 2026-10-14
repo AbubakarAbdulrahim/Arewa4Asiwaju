@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/lib/env";
@@ -6,12 +6,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { hashPrivateValue } from "@/lib/security/hmac";
 import { hasTrustedOrigin } from "@/lib/security/same-origin";
 
-const identifierSchema = z.string().trim().min(4).max(254);
-const genericResponse = {
-  ok: true,
-  message:
-    "If these details match an active membership, a secure sign-in link will be sent to its registered email address.",
-};
+const schema = z.object({
+  identifier: z.string().trim().min(4).max(254),
+  password: z.string().min(8).max(128),
+});
+const membershipNumberPattern = /^A4A-[0-9]{4}-[A-Z0-9]{2,10}-(?:[A-Z0-9]{3,5}[0-9]{3,}|[0-9]{6,})$/i;
 
 function respond(body: object, status = 200) {
   return NextResponse.json(body, {
@@ -29,108 +28,87 @@ export async function POST(request: NextRequest) {
   if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return respond({ error: "Member access is temporarily unavailable." }, 503);
   }
+
   let payload: unknown;
   try {
     payload = await request.json();
   } catch {
-    return respond({ error: "Enter one membership identifier." }, 400);
+    return respond({ error: "Enter your login details." }, 400);
   }
-  const parsed = z.object({ identifier: identifierSchema }).safeParse(payload);
-  if (!parsed.success) return respond({ error: "Enter one membership identifier." }, 400);
+  const parsed = schema.safeParse(payload);
+  if (!parsed.success) return respond({ error: "Enter your email or membership number and password." }, 400);
+
   const identifier = parsed.data.identifier.trim();
   const normalized = identifier.toLowerCase();
   const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
-  const isMemberNumber = /^A4A-[0-9]{4}-[A-Z0-9]{2,10}-[0-9]{6,}$/i.test(identifier);
-  const isQrToken = /^[a-f0-9]{64}$/i.test(identifier);
-  if (!isEmail && !isMemberNumber && !isQrToken) return respond(genericResponse, 202);
+  const isMembershipNumber = membershipNumberPattern.test(identifier);
+  if (!isEmail && !isMembershipNumber) {
+    return respond({ error: "We couldn't sign you in. Check your details and try again." }, 401);
+  }
 
   try {
     const admin = createAdminClient();
-    const ipAddress = request.headers.get("x-real-ip") ?? "unknown-client";
+    const ipAddress = request.headers.get("x-real-ip")?.trim() || "unknown-client";
     const limit = await admin.rpc("consume_registration_rate_limit", {
       p_key_hashes: [
-        hashPrivateValue(`id-retrieval-ip:${ipAddress}`),
-        hashPrivateValue(`id-retrieval-identifier:${normalized}`),
+        hashPrivateValue(`member-login-ip:${ipAddress}`),
+        hashPrivateValue(`member-login-identifier:${normalized}`),
       ],
-      p_limit: 5,
-      p_window_seconds: 3600,
+      p_limit: 8,
+      p_window_seconds: 900,
     });
     if (limit.error) return respond({ error: "Member access is temporarily unavailable." }, 503);
-    if (!limit.data) return respond({ error: "Too many attempts. Try again later." }, 429);
+    if (!limit.data) return respond({ error: "Too many attempts. Try again in 15 minutes." }, 429);
 
-    let memberProfileId: string | null = null;
-    if (isEmail) {
-      const profile = await admin
-        .from("profiles")
-        .select("id")
-        .eq("email", normalized)
-        .maybeSingle();
-      memberProfileId = profile.data?.id ?? null;
-    } else if (isMemberNumber) {
+    let profileQuery = admin.from("profiles").select("id,email");
+    if (isEmail) profileQuery = profileQuery.eq("email", normalized);
+    else {
       const membership = await admin
         .from("memberships")
         .select("profile_id")
         .eq("membership_number", identifier.toUpperCase())
         .eq("status", "active")
         .maybeSingle();
-      memberProfileId = membership.data?.profile_id ?? null;
-    } else {
-      const card = await admin
-        .from("id_cards")
-        .select("membership_id")
-        .eq("verification_token", normalized)
-        .eq("status", "active")
-        .maybeSingle();
-      if (card.data?.membership_id) {
-        const membership = await admin
-          .from("memberships")
-          .select("profile_id")
-          .eq("id", card.data.membership_id)
-          .eq("status", "active")
-          .maybeSingle();
-        memberProfileId = membership.data?.profile_id ?? null;
+      if (membership.error || !membership.data?.profile_id) {
+        return respond({ error: "We couldn't sign you in. Check your details and try again." }, 401);
       }
+      profileQuery = profileQuery.eq("id", membership.data.profile_id);
     }
-    if (!memberProfileId) return respond(genericResponse, 202);
-
-    const member = await admin
+    const profile = await profileQuery.maybeSingle();
+    if (profile.error || !profile.data?.id || !profile.data.email) {
+      return respond({ error: "We couldn't sign you in. Check your details and try again." }, 401);
+    }
+    const membership = await admin
       .from("memberships")
       .select("id")
-      .eq("profile_id", memberProfileId)
+      .eq("profile_id", profile.data.id)
       .eq("status", "active")
       .maybeSingle();
-    if (!member.data) return respond(genericResponse, 202);
-    const activeCard = await admin
-      .from("id_cards")
-      .select("id")
-      .eq("membership_id", member.data.id)
-      .eq("status", "active")
-      .gt("expires_at", new Date().toISOString())
-      .limit(1)
-      .maybeSingle();
-    if (!activeCard.data) return respond(genericResponse, 202);
+    if (membership.error || !membership.data) {
+      return respond({ error: "We couldn't sign you in. Check your details and try again." }, 401);
+    }
 
-    const profile = await admin
-      .from("profiles")
-      .select("email")
-      .eq("id", memberProfileId)
-      .maybeSingle();
-    if (!profile.data?.email) return respond(genericResponse, 202);
-
-    const auth = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
-      auth: { autoRefreshToken: false, persistSession: false },
-    });
-    const redirectTo = new URL(
-      "/auth/callback?next=%2Fportal%2Fid-card",
-      env.NEXT_PUBLIC_APP_URL,
-    ).toString();
-    await auth.auth.signInWithOtp({
+    const response = respond({ ok: true });
+    const supabase = createServerClient(
+      env.NEXT_PUBLIC_SUPABASE_URL,
+      env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+        cookies: {
+          getAll: () => request.cookies.getAll(),
+          setAll: (cookies) =>
+            cookies.forEach(({ name, value, options }) => response.cookies.set(name, value, options)),
+        },
+      },
+    );
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: profile.data.email,
-      options: { shouldCreateUser: false, emailRedirectTo: redirectTo },
+      password: parsed.data.password,
     });
-    return respond(genericResponse, 202);
+    if (error || data.user?.id !== profile.data.id) {
+      return respond({ error: "We couldn't sign you in. Check your details and try again." }, 401);
+    }
+    return response;
   } catch {
-    // Never expose whether an email, member number, or QR token has a record.
-    return respond(genericResponse, 202);
+    return respond({ error: "Member access is temporarily unavailable." }, 503);
   }
 }

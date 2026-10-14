@@ -6,7 +6,7 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight, Check, ShieldCheck, Upload, UserRound } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { NORTHERN_STATES } from "@/lib/geo-data";
+import { getWardOptions, NORTHERN_STATES } from "@/lib/geo-data";
 
 type RegistrationConfig = { enabled: boolean; notice?: string; version?: string };
 type RegistrationResult = {
@@ -21,6 +21,8 @@ type RegistrationValues = {
   middleName: string;
   lastName: string;
   email: string;
+  password: string;
+  confirmPassword: string;
   phone: string;
   stateOfResidence: string;
   lgaOfResidence: string;
@@ -30,14 +32,12 @@ type RegistrationValues = {
   occupation: string;
   address: string;
   voterCard: string;
+  voterCardNumber: string;
   isStudent: string;
   institutionType: string;
   institutionName: string;
-  institutionCampus: string;
-  department: string;
   courseOfStudy: string;
   studyLevel: string;
-  graduationYear: string;
 };
 
 const steps = ["Personal details", "Institution", "Photo", "Review"] as const;
@@ -46,6 +46,8 @@ const initialValues: RegistrationValues = {
   middleName: "",
   lastName: "",
   email: "",
+  password: "",
+  confirmPassword: "",
   phone: "",
   stateOfResidence: "",
   lgaOfResidence: "",
@@ -55,14 +57,12 @@ const initialValues: RegistrationValues = {
   occupation: "",
   address: "",
   voterCard: "",
+  voterCardNumber: "",
   isStudent: "yes",
   institutionType: "",
   institutionName: "",
-  institutionCampus: "",
-  department: "",
   courseOfStudy: "",
   studyLevel: "",
-  graduationYear: "",
 };
 
 async function preparePhoto(file: File): Promise<File> {
@@ -144,6 +144,10 @@ function RegistrationForm() {
     () => NORTHERN_STATES.find((state) => state.name === values.stateOfResidence),
     [values.stateOfResidence],
   );
+  const wardOptions = useMemo(
+    () => getWardOptions(selectedState?.code ?? "", values.lgaOfResidence),
+    [selectedState?.code, values.lgaOfResidence],
+  );
 
   useEffect(() => {
     let active = true;
@@ -206,11 +210,15 @@ function RegistrationForm() {
       if (values.lastName.trim().length < 2) nextErrors.lastName = "Enter your last name.";
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim()))
         nextErrors.email = "Enter a valid email address.";
+      if (values.password.length < 12) nextErrors.password = "Use a password with at least 12 characters.";
+      if (values.password !== values.confirmPassword) nextErrors.confirmPassword = "The passwords do not match.";
       if (!/^\+?[0-9 ()-]{7,30}$/.test(values.phone.trim())) nextErrors.phone = "Enter a valid phone number.";
       if (!selectedState) nextErrors.stateOfResidence = "Select your state of residence.";
       if (!values.lgaOfResidence || !selectedState?.lgas.includes(values.lgaOfResidence))
         nextErrors.lgaOfResidence = "Select a valid LGA.";
-      if (!values.ward.trim()) nextErrors.ward = "Enter your ward.";
+      if (!wardOptions.includes(values.ward)) nextErrors.ward = "Select a ward in the chosen LGA.";
+      if (values.voterCard === "yes" && !values.voterCardNumber.trim())
+        nextErrors.voterCardNumber = "Enter your voter’s card number.";
     }
     if (index === 1 && values.isStudent === "yes") {
       if (!values.institutionType) nextErrors.institutionType = "Choose the institution type.";
@@ -354,8 +362,8 @@ function RegistrationForm() {
             </div>
             {registration.membershipNumber && (
               <p className="mt-4 text-sm text-muted">
-                Keep your membership number. Sign in to the member portal later using the email
-                address you registered with.
+                Keep your membership number. Sign in later with your registered email or membership
+                number and the password you created.
               </p>
             )}
           </section>
@@ -438,6 +446,39 @@ function RegistrationForm() {
                       {fieldError("email")}
                     </div>
                     <div>
+                      <label className="field-label" htmlFor="memberPassword">
+                        Create password <span aria-hidden="true">*</span>
+                      </label>
+                      <input
+                        className="field-control"
+                        id="memberPassword"
+                        type="password"
+                        autoComplete="new-password"
+                        minLength={12}
+                        maxLength={128}
+                        value={values.password}
+                        onChange={(event) => update("password", event.target.value)}
+                      />
+                      <p className="mt-1 text-xs text-muted">Use at least 12 characters to sign in and retrieve your card later.</p>
+                      {fieldError("password")}
+                    </div>
+                    <div>
+                      <label className="field-label" htmlFor="confirmMemberPassword">
+                        Confirm password <span aria-hidden="true">*</span>
+                      </label>
+                      <input
+                        className="field-control"
+                        id="confirmMemberPassword"
+                        type="password"
+                        autoComplete="new-password"
+                        minLength={12}
+                        maxLength={128}
+                        value={values.confirmPassword}
+                        onChange={(event) => update("confirmPassword", event.target.value)}
+                      />
+                      {fieldError("confirmPassword")}
+                    </div>
+                    <div>
                       <label className="field-label" htmlFor="phone">Phone number <span aria-hidden="true">*</span></label>
                       <input className="field-control" id="phone" type="tel" autoComplete="tel" maxLength={30} placeholder="080… or +234…" value={values.phone} onChange={(event) => update("phone", event.target.value)} />
                       {fieldError("phone")}
@@ -453,6 +494,7 @@ function RegistrationForm() {
                         onChange={(event) => {
                           update("stateOfResidence", event.target.value);
                           update("lgaOfResidence", "");
+                          update("ward", "");
                         }}
                       >
                         <option value="">Select a state</option>
@@ -473,7 +515,10 @@ function RegistrationForm() {
                         id="lga"
                         value={values.lgaOfResidence}
                         disabled={!selectedState}
-                        onChange={(event) => update("lgaOfResidence", event.target.value)}
+                        onChange={(event) => {
+                          update("lgaOfResidence", event.target.value);
+                          update("ward", "");
+                        }}
                       >
                         <option value="">
                           {selectedState ? "Select an LGA" : "Select a state first"}
@@ -488,7 +533,10 @@ function RegistrationForm() {
                     </div>
                     <div>
                       <label className="field-label" htmlFor="ward">Ward <span aria-hidden="true">*</span></label>
-                      <input className="field-control" id="ward" maxLength={150} value={values.ward} onChange={(event) => update("ward", event.target.value)} />
+                      <select className="field-control" id="ward" value={values.ward} disabled={!values.lgaOfResidence || wardOptions.length === 0} onChange={(event) => update("ward", event.target.value)}>
+                        <option value="">{values.lgaOfResidence ? "Select a ward" : "Select an LGA first"}</option>
+                        {wardOptions.map((ward) => <option key={ward} value={ward}>{ward}</option>)}
+                      </select>
                       {fieldError("ward")}
                     </div>
                     <div>
@@ -508,17 +556,28 @@ function RegistrationForm() {
                     </div>
                     <div>
                       <label className="field-label" htmlFor="voterCard">Do you have a voter’s card? <span className="font-normal text-muted">(optional)</span></label>
-                      <select className="field-control" id="voterCard" value={values.voterCard} onChange={(event) => update("voterCard", event.target.value)}>
+                      <select className="field-control" id="voterCard" value={values.voterCard} onChange={(event) => {
+                        update("voterCard", event.target.value);
+                        if (event.target.value !== "yes") update("voterCardNumber", "");
+                      }}>
                         <option value="">Prefer not to say</option><option value="yes">Yes</option><option value="no">No</option>
                       </select>
                     </div>
+                    {values.voterCard === "yes" && (
+                      <div>
+                        <label className="field-label" htmlFor="voterCardNumber">Voter’s card number <span aria-hidden="true">*</span></label>
+                        <input className="field-control" id="voterCardNumber" name="voterCardNumber" type="text" inputMode="text" autoComplete="off" autoCapitalize="characters" maxLength={50} value={values.voterCardNumber} onChange={(event) => update("voterCardNumber", event.target.value)} />
+                        {fieldError("voterCardNumber")}
+                        <p className="mt-1 text-xs text-muted">It is stored with your private membership record and never printed on your ID card.</p>
+                      </div>
+                    )}
                     <div className="sm:col-span-2">
                       <label className="field-label" htmlFor="address">Residential address <span className="font-normal text-muted">(optional)</span></label>
                       <textarea className="field-control min-h-20" id="address" autoComplete="street-address" maxLength={500} value={values.address} onChange={(event) => update("address", event.target.value)} />
                     </div>
                   </div>
                   <p className="text-xs text-muted">
-                    Ward, gender, date of birth, address and voter-card possession are optional. We never ask for NIN or a voter-card number.
+                    Ward selection is required. Gender, date of birth, address, and voter-card details are optional.
                   </p>
                 </fieldset>
               )}
@@ -568,14 +627,6 @@ function RegistrationForm() {
                       {fieldError("institutionName")}
                     </div>
                     <div>
-                      <label className="field-label" htmlFor="institutionCampus">Campus <span className="font-normal text-muted">(optional)</span></label>
-                      <input className="field-control" id="institutionCampus" maxLength={150} value={values.institutionCampus} onChange={(event) => update("institutionCampus", event.target.value)} />
-                    </div>
-                    <div>
-                      <label className="field-label" htmlFor="department">Department <span className="font-normal text-muted">(optional)</span></label>
-                      <input className="field-control" id="department" maxLength={150} value={values.department} onChange={(event) => update("department", event.target.value)} />
-                    </div>
-                    <div>
                       <label className="field-label" htmlFor="courseOfStudy">Course or programme {values.isStudent === "yes" && <span aria-hidden="true">*</span>}</label>
                       <input className="field-control" id="courseOfStudy" maxLength={255} value={values.courseOfStudy} onChange={(event) => update("courseOfStudy", event.target.value)} />
                       {fieldError("courseOfStudy")}
@@ -584,11 +635,6 @@ function RegistrationForm() {
                       <label className="field-label" htmlFor="studyLevel">Current level / year {values.isStudent === "yes" && <span aria-hidden="true">*</span>}</label>
                       <input className="field-control" id="studyLevel" maxLength={80} placeholder="e.g. 300 level, Year 2" value={values.studyLevel} onChange={(event) => update("studyLevel", event.target.value)} />
                       {fieldError("studyLevel")}
-                    </div>
-                    <div>
-                      <label className="field-label" htmlFor="graduationYear">Expected graduation year <span className="font-normal text-muted">(optional)</span></label>
-                      <input className="field-control" id="graduationYear" inputMode="numeric" maxLength={4} placeholder="e.g. 2028" value={values.graduationYear} onChange={(event) => update("graduationYear", event.target.value)} />
-                      {fieldError("graduationYear")}
                     </div>
                   </div>
                 </fieldset>
@@ -678,7 +724,7 @@ function RegistrationForm() {
                     {values.isStudent === "yes" && (
                       <div>
                         <dt className="text-xs font-bold uppercase text-muted">Student details</dt>
-                        <dd className="mt-1">{[values.department, values.courseOfStudy, values.studyLevel, values.institutionCampus].filter(Boolean).join(" · ")}</dd>
+                        <dd className="mt-1">{[values.courseOfStudy, values.studyLevel].filter(Boolean).join(" · ")}</dd>
                       </div>
                     )}
                     <div>
@@ -736,8 +782,10 @@ function RegistrationForm() {
                     Your photo is stored privately for membership administration and ID-card
                     generation. Your contact and location details support membership administration;
                     student details help organise campus activity. Date of birth, gender, occupation,
-                    address, and voter-card possession are optional. We do not collect a voter-card
-                    number or NIN. The public QR check confirms card status only.
+                    address, and voter-card details are optional. A voter-card number is kept only
+                    as long as needed for membership administration, is not printed on your card,
+                    and can be corrected or deleted through a privacy request. We do not collect NIN.
+                    The public QR check confirms card status only.
                   </p>
                 </fieldset>
               )}

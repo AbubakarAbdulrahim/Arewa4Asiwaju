@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       ? "/register?verification=failed"
       : isAdminPasswordReset
         ? "/admin-login/reset/error"
-        : "/auth/login?verification=failed",
+        : "/login?verification=failed",
     request.url,
   );
   if (!code || (intent && !uuidPattern.test(intent))) return NextResponse.redirect(failure);

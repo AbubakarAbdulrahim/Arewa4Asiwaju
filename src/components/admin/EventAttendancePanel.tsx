@@ -10,7 +10,11 @@ type Registration = {
   attended_at: string | null;
 };
 
-export function EventAttendancePanel() {
+export function EventAttendancePanel({
+  events,
+}: {
+  events: { id: string; title: string; startDate: string }[];
+}) {
   const [eventId, setEventId] = useState("");
   const [rows, setRows] = useState<Registration[]>([]);
   const [message, setMessage] = useState("");
@@ -84,21 +88,27 @@ export function EventAttendancePanel() {
     <section className="mt-7 border-t border-line pt-6">
       <h3 className="text-lg font-bold">Event attendance</h3>
       <p className="mt-1 text-sm text-muted">
-        Enter an event UUID to load its registrations. Names and numbers are returned only within
-        your authorised event scope.
+        Select an event to view its registered members and mark who attended. Only events in your
+        authorised area are available.
       </p>
       <form onSubmit={load} className="mt-3 flex flex-wrap gap-2">
-        <label className="sr-only" htmlFor="attendance-event-id">
-          Event UUID
+        <label className="text-sm font-semibold" htmlFor="attendance-event-id">
+          Event
         </label>
-        <input
+        <select
           id="attendance-event-id"
           required
           value={eventId}
           onChange={(event) => setEventId(event.target.value)}
           className="min-h-11 min-w-[18rem] rounded-sm border border-line bg-white px-3"
-          placeholder="Event UUID"
-        />
+        >
+          <option value="">Choose an event</option>
+          {events.map((event) => (
+            <option key={event.id} value={event.id}>
+              {event.title} · {event.startDate.slice(0, 10)}
+            </option>
+          ))}
+        </select>
         <button className="button-secondary" type="submit">
           Load attendance
         </button>

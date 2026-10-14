@@ -18,6 +18,8 @@ export const registrationSchema = z
       .email("Enter a valid email address")
       .max(254)
       .transform((value) => value.toLowerCase()),
+    password: z.string().min(12, "Use at least 12 characters").max(128),
+    confirmPassword: z.string().min(12).max(128),
     phone: z.string().trim().min(7, "Enter a phone number").max(30).regex(/^\+?[0-9 ()-]{7,30}$/, "Enter a valid phone number"),
     stateOfResidence: z.string().trim().min(2).max(100),
     lgaOfResidence: z.string().trim().min(2).max(100),
@@ -27,6 +29,7 @@ export const registrationSchema = z
     occupation: z.string().trim().max(120).optional().or(z.literal("")),
     address: z.string().trim().max(500).optional().or(z.literal("")),
     voterCard: z.enum(["yes", "no", "prefer_not_to_say"]).optional().or(z.literal("")),
+    voterCardNumber: z.string().trim().max(50).regex(/^[A-Za-z0-9 /-]*$/, "Use only letters, numbers, spaces, slashes, or hyphens.").optional().or(z.literal("")),
     isStudent: z.enum(["yes", "no"]),
     institutionType: z.enum(["tertiary", "artisan", "youth_corps", "general"]).optional().or(z.literal("")),
     institutionName: z
@@ -35,16 +38,16 @@ export const registrationSchema = z
       .max(255, "Use 255 characters or fewer")
       .optional()
       .or(z.literal("")),
-    institutionCampus: z.string().trim().max(150).optional().or(z.literal("")),
-    department: z.string().trim().max(150).optional().or(z.literal("")),
     courseOfStudy: z.string().trim().max(255).optional().or(z.literal("")),
     studyLevel: z.string().trim().max(80).optional().or(z.literal("")),
-    graduationYear: z.string().trim().regex(/^$|^20[0-9]{2}$/, "Enter a year between 2000 and 2099").optional(),
     acceptedNotice: z.literal(true, {
       error: "You must accept the data processing notice to continue.",
     }),
   })
   .superRefine((value, context) => {
+    if (value.password !== value.confirmPassword) {
+      context.addIssue({ code: "custom", path: ["confirmPassword"], message: "The passwords do not match." });
+    }
     const fullName = [value.firstName, value.middleName, value.lastName].filter(Boolean).join(" ");
     if (fullName.length > 90) {
       context.addIssue({
@@ -58,6 +61,20 @@ export const registrationSchema = z
         code: "custom",
         path: ["institutionType"],
         message: "Choose the institution type.",
+      });
+    }
+    if (value.voterCard === "yes" && !value.voterCardNumber?.trim()) {
+      context.addIssue({
+        code: "custom",
+        path: ["voterCardNumber"],
+        message: "Enter your voter’s card number.",
+      });
+    }
+    if (value.voterCard !== "yes" && value.voterCardNumber?.trim()) {
+      context.addIssue({
+        code: "custom",
+        path: ["voterCardNumber"],
+        message: "Select Yes before entering a voter’s card number.",
       });
     }
     if (value.isStudent === "yes") {

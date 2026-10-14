@@ -17,17 +17,18 @@ export default async function SupportAdminPage() {
       <p className="eyebrow">Member services</p>
       <h2 className="section-title mt-2">Support requests</h2>
       <p className="mt-2 text-sm text-muted">
-        Request text and contact details are visible only to authorised membership staff. Record a
-        status and response to close the loop.
+        Review each member request, update its progress, and record a response. Contact details are
+        only shown to authorised membership staff.
       </p>
       {error && (
         <p role="status" className="notice mt-4">
-          Support management data is pending the Phase 7 migration.
+          Support requests are not available right now. Refresh this page or contact the system
+          administrator.
         </p>
       )}
       <div className="mt-5">
         <AdminDataTable
-          columns={["id", "name", "subject", "category", "status", "created_at"]}
+          columns={["name", "subject", "category", "status", "created_at"]}
           rows={rows}
         />
       </div>
@@ -35,8 +36,18 @@ export default async function SupportAdminPage() {
         <AdminActionForm
           title="Update a support request"
           action="support.update"
+          records={rows}
           fields={[
-            { name: "id", label: "Request UUID", required: true },
+            {
+              name: "id",
+              label: "Request to update",
+              type: "select",
+              required: true,
+              options: rows.map((row) => ({
+                value: String(row.id),
+                label: `${String(row.name)} · ${String(row.subject)} · ${String(row.created_at).slice(0, 10)}`,
+              })),
+            },
             {
               name: "status",
               label: "Status",

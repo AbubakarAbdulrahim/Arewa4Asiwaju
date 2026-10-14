@@ -5,7 +5,7 @@ import { ArrowUpRight, MapPin, Phone } from "lucide-react";
 const footerLinkClass =
   "inline-flex min-h-8 items-center text-sm text-white/75 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:text-white";
 
-export function Footer() {
+export function Footer({ reserveFloatingActionSpace = false }: { reserveFloatingActionSpace?: boolean }) {
   return (
     <footer className="bg-[#10251a] text-white">
       <div className="site-container grid gap-10 py-12 sm:py-14 lg:grid-cols-[1.2fr_.65fr_.8fr] lg:gap-12 lg:py-16">
@@ -25,7 +25,7 @@ export function Footer() {
               <span className="text-sm font-extrabold uppercase leading-tight tracking-[.04em] sm:text-base">
                 Arewa for Asiwaju
               </span>
-              <span className="mt-1 text-xs font-semibold uppercase tracking-[.12em] text-[#f3ca61]">
+              <span className="mt-1 text-xs font-semibold uppercase tracking-[.12em] text-[#8dd5a5]">
                 Student Wing
               </span>
             </span>
@@ -66,20 +66,20 @@ export function Footer() {
         <div>
           <h2 className="text-sm font-bold uppercase tracking-[.12em] text-white">Contact and resources</h2>
           <p className="mt-4 flex items-start gap-2.5 text-sm leading-6 text-white/75">
-            <MapPin aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-[#f3ca61]" />
-            Northern Nigeria and the Federal Capital Territory
+            <MapPin aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-[#8dd5a5]" />
+            Kano, Nigeria
           </p>
           <ul className="mt-2 space-y-1">
             <li>
               <a className={`${footerLinkClass} gap-2.5`} href="tel:09122628654">
-                <Phone aria-hidden="true" className="h-4 w-4 text-[#f3ca61]" />
+                <Phone aria-hidden="true" className="h-4 w-4 text-[#8dd5a5]" />
                 09122628654
               </a>
             </li>
             <li>
-              <a className={`${footerLinkClass} gap-2.5`} href="tel:009013113304">
-                <Phone aria-hidden="true" className="h-4 w-4 text-[#f3ca61]" />
-                009013113304
+              <a className={`${footerLinkClass} gap-2.5`} href="tel:09013113304">
+                <Phone aria-hidden="true" className="h-4 w-4 text-[#8dd5a5]" />
+                09013113304
               </a>
             </li>
           </ul>
@@ -91,7 +91,7 @@ export function Footer() {
             <Link className={footerLinkClass} href="/terms">Terms</Link>
           </div>
           <Link
-            className="mt-5 inline-flex min-h-10 items-center gap-2 rounded-sm bg-[#f3ca61] px-4 py-2 text-sm font-bold text-[#10251a] transition-colors hover:bg-white focus-visible:outline-white"
+            className="mt-5 inline-flex min-h-10 items-center gap-2 rounded-sm bg-brand-forest px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-brand-forest-dark hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             href="/register"
           >
             Join the Student Wing <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
@@ -100,7 +100,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/15">
-        <div className="site-container flex flex-col gap-2 py-4 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
+        <div className={`site-container flex flex-col gap-2 py-4 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between ${reserveFloatingActionSpace ? "pb-20" : ""}`}>
           <p>Arewa for Asiwaju Student Wing. All rights reserved.</p>
           <Link className={footerLinkClass} href="/ha">Hausa version</Link>
         </div>

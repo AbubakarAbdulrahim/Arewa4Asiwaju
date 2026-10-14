@@ -9,9 +9,9 @@ export interface DigitalIdCardProps {
   membershipNumber: string;
   stateName: string;
   lgaName: string;
+  wardName?: string | null;
   institutionName?: string | null;
   issuedAt: string | Date;
-  expiresAt: string | Date;
   qrCodeUrl?: string;
   onDownloadPdf?: () => void;
   isDownloading?: boolean;
@@ -22,9 +22,9 @@ export function DigitalIdCard({
   membershipNumber,
   stateName,
   lgaName,
+  wardName,
   institutionName,
   issuedAt,
-  expiresAt,
   qrCodeUrl,
   onDownloadPdf,
   isDownloading = false,
@@ -32,10 +32,6 @@ export function DigitalIdCard({
   const [flipped, setFlipped] = useState(false);
 
   const formattedIssue = new Date(issuedAt).toLocaleDateString("en-NG", {
-    month: "short",
-    year: "numeric",
-  });
-  const formattedExpiry = new Date(expiresAt).toLocaleDateString("en-NG", {
     month: "short",
     year: "numeric",
   });
@@ -123,6 +119,11 @@ export function DigitalIdCard({
                     <span className="text-[7.5px] font-semibold text-[#64748B] block">LGA</span>
                     <span className="font-bold text-[#121713] truncate block">{lgaName}</span>
                   </div>
+                </div>
+
+                <div>
+                  <span className="text-[7.5px] font-semibold text-[#64748B] block">WARD</span>
+                  <span className="font-bold text-[#121713] truncate block">{wardName || "Not recorded"}</span>
                 </div>
 
                 {institutionName && (

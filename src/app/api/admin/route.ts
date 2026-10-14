@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { hasTrustedOrigin } from "@/lib/security/same-origin";
@@ -268,6 +269,9 @@ export async function POST(request: NextRequest) {
       { error: "The change could not be saved. Check the role scope and retry." },
       { status: 409 },
     );
+  if (input.action === "content.save") revalidateTag("public-announcements", "max");
+  if (input.action === "event.save") revalidateTag("public-events", "max");
+  if (input.action === "leadership.save") revalidateTag("public-leadership", "max");
   return NextResponse.json(
     { ok: true, data: result.data },
     { headers: { "Cache-Control": "no-store" } },

@@ -6,7 +6,7 @@ export type AdminField = {
   label: string;
   type?: "text" | "number" | "datetime-local" | "url" | "textarea" | "select" | "checkbox";
   required?: boolean;
-  options?: string[];
+  options?: (string | { value: string; label: string })[];
   placeholder?: string;
   helpText?: string;
 };
@@ -15,10 +15,12 @@ export function AdminActionForm({
   title,
   action,
   fields,
+  records = [],
 }: {
   title: string;
   action: string;
   fields: AdminField[];
+  records?: Record<string, unknown>[];
 }) {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -82,14 +84,30 @@ export function AdminActionForm({
                   <select
                     name={field.name}
                     required={field.required}
+                    onChange={
+                      field.name === "id" && records.length
+                        ? (event) =>
+                            populateFromRecord(
+                              event.currentTarget.form,
+                              event.currentTarget.value,
+                              records,
+                              fields,
+                            )
+                        : undefined
+                    }
                     className="mt-1 block min-h-11 w-full rounded-sm border border-line bg-white px-3 font-normal"
                   >
                     <option value="">Choose…</option>
-                    {field.options?.map((option) => (
-                      <option key={option} value={option}>
-                        {option.replaceAll("_", " ")}
-                      </option>
-                    ))}
+                    {field.options?.map((option) => {
+                      const value = typeof option === "string" ? option : option.value;
+                      const label =
+                        typeof option === "string" ? option.replaceAll("_", " ") : option.label;
+                      return (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      );
+                    })}
                   </select>
                 ) : (
                   <input
@@ -124,6 +142,43 @@ export function AdminActionForm({
   );
 }
 
+function populateFromRecord(
+  form: HTMLFormElement | null,
+  selectedId: string,
+  records: Record<string, unknown>[],
+  fields: AdminField[],
+) {
+  if (!form) return;
+  const record = records.find((item) => String(item.id ?? "") === selectedId);
+  for (const field of fields) {
+    if (field.name === "id") continue;
+    const control = form.elements.namedItem(field.name);
+    if (
+      !control ||
+      !(
+        control instanceof HTMLInputElement ||
+        control instanceof HTMLSelectElement ||
+        control instanceof HTMLTextAreaElement
+      )
+    )
+      continue;
+    const snakeName = field.name.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+    const value = record?.[field.name] ?? record?.[snakeName] ?? "";
+    if (field.type === "checkbox" && control instanceof HTMLInputElement) {
+      control.checked = value === true;
+    } else if (control instanceof HTMLInputElement && field.type === "datetime-local") {
+      const date = typeof value === "string" ? new Date(value) : null;
+      const localDate =
+        date && Number.isFinite(date.getTime())
+          ? new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 16)
+          : "";
+      control.value = localDate;
+    } else {
+      control.value = value === null || value === undefined ? "" : String(value);
+    }
+  }
+}
+
 export function AdminDataTable({
   columns,
   rows,
@@ -143,8 +198,8 @@ export function AdminDataTable({
         <thead>
           <tr className="border-b border-line bg-[#f2f4f0]">
             {columns.map((column) => (
-              <th key={column} scope="col" className="px-3 py-3 font-bold capitalize">
-                {column.replaceAll("_", " ")}
+              <th key={column} scope="col" className="px-3 py-3 font-bold">
+                {humanize(column)}
               </th>
             ))}
           </tr>
@@ -168,6 +223,47 @@ export function AdminDataTable({
 function formatCell(value: unknown): string {
   if (value === null || value === undefined || value === "") return "—";
   if (typeof value === "boolean") return value ? "Yes" : "No";
-  if (typeof value === "object") return JSON.stringify(value);
-  return String(value);
+  if (typeof value === "object") {
+    return Object.entries(value as Record<string, unknown>)
+      .map(([key, item]) => `${humanize(key)}: ${formatCell(item)}`)
+      .join(" · ");
+  }
+  const text = String(value);
+  if (/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(text)) return "Linked record";
+  if (/^https:\/\//i.test(text)) return "Online file";
+  if (/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(text)) {
+    const date = new Date(text);
+    if (Number.isFinite(date.getTime())) {
+      return text.includes("T") ? date.toLocaleString("en-NG") : date.toLocaleDateString("en-NG");
+    }
+  }
+  return text.replaceAll("_", " ");
+}
+
+function humanize(value: string) {
+  const known: Record<string, string> = {
+    is_published: "Published",
+    is_virtual: "Online event",
+    state_code: "State",
+    lga_name: "Local government",
+    org_unit_name: "Organisational area",
+    created_at: "Created",
+    updated_at: "Last updated",
+    published_at: "Published on",
+    start_date: "Starts",
+    end_date: "Ends",
+    asset_type: "File type",
+    target_type: "Item type",
+    details: "Summary",
+    actor_id: "Administrator",
+    target_id: "Record",
+    org_unit_id: "Organisational area",
+    parent_id: "Parent area",
+    profile_id: "Member",
+    user_id: "Account",
+    id: "Record",
+  };
+  return (
+    known[value] ?? value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
+  );
 }
