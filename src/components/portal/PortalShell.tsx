@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SignOutButton } from "@/components/portal/PortalActions";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const portalLinks = [
   ["Overview", "/portal"],
@@ -29,7 +30,10 @@ export function PortalShell({
           </p>
           <h1 className="mt-1 text-2xl font-bold">Welcome, {memberName}</h1>
         </div>
-        <SignOutButton />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <SignOutButton />
+        </div>
       </header>
       <div className="grid gap-8 py-7 lg:grid-cols-[210px_1fr]">
         <nav

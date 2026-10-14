@@ -31,14 +31,21 @@ test("registration keeps the profile minimal and normalises the email address", 
     middleName: "",
     lastName: "Hausa",
     email: " Amina@example.org ",
+    password: "staging-test-password-123",
+    confirmPassword: "staging-test-password-123",
+    phone: "09123456789",
     stateOfResidence: "Kano",
     lgaOfResidence: "Kano Municipal",
+    ward: "Dala",
+    voterCard: "no",
+    isStudent: "no",
     acceptedNotice: true,
   });
   assert.equal(result.success, true);
   if (result.success) {
     assert.equal(result.data.email, "amina@example.org");
-    assert.equal("phone" in result.data, false);
+    assert.equal(result.data.phone, "09123456789");
+    assert.equal("politicalAffiliation" in result.data, false);
   }
 });
 

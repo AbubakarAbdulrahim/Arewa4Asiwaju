@@ -265,7 +265,7 @@ export function BannerGenerator() {
               value={name}
               onChange={handleNameChange}
               onBlur={() => setName((value) => value.trim())}
-              placeholder="Comr. Abubakar Abdulrahim"
+              placeholder="Garba Magaji"
               className="field-control"
               aria-describedby="banner-name-hint"
               disabled={isGenerating}
@@ -370,48 +370,9 @@ export function BannerGenerator() {
                 aria-valuetext={`${zoom.toFixed(1)} times zoom`}
                 disabled={isGenerating}
               />
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="text-xs font-semibold text-ink" htmlFor="photo-horizontal">
-                  Horizontal position
-                  <input
-                    id="photo-horizontal"
-                    type="range"
-                    min="-100"
-                    max="100"
-                    value={Math.round(pan.x * 100)}
-                    onChange={(event) => {
-                      setPan((current) => ({
-                        ...current,
-                        x: Number(event.currentTarget.value) / 100,
-                      }));
-                      invalidateGenerated();
-                    }}
-                    className="banner-range block w-full"
-                    disabled={isGenerating}
-                  />
-                </label>
-                <label className="text-xs font-semibold text-ink" htmlFor="photo-vertical">
-                  Vertical position
-                  <input
-                    id="photo-vertical"
-                    type="range"
-                    min="-100"
-                    max="100"
-                    value={Math.round(pan.y * 100)}
-                    onChange={(event) => {
-                      setPan((current) => ({
-                        ...current,
-                        y: Number(event.currentTarget.value) / 100,
-                      }));
-                      invalidateGenerated();
-                    }}
-                    className="banner-range block w-full"
-                    disabled={isGenerating}
-                  />
-                </label>
-              </div>
               <p className="text-xs leading-relaxed text-muted">
-                Drag the photo in the preview to reposition it. Use the slider to zoom.
+                Drag the photo in the preview to reposition it. Use the zoom control above to adjust
+                the crop.
               </p>
             </div>
           )}

@@ -16,6 +16,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { SignOutButton } from "@/components/portal/PortalActions";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import type { UserRole } from "@/types/database";
 
 const links: {
@@ -171,6 +172,7 @@ export function AdminShell({
           </Link>
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-muted sm:block">{name}</span>
+            <ThemeToggle />
             <SignOutButton />
           </div>
         </div>
