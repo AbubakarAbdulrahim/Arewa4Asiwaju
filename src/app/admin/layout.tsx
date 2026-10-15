@@ -13,8 +13,8 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
       <main id="main-content" className="site-container py-16">
         <h1 className="section-title">Administration setup pending</h1>
         <p className="mt-3 max-w-2xl text-muted">
-          Connect the staging Supabase project and apply the approved migrations before
-          administrative data can load.
+          The administrator must finish connecting the data service before this workspace can load
+          records.
         </p>
         <Link className="button-quiet mt-6" href="/admin-login">
           Admin sign in

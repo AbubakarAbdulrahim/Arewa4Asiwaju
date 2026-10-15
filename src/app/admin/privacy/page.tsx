@@ -22,12 +22,13 @@ export default async function AdminPrivacyPage() {
       </p>
       {error && (
         <p role="status" className="notice mt-4">
-          Privacy operations are pending the Phase 8 migration.
+          Privacy requests are not available right now. Refresh this page or contact the system
+          administrator.
         </p>
       )}
       <div className="mt-5">
         <AdminDataTable
-          columns={["id", "request_type", "status", "membership_number", "full_name", "created_at"]}
+          columns={["request_type", "status", "membership_number", "full_name", "created_at"]}
           rows={rows}
         />
       </div>
@@ -35,8 +36,18 @@ export default async function AdminPrivacyPage() {
         <AdminActionForm
           title="Update a privacy request"
           action="privacy.update"
+          records={rows}
           fields={[
-            { name: "id", label: "Request UUID", required: true },
+            {
+              name: "id",
+              label: "Privacy request",
+              type: "select",
+              required: true,
+              options: rows.map((row) => ({
+                value: String(row.id),
+                label: `${String(row.full_name)} · ${String(row.request_type).replaceAll("_", " ")} · ${String(row.created_at).slice(0, 10)}`,
+              })),
+            },
             {
               name: "status",
               label: "Status",

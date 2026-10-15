@@ -12,7 +12,7 @@ export function PortalSignInPrompt({ unavailable = false }: { unavailable?: bool
             ? "The account service is not configured right now. Please try again later."
             : "Your membership information is private. Sign in with the email address on your account to continue."}
         </p>
-        <Link className="button-primary mt-5" href="/auth/login">
+        <Link className="button-primary mt-5" href="/login">
           Go to member sign-in
         </Link>
       </section>

@@ -1,5 +1,5 @@
 import "server-only";
-import { connection } from "next/server";
+import { cacheLife, cacheTag } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
 import { env, hasSupabaseConfig } from "@/lib/env";
 
@@ -29,6 +29,22 @@ export type PublicEvent = {
   capacity: number | null;
 };
 
+export function splitEventsByDate(items: PublicEvent[], now: number) {
+  return {
+    upcoming: items.filter((event) => new Date(event.end_date).getTime() >= now),
+    recent: items
+      .filter((event) => new Date(event.end_date).getTime() < now)
+      .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())
+      .slice(0, 6),
+  };
+}
+
+export async function getPublicContentTime(): Promise<number> {
+  "use cache";
+  cacheLife("minutes");
+  return Date.now();
+}
+
 export type PublicLeader = {
   id: string;
   full_name: string;
@@ -51,7 +67,9 @@ function publicClient() {
 }
 
 export async function getAnnouncements(): Promise<PublicResult<PublicAnnouncement>> {
-  await connection();
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("public-announcements");
   const client = publicClient();
   if (!client) return { state: "not-configured", items: [] };
   const { data, error } = await client
@@ -65,7 +83,9 @@ export async function getAnnouncements(): Promise<PublicResult<PublicAnnouncemen
 }
 
 export async function getAnnouncement(slug: string): Promise<PublicAnnouncement | null> {
-  await connection();
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("public-announcements");
   const client = publicClient();
   if (!client) return null;
   const { data, error } = await client
@@ -79,7 +99,9 @@ export async function getAnnouncement(slug: string): Promise<PublicAnnouncement 
 }
 
 export async function getEvents(): Promise<PublicResult<PublicEvent>> {
-  await connection();
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("public-events");
   const client = publicClient();
   if (!client) return { state: "not-configured", items: [] };
   const { data, error } = await client
@@ -95,7 +117,9 @@ export async function getEvents(): Promise<PublicResult<PublicEvent>> {
 }
 
 export async function getEvent(slug: string): Promise<PublicEvent | null> {
-  await connection();
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("public-events");
   const client = publicClient();
   if (!client) return null;
   const { data, error } = await client
@@ -111,7 +135,9 @@ export async function getEvent(slug: string): Promise<PublicEvent | null> {
 }
 
 export async function getPublicLeadership(): Promise<PublicLeader[]> {
-  await connection();
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("public-leadership");
   const client = publicClient();
   if (!client) return [];
   const { data, error } = await client.rpc("get_public_leadership");

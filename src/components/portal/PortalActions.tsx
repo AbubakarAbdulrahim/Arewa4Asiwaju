@@ -368,7 +368,7 @@ export function SignOutButton() {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
-      router.push("/auth/login");
+      router.push("/login");
       router.refresh();
     }
   }

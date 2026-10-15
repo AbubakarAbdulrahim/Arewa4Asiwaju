@@ -65,7 +65,7 @@ function CardImage({
       ) : (
         <div className="absolute inset-0 flex items-center justify-center bg-brand-forest text-white">
           <div className="flex flex-col items-center gap-3 text-white/85">
-            <Icon aria-hidden="true" className="h-9 w-9" strokeWidth={1.5} />
+            <Icon aria-hidden="true" className="h-9 w-9 text-white" stroke="white" strokeWidth={1.5} />
             <span className="text-xs font-bold uppercase tracking-[.16em]">
               {kind === "news" ? "A4A newsroom" : "A4A event"}
             </span>

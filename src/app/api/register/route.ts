@@ -3,12 +3,13 @@ import { PDFDocument } from "pdf-lib";
 import { NextResponse, type NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { env } from "@/lib/env";
-import { NORTHERN_STATES } from "@/lib/geo-data";
+import { getLgaMembershipCode, getWardOptions, NORTHERN_STATES } from "@/lib/geo-data";
 import { registrationSchema } from "@/lib/validation/registration-schema";
 import { hashPrivateValue } from "@/lib/security/hmac";
 import { processMembershipCard } from "@/lib/cards/issue-card";
 import { logger } from "@/lib/logger";
 import { inspectMemberPhoto } from "@/lib/security/member-photo";
+import { buildRegistrationNotice } from "@/lib/registration-notice";
 
 const acceptedResponse = {
   ok: true,
@@ -73,6 +74,10 @@ export async function POST(request: NextRequest) {
   const state = NORTHERN_STATES.find((item) => item.name === parsed.data.stateOfResidence);
   if (!state || !state.lgas.includes(parsed.data.lgaOfResidence)) {
     return json({ error: "Select a valid state and LGA." }, 400);
+  }
+  const lgaCode = getLgaMembershipCode(state.code, parsed.data.lgaOfResidence);
+  if (!lgaCode || !getWardOptions(state.code, parsed.data.lgaOfResidence).includes(parsed.data.ward)) {
+    return json({ error: "Select a ward within the chosen LGA." }, 400);
   }
   const photoFile = form.get("profilePhoto");
   if (!(photoFile instanceof File)) {
@@ -152,8 +157,8 @@ export async function POST(request: NextRequest) {
     .join(" ");
   const createdUser = await admin.auth.admin.createUser({
     email: parsed.data.email,
-    // This creates an immediately usable Auth identity without sending a signup
-    // verification email. Future portal sign-in still requires inbox access.
+    password: parsed.data.password,
+    // Create the Auth identity without requiring an email verification step.
     email_confirm: true,
     user_metadata: { full_name: fullName },
   });
@@ -183,7 +188,7 @@ export async function POST(request: NextRequest) {
   }
 
   const noticeHash = createHash("sha256")
-    .update(env.REGISTRATION_CONSENT_NOTICE!, "utf8")
+    .update(buildRegistrationNotice(env.REGISTRATION_CONSENT_NOTICE!), "utf8")
     .digest("hex");
   const created = await admin.rpc("create_open_membership_with_photo", {
     p_auth_user_id: createdUser.data.user.id,
@@ -210,11 +215,10 @@ export async function POST(request: NextRequest) {
       occupation: parsed.data.occupation || null,
       address: parsed.data.address || null,
       voter_card_status: parsed.data.voterCard || null,
-      institution_campus: parsed.data.institutionCampus || null,
-      department: parsed.data.department || null,
+      voter_card_number: parsed.data.voterCard === "yes" ? parsed.data.voterCardNumber?.trim() ?? null : null,
+      lga_code: lgaCode,
       course_of_study: parsed.data.courseOfStudy || null,
       study_level: parsed.data.studyLevel || null,
-      graduation_year: parsed.data.graduationYear || null,
     },
   });
   const issued = Array.isArray(created.data) ? created.data[0] : created.data;
