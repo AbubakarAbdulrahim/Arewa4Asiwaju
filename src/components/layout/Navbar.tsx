@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -12,6 +13,7 @@ const navLinks = [
   { label: "Leadership", href: "/leadership" },
   { label: "News", href: "/news" },
   { label: "Events", href: "/events" },
+  { label: "Get Your Banner", href: "/banner-generator" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -78,6 +80,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-1.5 lg:flex">
+          <ThemeToggle />
           <Link href="/login" className="button-secondary px-3 py-2 text-xs">
             Login
           </Link>
@@ -122,13 +125,16 @@ export function Navbar() {
                 </Link>
               );
             })}
-            <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              className="button-secondary mt-1 w-full"
-            >
-              Login
-            </Link>
+            <div className="mt-1 flex items-center gap-2">
+              <ThemeToggle />
+              <Link
+                href="/login"
+                onClick={() => setOpen(false)}
+                className="button-secondary flex-1"
+              >
+                Login
+              </Link>
+            </div>
             <Link href="/register" onClick={() => setOpen(false)} className="button-primary mt-2">
               Join the Student Wing <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Link>

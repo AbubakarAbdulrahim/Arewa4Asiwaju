@@ -107,7 +107,6 @@ export function Footer({ reserveFloatingActionSpace = false }: { reserveFloating
       <div className="border-t border-white/15">
         <div className={`site-container flex flex-col gap-2 py-4 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between ${reserveFloatingActionSpace ? "pb-20" : ""}`}>
           <p>Arewa for Asiwaju Student Wing. All rights reserved.</p>
-          <Link className={footerLinkClass} href="/ha">Hausa version</Link>
         </div>
       </div>
     </footer>

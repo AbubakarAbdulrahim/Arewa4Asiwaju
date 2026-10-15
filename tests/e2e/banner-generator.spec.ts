@@ -20,15 +20,19 @@ test("generator previews a local image and downloads the matching high-resolutio
     page.getByRole("heading", { name: "Create Your A4A Students’ Wing Banner" }),
   ).toBeVisible();
 
-  await page.getByLabel("Full name").fill("  Comr. Abubakar Abdulrahim  ");
+  await page.getByLabel("Full name").fill("  Garba Magaji  ");
   await page.getByLabel("Profile picture").setInputFiles({
     name: "portrait.png",
     mimeType: "image/png",
     buffer: onePixelPng,
   });
 
+  await expect(page.getByLabel("Horizontal position")).toHaveCount(0);
+  await expect(page.getByLabel("Vertical position")).toHaveCount(0);
+  await expect(page.getByLabel("Zoom picture")).toBeVisible();
+
   await expect(
-    page.getByRole("img", { name: "Banner preview for Comr. Abubakar Abdulrahim" }),
+    page.getByRole("img", { name: "Banner preview for Garba Magaji" }),
   ).toBeVisible();
   const canvas = page.locator("canvas");
   const withoutPosition = await canvas.evaluate((element: HTMLCanvasElement) =>
@@ -50,7 +54,7 @@ test("generator previews a local image and downloads the matching high-resolutio
     .evaluate((canvas: HTMLCanvasElement) => [canvas.width, canvas.height]);
   expect(canvasSize).toEqual([1528, 2160]);
   const [download] = await Promise.all([page.waitForEvent("download"), downloadLink.click()]);
-  expect(download.suggestedFilename()).toBe("arewa4asiwaju-comr-abubakar-abdulrahim.png");
+  expect(download.suggestedFilename()).toBe("arewa4asiwaju-garba-magaji.png");
 
   await page.getByRole("button", { name: "Create another banner" }).click();
   await expect(page.getByLabel("Full name")).toHaveValue("");

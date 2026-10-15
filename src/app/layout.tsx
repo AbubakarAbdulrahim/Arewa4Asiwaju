@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { env } from "@/lib/env";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 const description =
   "Arewa for Asiwaju Student Wing is part of a political mobilisation and advocacy movement working across Northern Nigeria.";
@@ -33,7 +34,14 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('a4a_theme_preference');var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.style.colorScheme=d?'dark':'light'}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-paper text-ink antialiased">
         <a
           href="#main-content"
@@ -41,7 +49,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Skip to content
         </a>
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

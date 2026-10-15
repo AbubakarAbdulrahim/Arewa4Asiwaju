@@ -58,7 +58,7 @@ export function RegionalReach() {
   return (
     <section
       ref={sectionRef}
-      className="border-y border-line bg-surface py-12 sm:py-16"
+      className="border-y border-line bg-surface py-10 sm:py-14"
       aria-labelledby="regional-reach-heading"
     >
       <div className="site-container">
@@ -73,15 +73,15 @@ export function RegionalReach() {
               Territory, with a structure designed to connect state, local, and ward activity.
             </p>
 
-            <div className="mt-7 grid max-w-lg grid-cols-2 overflow-hidden rounded-lg border border-line bg-paper">
-              <div className="border-r border-line px-5 py-4 sm:px-6 sm:py-5">
+            <div className="mt-7 grid max-w-lg grid-cols-2 border-y border-line py-4 sm:py-5">
+              <div className="border-r border-line pr-4 sm:pr-6">
                 <p className="font-mono text-4xl font-bold leading-none tracking-tight text-brand-forest sm:text-5xl" aria-hidden="true">
                   {stateCount}
                 </p>
                 <p className="mt-2 text-sm font-semibold text-ink">Northern states</p>
                 <span className="sr-only">19 northern states in scope</span>
               </div>
-              <div className="px-5 py-4 sm:px-6 sm:py-5">
+              <div className="pl-4 sm:pl-6">
                 <p className="font-mono text-4xl font-bold leading-none tracking-tight text-brand-forest sm:text-5xl" aria-hidden="true">
                   {fctCount}
                 </p>
@@ -91,15 +91,15 @@ export function RegionalReach() {
             </div>
           </div>
 
-          <div className="rounded-lg bg-brand-forest p-5 text-white sm:p-7">
+          <div className="border-l-2 border-brand-forest bg-paper py-1 pl-5 text-ink sm:pl-7">
             <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/20 pb-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[.14em] text-white/70">
+                  <p className="text-xs font-bold uppercase tracking-[.14em] text-muted">
                   Coverage
                 </p>
-                <h3 className="mt-1 text-xl font-bold sm:text-2xl">19 states + FCT</h3>
+                <h3 className="mt-1 text-xl font-bold text-ink sm:text-2xl">States by geopolitical zone</h3>
               </div>
-              <p className="text-sm text-white/75">Grouped by geopolitical zone</p>
+              <p className="text-sm text-muted">Coverage framework</p>
             </div>
 
             <div className="mt-5 grid gap-x-5 gap-y-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -107,10 +107,10 @@ export function RegionalReach() {
                 const states = coverage.filter((state) => state.zone === zone);
                 return (
                   <div key={zone}>
-                    <h4 className="text-xs font-bold uppercase tracking-[.12em] text-[#f3ca61]">
+                    <h4 className="text-xs font-bold uppercase tracking-[.12em] text-brand-forest">
                       {zone}
                     </h4>
-                    <ul className="mt-3 space-y-2 text-sm text-white/90">
+                    <ul className="mt-3 space-y-2 text-sm text-muted">
                       {states.map((state) => (
                         <li key={state.code}>{state.name}</li>
                       ))}

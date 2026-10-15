@@ -6,7 +6,7 @@ export interface NorthernState {
   lgas: string[];
 }
 
-import wardOptions from "./northern-ward-options.json";
+import wardOptions from "./northern-ward-options.json" with { type: "json" };
 
 type WardOptions = Record<string, string[]>;
 const WARD_OPTIONS = wardOptions as WardOptions;
