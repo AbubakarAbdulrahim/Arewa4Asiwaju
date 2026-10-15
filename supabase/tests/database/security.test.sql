@@ -200,7 +200,7 @@ SELECT * FROM public.create_open_membership_with_photo(
   'a4000000-0000-4000-8000-000000000005', 'unverified@example.test', 'Open', NULL, 'Member',
   'Kano', 'Database test LGA', 'KN', (SELECT id FROM public.organisational_units WHERE code = 'ST-KN'),
   'test-v1', repeat('e', 64), TRUE, 'members/a4000000-0000-4000-8000-000000000005/profile.jpg', 'tertiary', 'Test University',
-  '{"phone":"08012345678","is_student":"yes","ward":"Test Ward","course_of_study":"Computer Science","study_level":"300 level","institution_campus":"Main Campus","department":"Computing","graduation_year":"2028"}'::JSONB
+  '{"phone":"08012345678","is_student":"yes","ward":"Test Ward","lga_code":"KMC","course_of_study":"Computer Science","study_level":"300 level","institution_campus":"Main Campus","department":"Computing","graduation_year":"2028"}'::JSONB
 );
 RESET ROLE;
 SELECT is((SELECT email_confirmed_at IS NULL FROM auth.users WHERE id = 'a4000000-0000-4000-8000-000000000005'), TRUE, 'open membership creation does not require or change email verification');
@@ -261,4 +261,3 @@ SELECT set_config('request.jwt.claims', '{"role":"service_role"}', TRUE);
 
 SELECT * FROM finish();
 ROLLBACK;
-

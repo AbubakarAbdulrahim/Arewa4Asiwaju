@@ -12,11 +12,15 @@ const optionalText = z.preprocess(
   (value) => (value === "" ? undefined : value),
   z.string().trim().min(1).optional(),
 );
+const appEnvironment = z.preprocess(
+  (value) => (value === "preview" ? "staging" : value),
+  z.enum(["development", "staging", "production"]).default("development"),
+);
 
 const envSchema = z
   .object({
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
-    APP_ENV: z.enum(["development", "staging", "production"]).default("development"),
+    APP_ENV: appEnvironment,
     NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
     NEXT_PUBLIC_SUPABASE_URL: optionalUrl,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: optionalSecret,

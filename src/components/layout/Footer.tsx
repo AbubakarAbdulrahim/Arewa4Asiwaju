@@ -67,7 +67,7 @@ export function Footer() {
           <h2 className="text-sm font-bold uppercase tracking-[.12em] text-white">Contact and resources</h2>
           <p className="mt-4 flex items-start gap-2.5 text-sm leading-6 text-white/75">
             <MapPin aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-[#f3ca61]" />
-            Northern Nigeria and the Federal Capital Territory
+            Kano State, Nigeria
           </p>
           <ul className="mt-2 space-y-1">
             <li>

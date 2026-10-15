@@ -1,8 +1,37 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import test from "node:test";
 import { formatMembershipNumber } from "../src/lib/utils.ts";
 import { registrationSchema } from "../src/lib/validation/registration-schema.ts";
 import { inspectMemberPhoto } from "../src/lib/security/member-photo.ts";
+
+test("Vercel Preview APP_ENV maps to staging without accepting unknown environments", () => {
+  const preview = spawnSync(
+    process.execPath,
+    [
+      "--experimental-strip-types",
+      "--input-type=module",
+      "-e",
+      'import { env } from "./src/lib/env.ts"; console.log(env.APP_ENV)',
+    ],
+    {
+      encoding: "utf8",
+      env: { ...process.env, APP_ENV: "preview" },
+    },
+  );
+  assert.equal(preview.status, 0, preview.stderr);
+  assert.equal(preview.stdout.trim(), "staging");
+
+  const invalid = spawnSync(
+    process.execPath,
+    ["--experimental-strip-types", "--input-type=module", "-e", 'import "./src/lib/env.ts"'],
+    {
+      encoding: "utf8",
+      env: { ...process.env, APP_ENV: "invalid" },
+    },
+  );
+  assert.notEqual(invalid.status, 0);
+});
 
 test("membership number display is stable and normalised", () => {
   assert.equal(formatMembershipNumber(" a4a-2026-st-000042 "), "A4A-2026-ST-000042");
@@ -31,8 +60,11 @@ test("registration keeps the profile minimal and normalises the email address", 
     middleName: "",
     lastName: "Hausa",
     email: " Amina@example.org ",
+    phone: "08012345678",
     stateOfResidence: "Kano",
     lgaOfResidence: "Kano Municipal",
+    ward: "Test Ward",
+    isStudent: "no",
     acceptedNotice: true,
   });
   assert.equal(result.success, true);

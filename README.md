@@ -14,7 +14,7 @@ Before submitting changes, run `npm run format:check`, `npm run lint`, `npm run 
 
 ## Environments
 
-Use a separate Supabase project and distinct credentials for local development, staging, and production. Set `APP_ENV` and `NEXT_PUBLIC_APP_URL` for each environment. In Vercel, configure environment variables separately for Development, Preview (staging), and Production; production secrets must not be copied into preview deployments. Store `SUPABASE_SERVICE_ROLE_KEY` only as a server-side environment variable. Never commit `.env.local`, provider credentials, or production data.
+Use a separate Supabase project and distinct credentials for local development, staging, and production. Set `APP_ENV` to `development`, `staging`, or `production`, and set `NEXT_PUBLIC_APP_URL` for each environment. For compatibility, `APP_ENV=preview` is normalized to `staging` on Vercel Preview deployments. In Vercel, configure environment variables separately for Development, Preview (staging), and Production; production secrets must not be copied into preview deployments. Store `SUPABASE_SERVICE_ROLE_KEY` only as a server-side environment variable. Never commit `.env.local`, provider credentials, or production data.
 
 ## Project structure
 

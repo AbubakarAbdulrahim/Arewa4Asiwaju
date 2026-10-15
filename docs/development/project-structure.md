@@ -24,7 +24,7 @@ Keep route handlers thin; validate at boundaries, call focused domain functions,
 
 ## Runtime configuration
 
-Copy `.env.example` to `.env.local`. `src/lib/env.ts` validates `APP_ENV`, the public app URL, and paired Supabase public settings at module load. Supabase configuration may stay unset while the application shell is developed. A Supabase client refuses to initialize until both URL and anon key are set. The admin client is server-only and requires `SUPABASE_SERVICE_ROLE_KEY`; it never falls back to an anon key. Do not put privileged secrets in variables prefixed with `NEXT_PUBLIC_`.
+Copy `.env.example` to `.env.local`. `src/lib/env.ts` validates `APP_ENV`, the public app URL, and paired Supabase public settings at module load. `APP_ENV` uses `development`, `staging`, or `production`; the Vercel Preview label `preview` is normalized to `staging`. Supabase configuration may stay unset while the application shell is developed. A Supabase client refuses to initialize until both URL and anon key are set. The admin client is server-only and requires `SUPABASE_SERVICE_ROLE_KEY`; it never falls back to an anon key. Do not put privileged secrets in variables prefixed with `NEXT_PUBLIC_`.
 
 Set separate values in Vercel's Development, Preview, and Production scopes. Preview is the staging environment and must point to a non-production Supabase project. Use a separately managed production project and credentials. No deployed environment is configured by this repository alone.
 
