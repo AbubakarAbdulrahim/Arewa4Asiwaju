@@ -614,6 +614,24 @@ html[data-theme="dark"] .photo-carousel__image {
   background: var(--brand-forest);
 }
 
+@keyframes carouselProgressFill {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.carousel-progress-fill {
+  transform-origin: left;
+  animation: carouselProgressFill 5000ms linear forwards;
+}
+
+.carousel-progress-paused {
+  animation-play-state: paused;
+}
+
 @media (max-width: 40rem) {
   .site-container {
     width: min(calc(100% - 1.25rem), var(--content));

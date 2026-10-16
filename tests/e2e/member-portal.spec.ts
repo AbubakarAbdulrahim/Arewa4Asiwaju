@@ -54,13 +54,15 @@ test("mobile navigation works by keyboard and the hero photo is visible", async 
 
   await expect(
     page.getByRole("heading", {
-      name: "A student wing connecting policy and people",
+      name: "Connect Northern students with policy.",
     }),
   ).toBeVisible();
   await expect(
-    page.getByRole("img", {
-      name: "President Bola Ahmed Tinubu, grand patron of Arewa for Asiwaju",
-    }),
+    page
+      .getByRole("img", {
+        name: /President Bola Ahmed Tinubu/i,
+      })
+      .first(),
   ).toBeVisible();
   await expect(page.locator("html")).toHaveJSProperty("scrollWidth", 360);
 

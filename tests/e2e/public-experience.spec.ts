@@ -5,7 +5,9 @@ test("homepage hero uses the approved movement image and clear calls to action",
 }) => {
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "Connect Northern students with policy." }),
+    page.getByRole("heading", {
+      name: "Connect Northern Students with Policy for Renewed Hope Agenda 2027",
+    }),
   ).toBeVisible();
   await expect(
     page.getByRole("img", {
@@ -98,18 +100,12 @@ test("homepage remains within the requested responsive breakpoints", async ({ pa
     expect(scrollWidth, `homepage overflows at ${width}px`).toBeLessThanOrEqual(width);
   }
 });
-test("carousel advances from its portrait slide to the organising illustration", async ({
-  page,
-}) => {
+test("carousel advances from tinubu to badaru on user action", async ({ page }) => {
   test.setTimeout(60_000);
   await page.goto("/");
   const carousel = page.getByRole("region", { name: "Movement Highlights Carousel" });
-  await expect(
-    carousel.getByRole("heading", { name: "A student wing connecting policy and people" }),
-  ).toBeVisible();
+  await expect(carousel).toBeVisible();
+  await expect(carousel.getByRole("img", { name: /Tinubu/i }).first()).toBeVisible();
   await carousel.getByRole("button", { name: "Next slide" }).click();
-  await expect(
-    carousel.getByRole("heading", { name: "Build clear routes to take part" }),
-  ).toBeVisible();
-  await expect(carousel.getByRole("img", { name: /organising framework/ })).toBeVisible();
+  await expect(carousel.getByRole("img", { name: /Badaru/i }).first()).toBeVisible();
 });

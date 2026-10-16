@@ -23,7 +23,7 @@ export function PhotoCarousel({ slides }: { slides: PhotoSlide[] }) {
       return;
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % slides.length);
-    }, 6000);
+    }, 5000);
     return () => window.clearInterval(timer);
   }, [paused, slides.length]);
 

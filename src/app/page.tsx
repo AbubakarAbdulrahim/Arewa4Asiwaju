@@ -66,29 +66,18 @@ const heroSlides: HeroSlide[] = [
   {
     src: "/brand/grand-patron-tinubu-760w.jpg",
     alt: "President Bola Ahmed Tinubu, grand patron of Arewa for Asiwaju",
-    tag: "Our movement",
-    title: "A student wing connecting policy and people",
-    description:
-      "A4A focuses on grassroots organisation, policy advocacy, and student participation across Northern Nigeria.",
-    objectPosition: "center 24%",
   },
   {
-    src: "/brand/organising-framework.svg",
-    alt: "Illustration of the A4A organising framework from national coordination to student participation",
-    tag: "Illustration | organising framework",
-    title: "Build clear routes to take part",
-    description:
-      "The movement framework describes national, state, LGA, ward, and student structures. This graphic does not represent live chapter counts.",
-    objectPosition: "center",
+    src: "/brand/badaru.jpg",
+    alt: "Mohammed Badaru Abubakar",
   },
   {
-    src: "/brand/policy-communication.svg",
-    alt: "Illustration of education, agriculture, and infrastructure as policy communication themes",
-    tag: "Illustration | advocacy themes",
-    title: "Make public priorities easier to understand",
-    description:
-      "The supplied framework names education, agriculture and food security, infrastructure, and youth inclusion as advocacy themes.",
-    objectPosition: "center",
+    src: "/brand/maliki.jpg",
+    alt: "Maliki",
+  },
+  {
+    src: "/brand/kalli.jpg",
+    alt: "Kalli",
   },
 ];
 
@@ -196,7 +185,7 @@ export default function HomePage() {
             <div className="max-w-2xl">
               <p className="eyebrow mb-4">AREWA FOR ASIWAJU STUDENT WING</p>
               <h1 className="display-title home-hero-title max-w-2xl text-ink">
-                Connect Northern students with policy.
+                Connect Northern Students with Policy for Renewed Hope Agenda 2027
               </h1>
               <p className="mt-5 max-w-xl text-base leading-7 text-muted sm:text-lg sm:leading-relaxed">
                 A4A connects young people with the Renewed Hope Agenda through grassroots
