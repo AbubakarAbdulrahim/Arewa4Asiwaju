@@ -26,9 +26,7 @@ export async function GET(request: NextRequest) {
     const safeNext =
       next &&
       !next.includes("\\") &&
-      (next === "/portal" ||
-        next.startsWith("/portal/") ||
-        next === "/admin-login/reset")
+      (next === "/portal" || next.startsWith("/portal/") || next === "/admin-login/reset")
         ? next
         : "/portal";
     const destination = intent

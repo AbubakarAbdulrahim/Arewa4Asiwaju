@@ -134,6 +134,9 @@ a {
   letter-spacing: -0.045em;
   line-height: 1.06;
 }
+.home-hero-title {
+  font-size: clamp(2rem, 3.8vw, 3.25rem);
+}
 .section-title {
   font-size: clamp(1.65rem, 3vw, 2.5rem);
   font-weight: 700;
@@ -433,7 +436,9 @@ html[data-theme="dark"] .file-picker::file-selector-button {
   background: rgb(3 42 25 / 64%);
   color: white;
   backdrop-filter: blur(8px);
-  transition: background-color 150ms ease, transform 150ms ease;
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
 }
 .home-photo-carousel__controls button:hover {
   background: var(--brand-forest);
@@ -460,7 +465,9 @@ html[data-theme="dark"] .file-picker::file-selector-button {
   border: 1px solid white;
   border-radius: 999px;
   background: rgb(3 42 25 / 55%);
-  transition: width 150ms ease, background-color 150ms ease;
+  transition:
+    width 150ms ease,
+    background-color 150ms ease;
 }
 .home-photo-carousel__dots button[aria-current="true"] {
   width: 1.65rem;

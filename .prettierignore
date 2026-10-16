@@ -9,3 +9,5 @@ playwright-report
 package-lock.json
 next-env.d.ts
 public/brand/*.jpg
+
+src/lib/northern-ward-options.json

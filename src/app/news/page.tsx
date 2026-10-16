@@ -40,7 +40,9 @@ export default async function NewsPage() {
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Latest updates</p>
-            <h2 id="latest-news-heading" className="section-title mt-2">From the movement</h2>
+            <h2 id="latest-news-heading" className="section-title mt-2">
+              From the movement
+            </h2>
           </div>
           <Newspaper aria-hidden="true" className="hidden h-7 w-7 text-brand-forest sm:block" />
         </div>
@@ -48,7 +50,9 @@ export default async function NewsPage() {
           <ContentStatus state={result.state === "ready" ? "empty" : result.state} />
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {result.items.map((item) => <AnnouncementCard key={item.id} item={item} />)}
+            {result.items.map((item) => (
+              <AnnouncementCard key={item.id} item={item} />
+            ))}
           </div>
         )}
       </section>
@@ -57,11 +61,16 @@ export default async function NewsPage() {
         <div>
           <h2 className="text-lg font-bold text-ink">Want to be part of the updates?</h2>
           <p className="mt-1 text-sm leading-6 text-muted">
-            Join the Student Wing to participate in movement activities and receive relevant information.
+            Join the Student Wing to participate in movement activities and receive relevant
+            information.
           </p>
         </div>
-        <Link href="/register" className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-sm bg-brand-forest px-4 py-2 text-sm font-bold text-white hover:bg-brand-forest-dark sm:self-auto">
-          Join the Student Wing <ArrowRight aria-hidden="true" className="h-4 w-4 text-white" stroke="white" />
+        <Link
+          href="/register"
+          className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-sm bg-brand-forest px-4 py-2 text-sm font-bold text-white hover:bg-brand-forest-dark sm:self-auto"
+        >
+          Join the Student Wing{" "}
+          <ArrowRight aria-hidden="true" className="h-4 w-4 text-white" stroke="white" />
         </Link>
       </aside>
     </PublicPage>

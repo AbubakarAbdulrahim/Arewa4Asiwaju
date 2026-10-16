@@ -76,7 +76,10 @@ export async function POST(request: NextRequest) {
     return json({ error: "Select a valid state and LGA." }, 400);
   }
   const lgaCode = getLgaMembershipCode(state.code, parsed.data.lgaOfResidence);
-  if (!lgaCode || !getWardOptions(state.code, parsed.data.lgaOfResidence).includes(parsed.data.ward)) {
+  if (
+    !lgaCode ||
+    !getWardOptions(state.code, parsed.data.lgaOfResidence).includes(parsed.data.ward)
+  ) {
     return json({ error: "Select a ward within the chosen LGA." }, 400);
   }
   const photoFile = form.get("profilePhoto");
@@ -215,7 +218,8 @@ export async function POST(request: NextRequest) {
       occupation: parsed.data.occupation || null,
       address: parsed.data.address || null,
       voter_card_status: parsed.data.voterCard || null,
-      voter_card_number: parsed.data.voterCard === "yes" ? parsed.data.voterCardNumber?.trim() ?? null : null,
+      voter_card_number:
+        parsed.data.voterCard === "yes" ? (parsed.data.voterCardNumber?.trim() ?? null) : null,
       lga_code: lgaCode,
       course_of_study: parsed.data.courseOfStudy || null,
       study_level: parsed.data.studyLevel || null,

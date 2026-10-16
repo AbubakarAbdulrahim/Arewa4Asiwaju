@@ -328,8 +328,22 @@ export async function generateMembershipCardPdfTemplate(
   drawCenteredText(back, "MEMBERSHIP CARD INFORMATION", regular, 6.3, height - 39, white);
 
   drawCenteredText(back, "MEMBERSHIP & VERIFICATION", bold, 8, 218, forest);
-  drawCenteredText(back, "This card confirms membership in the A4A Student Wing.", regular, 8.5, 197, ink);
-  drawCenteredText(back, "Scan the QR code on the front to check current membership status.", regular, 8, 180, ink);
+  drawCenteredText(
+    back,
+    "This card confirms membership in the A4A Student Wing.",
+    regular,
+    8.5,
+    197,
+    ink,
+  );
+  drawCenteredText(
+    back,
+    "Scan the QR code on the front to check current membership status.",
+    regular,
+    8,
+    180,
+    ink,
+  );
   drawCenteredText(back, "The public check confirms card status only.", regular, 7.5, 164, muted);
 
   back.drawRectangle({
@@ -342,8 +356,22 @@ export async function generateMembershipCardPdfTemplate(
     borderWidth: 0.8,
   });
   drawCenteredText(back, "MEMBERSHIP IDENTIFIER", bold, 6.5, 125, forest);
-  drawCenteredText(back, "This number identifies your membership; it is not a password.", regular, 7.5, 108, ink);
-  drawCenteredText(back, "Not a national identity card or government-issued credential.", regular, 7, 71, muted);
+  drawCenteredText(
+    back,
+    "This number identifies your membership; it is not a password.",
+    regular,
+    7.5,
+    108,
+    ink,
+  );
+  drawCenteredText(
+    back,
+    "Not a national identity card or government-issued credential.",
+    regular,
+    7,
+    71,
+    muted,
+  );
   drawCenteredText(back, "Support: 09122628654  |  09013113304", bold, 7.5, 51, forest);
   drawCenteredText(back, "Keep your card and verification QR private.", regular, 6.5, 31, muted);
   back.drawRectangle({ x: 0, y: 0, width, height: 6, color: forest });

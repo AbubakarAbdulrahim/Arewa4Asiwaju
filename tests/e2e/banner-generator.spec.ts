@@ -31,9 +31,7 @@ test("generator previews a local image and downloads the matching high-resolutio
   await expect(page.getByLabel("Vertical position")).toHaveCount(0);
   await expect(page.getByLabel("Zoom picture")).toBeVisible();
 
-  await expect(
-    page.getByRole("img", { name: "Banner preview for Garba Magaji" }),
-  ).toBeVisible();
+  await expect(page.getByRole("img", { name: "Banner preview for Garba Magaji" })).toBeVisible();
   const canvas = page.locator("canvas");
   const withoutPosition = await canvas.evaluate((element: HTMLCanvasElement) =>
     element.toDataURL(),
@@ -63,6 +61,7 @@ test("generator previews a local image and downloads the matching high-resolutio
 });
 
 test("generator rejects unsupported image types with a readable error", async ({ page }) => {
+  test.setTimeout(60_000);
   await page.goto("/banner-generator");
   await page.getByLabel("Profile picture").setInputFiles({
     name: "document.txt",

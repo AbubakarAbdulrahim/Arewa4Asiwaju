@@ -20,17 +20,17 @@ export default function HausaAboutPage() {
           Arewa for Asiwaju
         </h1>
         <p className="mt-5 max-w-3xl text-lg leading-relaxed text-muted">
-          A4A ƙungiya ce ta wayar da kan jama’a da bayar da shawarwari kan siyasa, wadda ke aiki a
-          Arewacin Najeriya domin haɗa manufofin gwamnati da al’ummomin tushe.
+          A4A ƙungiya ce ta wayar da kan jama&apos;a da bayar da shawarwari kan siyasa, wadda ke
+          aiki a Arewacin Najeriya domin haɗa manufofin gwamnati da al&apos;ummomin tushe.
         </p>
         <section className="mt-10 border-t border-line pt-7">
           <h2 className="section-title">Abubuwan da ƙungiyar ke mayar da hankali a kai</h2>
           <ul className="mt-5 list-disc space-y-3 pl-6 text-sm leading-relaxed text-muted">
-            <li>Tsara ƙungiyoyi daga jiha zuwa ƙananan hukumomi da unguwanni.</li>
+            <li>Tsara ƙungiyoyi daga jihohi zuwa ƙananan hukumomi da unguwanni.</li>
             <li>Fassara da bayyana manufofin tarayya cikin harshe mai sauƙi da fahimta.</li>
             <li>Ƙarfafa matasa da ɗalibai su shiga ayyukan wayar da kai da jagoranci.</li>
             <li>
-              Raba bayanan gwamnati tare da sahihan majiyoyi don tabbatar da da’awar da ake
+              Raba bayanan gwamnati tare da sahihan majiyoyi don tabbatar da da&apos;awar da ake
               wallafawa.
             </li>
           </ul>

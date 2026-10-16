@@ -32,7 +32,9 @@ export async function processMembershipCard(
     const [profileResult, membershipResult, cardResult] = await Promise.all([
       admin
         .from("profiles")
-        .select("full_name,state_of_residence,lga_of_residence,ward,institution_name,photo_storage_path")
+        .select(
+          "full_name,state_of_residence,lga_of_residence,ward,institution_name,photo_storage_path",
+        )
         .eq("id", userId)
         .single(),
       admin

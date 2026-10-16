@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useSyncExternalStore,
-} from "react";
+import { createContext, useCallback, useContext, useSyncExternalStore } from "react";
 
 export type Theme = "light" | "dark" | "system";
 type ResolvedTheme = Exclude<Theme, "system">;
@@ -23,7 +18,7 @@ let memoryPreference: Theme | null = null;
 function getPreference(): Theme {
   try {
     const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    return stored === "light" || stored === "dark" ? stored : memoryPreference ?? "system";
+    return stored === "light" || stored === "dark" ? stored : (memoryPreference ?? "system");
   } catch {
     return memoryPreference ?? "system";
   }

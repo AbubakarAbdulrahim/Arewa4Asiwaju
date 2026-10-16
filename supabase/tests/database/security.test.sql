@@ -1,7 +1,7 @@
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap WITH SCHEMA extensions;
 SET LOCAL search_path = extensions, public;
-SELECT plan(96);
+SELECT plan(97);
 
 SELECT ok(
   EXISTS (
@@ -202,6 +202,7 @@ SELECT * FROM public.create_open_membership_with_photo(
   'test-v1', repeat('e', 64), TRUE, 'members/a4000000-0000-4000-8000-000000000005/profile.jpg', 'tertiary', 'Test University',
   '{"phone":"08012345678","is_student":"yes","ward":"Test Ward","lga_code":"KMC","course_of_study":"Computer Science","study_level":"300 level","institution_campus":"Main Campus","department":"Computing","graduation_year":"2028"}'::JSONB
 );
+SELECT ok(COALESCE(current_setting('a4a.registration_lga_code', true), '') = '', 'open registration consumes its temporary LGA context during number allocation');
 RESET ROLE;
 SELECT is((SELECT email_confirmed_at IS NULL FROM auth.users WHERE id = 'a4000000-0000-4000-8000-000000000005'), TRUE, 'open membership creation does not require or change email verification');
 SELECT is((SELECT photo_storage_path FROM public.profiles WHERE id = 'a4000000-0000-4000-8000-000000000005'), 'members/a4000000-0000-4000-8000-000000000005/profile.jpg', 'photo registration records only the private storage path');

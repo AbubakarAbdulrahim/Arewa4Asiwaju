@@ -75,14 +75,20 @@ export function RegionalReach() {
 
             <div className="mt-7 grid max-w-lg grid-cols-2 border-y border-line py-4 sm:py-5">
               <div className="border-r border-line pr-4 sm:pr-6">
-                <p className="font-mono text-4xl font-bold leading-none tracking-tight text-brand-forest sm:text-5xl" aria-hidden="true">
+                <p
+                  className="font-mono text-4xl font-bold leading-none tracking-tight text-brand-forest sm:text-5xl"
+                  aria-hidden="true"
+                >
                   {stateCount}
                 </p>
                 <p className="mt-2 text-sm font-semibold text-ink">Northern states</p>
                 <span className="sr-only">19 northern states in scope</span>
               </div>
               <div className="pl-4 sm:pl-6">
-                <p className="font-mono text-4xl font-bold leading-none tracking-tight text-brand-forest sm:text-5xl" aria-hidden="true">
+                <p
+                  className="font-mono text-4xl font-bold leading-none tracking-tight text-brand-forest sm:text-5xl"
+                  aria-hidden="true"
+                >
                   {fctCount}
                 </p>
                 <p className="mt-2 text-sm font-semibold text-ink">Federal Capital Territory</p>
@@ -94,10 +100,10 @@ export function RegionalReach() {
           <div className="border-l-2 border-brand-forest bg-paper py-1 pl-5 text-ink sm:pl-7">
             <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/20 pb-4">
               <div>
-                  <p className="text-xs font-bold uppercase tracking-[.14em] text-muted">
-                  Coverage
-                </p>
-                <h3 className="mt-1 text-xl font-bold text-ink sm:text-2xl">States by geopolitical zone</h3>
+                <p className="text-xs font-bold uppercase tracking-[.14em] text-muted">Coverage</p>
+                <h3 className="mt-1 text-xl font-bold text-ink sm:text-2xl">
+                  States by geopolitical zone
+                </h3>
               </div>
               <p className="text-sm text-muted">Coverage framework</p>
             </div>

@@ -60,12 +60,6 @@ test("registration keeps the profile minimal and normalises the email address", 
     middleName: "",
     lastName: "Hausa",
     email: " Amina@example.org ",
-<<<<<<< .merge_file_GHTrv4
-    phone: "08012345678",
-    stateOfResidence: "Kano",
-    lgaOfResidence: "Kano Municipal",
-    ward: "Test Ward",
-=======
     password: "staging-test-password-123",
     confirmPassword: "staging-test-password-123",
     phone: "09123456789",
@@ -73,7 +67,6 @@ test("registration keeps the profile minimal and normalises the email address", 
     lgaOfResidence: "Kano Municipal",
     ward: "Dala",
     voterCard: "no",
->>>>>>> .merge_file_WeLsSd
     isStudent: "no",
     acceptedNotice: true,
   });

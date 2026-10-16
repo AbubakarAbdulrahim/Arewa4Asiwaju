@@ -52,9 +52,14 @@ export function MemberCardAccess() {
       });
       const result = (await response.json()) as { message?: string; error?: string };
       if (!response.ok) throw new Error(result.error || "Password recovery is unavailable.");
-      setMessage(result.message || "If the details match an active membership, reset instructions will be sent.");
+      setMessage(
+        result.message ||
+          "If the details match an active membership, reset instructions will be sent.",
+      );
     } catch (resetError) {
-      setError(resetError instanceof Error ? resetError.message : "Password recovery is unavailable.");
+      setError(
+        resetError instanceof Error ? resetError.message : "Password recovery is unavailable.",
+      );
     } finally {
       setBusy(false);
     }
@@ -91,8 +96,13 @@ export function MemberCardAccess() {
               </p>
             </div>
             <p className="mt-8 flex items-start gap-2 border-t border-white/20 pt-4 text-xs leading-5 text-white/65 lg:mt-0">
-              <ShieldCheck aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-white" stroke="white" />
-              Your card is private. Sign in with your member password before viewing or downloading it.
+              <ShieldCheck
+                aria-hidden="true"
+                className="mt-0.5 h-4 w-4 shrink-0 text-white"
+                stroke="white"
+              />
+              Your card is private. Sign in with your member password before viewing or downloading
+              it.
             </p>
           </section>
 

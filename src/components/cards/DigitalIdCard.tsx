@@ -123,7 +123,9 @@ export function DigitalIdCard({
 
                 <div>
                   <span className="text-[7.5px] font-semibold text-[#64748B] block">WARD</span>
-                  <span className="font-bold text-[#121713] truncate block">{wardName || "Not recorded"}</span>
+                  <span className="font-bold text-[#121713] truncate block">
+                    {wardName || "Not recorded"}
+                  </span>
                 </div>
 
                 {institutionName && (

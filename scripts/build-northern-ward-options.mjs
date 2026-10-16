@@ -36,9 +36,11 @@ const aliases = new Map([
   ["fct|municipalareacouncilamac", "MUNICIPAL"],
 ]);
 
-const stateBlocks = [...geoSource.matchAll(
-  /code:\s*"([A-Z0-9]+)"[\s\S]*?name:\s*"([^"]+)"[\s\S]*?lgas:\s*\[([^\]]*)\]/g,
-)];
+const stateBlocks = [
+  ...geoSource.matchAll(
+    /code:\s*"([A-Z0-9]+)"[\s\S]*?name:\s*"([^"]+)"[\s\S]*?lgas:\s*\[([^\]]*)\]/g,
+  ),
+];
 const wardsByParent = new Map();
 for (const row of wardRows) {
   const key = `${normalize(row.state_name)}|${normalize(row.lga_name)}`;
@@ -67,4 +69,6 @@ for (const block of stateBlocks) {
 
 if (unmatched.length) throw new Error(`Unmatched LGA entries: ${unmatched.join(", ")}`);
 await writeFile("src/lib/northern-ward-options.json", `${JSON.stringify(output)}\n`);
-console.log(`Wrote ${Object.keys(output).length} LGA entries and ${Object.values(output).reduce((sum, wards) => sum + wards.length, 0)} ward options.`);
+console.log(
+  `Wrote ${Object.keys(output).length} LGA entries and ${Object.values(output).reduce((sum, wards) => sum + wards.length, 0)} ward options.`,
+);

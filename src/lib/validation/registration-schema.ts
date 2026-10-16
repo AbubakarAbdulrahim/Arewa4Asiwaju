@@ -20,7 +20,12 @@ export const registrationSchema = z
       .transform((value) => value.toLowerCase()),
     password: z.string().min(12, "Use at least 12 characters").max(128),
     confirmPassword: z.string().min(12).max(128),
-    phone: z.string().trim().min(7, "Enter a phone number").max(30).regex(/^\+?[0-9 ()-]{7,30}$/, "Enter a valid phone number"),
+    phone: z
+      .string()
+      .trim()
+      .min(7, "Enter a phone number")
+      .max(30)
+      .regex(/^\+?[0-9 ()-]{7,30}$/, "Enter a valid phone number"),
     stateOfResidence: z.string().trim().min(2).max(100),
     lgaOfResidence: z.string().trim().min(2).max(100),
     ward: z.string().trim().min(1, "Enter your ward").max(150),
@@ -29,9 +34,18 @@ export const registrationSchema = z
     occupation: z.string().trim().max(120).optional().or(z.literal("")),
     address: z.string().trim().max(500).optional().or(z.literal("")),
     voterCard: z.enum(["yes", "no", "prefer_not_to_say"]).optional().or(z.literal("")),
-    voterCardNumber: z.string().trim().max(50).regex(/^[A-Za-z0-9 /-]*$/, "Use only letters, numbers, spaces, slashes, or hyphens.").optional().or(z.literal("")),
+    voterCardNumber: z
+      .string()
+      .trim()
+      .max(50)
+      .regex(/^[A-Za-z0-9 /-]*$/, "Use only letters, numbers, spaces, slashes, or hyphens.")
+      .optional()
+      .or(z.literal("")),
     isStudent: z.enum(["yes", "no"]),
-    institutionType: z.enum(["tertiary", "artisan", "youth_corps", "general"]).optional().or(z.literal("")),
+    institutionType: z
+      .enum(["tertiary", "artisan", "youth_corps", "general"])
+      .optional()
+      .or(z.literal("")),
     institutionName: z
       .string()
       .trim()
@@ -46,7 +60,11 @@ export const registrationSchema = z
   })
   .superRefine((value, context) => {
     if (value.password !== value.confirmPassword) {
-      context.addIssue({ code: "custom", path: ["confirmPassword"], message: "The passwords do not match." });
+      context.addIssue({
+        code: "custom",
+        path: ["confirmPassword"],
+        message: "The passwords do not match.",
+      });
     }
     const fullName = [value.firstName, value.middleName, value.lastName].filter(Boolean).join(" ");
     if (fullName.length > 90) {
@@ -78,15 +96,34 @@ export const registrationSchema = z
       });
     }
     if (value.isStudent === "yes") {
-      for (const field of ["institutionName", "institutionType", "courseOfStudy", "studyLevel"] as const) {
-        if (!value[field]) context.addIssue({ code: "custom", path: [field], message: "Required for current students." });
+      for (const field of [
+        "institutionName",
+        "institutionType",
+        "courseOfStudy",
+        "studyLevel",
+      ] as const) {
+        if (!value[field])
+          context.addIssue({
+            code: "custom",
+            path: [field],
+            message: "Required for current students.",
+          });
       }
     }
     const dateParts = value.dateOfBirth ? value.dateOfBirth.split("-").map(Number) : [];
     const dateIsFormatted = /^\d{4}-\d{2}-\d{2}$/.test(value.dateOfBirth ?? "");
-    const dateIsReal = dateIsFormatted && dateParts.length === 3 && new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2])).toISOString().slice(0, 10) === value.dateOfBirth;
+    const dateIsReal =
+      dateIsFormatted &&
+      dateParts.length === 3 &&
+      new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]))
+        .toISOString()
+        .slice(0, 10) === value.dateOfBirth;
     if (value.dateOfBirth && (!dateIsReal || new Date(value.dateOfBirth) > new Date())) {
-      context.addIssue({ code: "custom", path: ["dateOfBirth"], message: "Enter a valid date of birth." });
+      context.addIssue({
+        code: "custom",
+        path: ["dateOfBirth"],
+        message: "Enter a valid date of birth.",
+      });
     }
   });
 

@@ -17,7 +17,10 @@ export function getWardOptions(stateCode: string, lgaName: string): string[] {
 
 function baseLgaCode(lgaName: string): string {
   const tokens = lgaName.toUpperCase().match(/[A-Z0-9]+/g) ?? [];
-  const initials = [...tokens, "COUNCIL"].map((token) => token[0]).join("").slice(0, 3);
+  const initials = [...tokens, "COUNCIL"]
+    .map((token) => token[0])
+    .join("")
+    .slice(0, 3);
   const letters = lgaName.toUpperCase().replace(/[^A-Z0-9]/g, "");
   let code = initials;
   for (const letter of letters) {

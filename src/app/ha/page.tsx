@@ -41,13 +41,13 @@ export default function HausaHomePage() {
         <section className="site-container py-12">
           <h2 className="section-title">{t.mission}</h2>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted">
-            A4A na mai da hankali kan shirya al’umma, bayyana manufofi, da ƙarfafa matasa da ɗalibai
-            su shiga ayyukan al’umma. Ana gina wannan fassarar ne bisa takardar tsarin ƙungiyar da
-            aka bayar.
+            A4A na mai da hankali kan shirya al&apos;umma, bayyana manufofi, da ƙarfafa matasa da
+            ɗalibai su shiga ayyukan al&apos;umma. An gina wannan bayani bisa takardar tsarin
+            ƙungiyar da aka bayar.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link className="button-secondary" href="/mission">
-              Karin bayani kan manufa
+              Ƙarin bayani kan manufa
             </Link>
             <Link className="button-secondary" href="/events">
               Abubuwan da ke tafe

@@ -23,7 +23,6 @@ export function HeroSlider({ slides }: HeroSliderProps) {
   const [paused, setPaused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const isPlaybackPaused = paused || isHovered || isFocused;
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
@@ -102,7 +101,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
             <div
               key={slide.src}
               aria-hidden={!isActive}
-              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out motion-reduce:transition-none ${
                 isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
               }`}
             >
@@ -112,7 +111,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
                 fill
                 preload={index === 0}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px"
-                className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.02]"
+                className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.02] motion-reduce:transition-none"
                 style={{ objectPosition: slide.objectPosition ?? "center 25%" }}
               />
 
@@ -175,15 +174,14 @@ export function HeroSlider({ slides }: HeroSliderProps) {
       {/* Interactive Bottom Bar */}
       {slides.length > 1 && (
         <div className="flex items-center justify-between border-t border-line/60 bg-surface px-4 py-3 sm:px-6">
-          <div className="flex items-center gap-1.5" role="tablist" aria-label="Slide Selector">
+          <div className="flex items-center gap-1.5" role="group" aria-label="Choose a slide">
             {slides.map((slide, index) => {
               const isCurrent = index === activeIndex;
               return (
                 <button
                   key={slide.src}
                   type="button"
-                  role="tab"
-                  aria-selected={isCurrent}
+                  aria-pressed={isCurrent}
                   aria-label={`Go to slide ${index + 1}: ${slide.title}`}
                   onClick={() => setActiveIndex(index)}
                   className="inline-flex h-11 min-w-11 items-center justify-center rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-forest"
@@ -204,9 +202,9 @@ export function HeroSlider({ slides }: HeroSliderProps) {
             </span>
             <button
               type="button"
-              onClick={() => setPaused(isPlaybackPaused ? false : true)}
-              aria-pressed={isPlaybackPaused}
-              aria-label={isPlaybackPaused ? "Resume automatic playback" : "Pause automatic playback"}
+              onClick={() => setPaused((value) => !value)}
+              aria-pressed={paused}
+              aria-label={paused ? "Resume automatic playback" : "Pause automatic playback"}
               className="ml-2 inline-flex h-11 w-11 items-center justify-center rounded-sm border border-line bg-surface-raised text-muted transition-colors hover:text-ink"
             >
               {paused ? (

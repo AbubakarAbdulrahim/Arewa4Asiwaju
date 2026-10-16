@@ -1,12 +1,26 @@
 import { expect, test } from "@playwright/test";
 
-test("homepage hero uses the approved movement image and clear calls to action", async ({ page }) => {
+test("homepage hero uses the approved movement image and clear calls to action", async ({
+  page,
+}) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Organising Northern students to make policy matter locally." })).toBeVisible();
-  await expect(page.getByRole("img", { name: "Bola Ahmed Tinubu, grand patron of Arewa for Asiwaju" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Connect Northern students with policy." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", {
+      name: "President Bola Ahmed Tinubu, grand patron of Arewa for Asiwaju",
+    }),
+  ).toBeVisible();
   const hero = page.locator("#main-content");
-  await expect(hero.getByRole("link", { name: /Join the Student Wing/ })).toHaveAttribute("href", "/register");
-  await expect(hero.getByRole("link", { name: "Discover the Movement" })).toHaveAttribute("href", "/about");
+  await expect(hero.getByRole("link", { name: /Join the Student Wing/ })).toHaveAttribute(
+    "href",
+    "/register",
+  );
+  await expect(hero.getByRole("link", { name: "Discover the Movement" })).toHaveAttribute(
+    "href",
+    "/about",
+  );
 });
 
 test("theme toggle applies dark mode and remembers the preference", async ({ page }) => {
@@ -14,7 +28,9 @@ test("theme toggle applies dark mode and remembers the preference", async ({ pag
   await page.getByRole("button", { name: "Switch to dark mode" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect
-    .poll(() => page.locator("body").evaluate((element) => getComputedStyle(element).backgroundColor))
+    .poll(() =>
+      page.locator("body").evaluate((element) => getComputedStyle(element).backgroundColor),
+    )
     .toBe("rgb(16, 23, 19)");
   await expect
     .poll(() => page.evaluate(() => localStorage.getItem("a4a_theme_preference")))
@@ -26,7 +42,9 @@ test("theme toggle applies dark mode and remembers the preference", async ({ pag
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 });
 
-test("mobile navbar places the theme toggle before Login and has no horizontal overflow", async ({ page }) => {
+test("mobile navbar places the theme toggle before Login and has no horizontal overflow", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto("/");
   await page.getByRole("button", { name: "Open navigation menu" }).click();
@@ -79,4 +97,19 @@ test("homepage remains within the requested responsive breakpoints", async ({ pa
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
     expect(scrollWidth, `homepage overflows at ${width}px`).toBeLessThanOrEqual(width);
   }
+});
+test("carousel advances from its portrait slide to the organising illustration", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await page.goto("/");
+  const carousel = page.getByRole("region", { name: "Movement Highlights Carousel" });
+  await expect(
+    carousel.getByRole("heading", { name: "A student wing connecting policy and people" }),
+  ).toBeVisible();
+  await carousel.getByRole("button", { name: "Next slide" }).click();
+  await expect(
+    carousel.getByRole("heading", { name: "Build clear routes to take part" }),
+  ).toBeVisible();
+  await expect(carousel.getByRole("img", { name: /organising framework/ })).toBeVisible();
 });

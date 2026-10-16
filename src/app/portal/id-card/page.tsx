@@ -65,7 +65,9 @@ export default async function MemberCardPage() {
           </div>
           <div className="mt-4">
             <CardReissueButton />
-            <p className="mt-2 text-xs text-muted">A replacement card is limited to two requests per day.</p>
+            <p className="mt-2 text-xs text-muted">
+              A replacement card is limited to two requests per day.
+            </p>
           </div>
         </div>
       )}

@@ -68,8 +68,8 @@ export default function MissionPage() {
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
           The supplied movement framework identifies the Renewed Hope Agenda as its central policy
           reference and notes region-specific frameworks such as HEARTS in North Central. These
-          references describe A4A’s advocacy approach; they do not constitute independent evaluation
-          of policy results.
+          references describe A4A&apos;s advocacy approach; they do not constitute independent
+          evaluation of policy results.
         </p>
         <Link className="button-primary mt-6" href="/about">
           About the movement <ArrowRight aria-hidden="true" className="h-4 w-4" />

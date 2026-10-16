@@ -22,7 +22,7 @@ const questions = [
   ],
   [
     "How can I verify a membership card?",
-    "Use the public card verification page and enter or scan the card’s verification code. The page is designed to disclose only a validity result.",
+    "Use the public card verification page and enter or scan the card's verification code. The page is designed to disclose only a validity result.",
   ],
   [
     "Where can I find events and official updates?",

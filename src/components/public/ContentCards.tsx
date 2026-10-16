@@ -16,7 +16,9 @@ function approvedImageUrl(value: string | null) {
   try {
     const candidate = new URL(value);
     const storageOrigin = new URL(env.NEXT_PUBLIC_SUPABASE_URL).origin;
-    return candidate.protocol === "https:" && candidate.origin === storageOrigin ? candidate.href : null;
+    return candidate.protocol === "https:" && candidate.origin === storageOrigin
+      ? candidate.href
+      : null;
   } catch {
     return null;
   }
@@ -65,7 +67,12 @@ function CardImage({
       ) : (
         <div className="absolute inset-0 flex items-center justify-center bg-brand-forest text-white">
           <div className="flex flex-col items-center gap-3 text-white/85">
-            <Icon aria-hidden="true" className="h-9 w-9 text-white" stroke="white" strokeWidth={1.5} />
+            <Icon
+              aria-hidden="true"
+              className="h-9 w-9 text-white"
+              stroke="white"
+              strokeWidth={1.5}
+            />
             <span className="text-xs font-bold uppercase tracking-[.16em]">
               {kind === "news" ? "A4A newsroom" : "A4A event"}
             </span>
@@ -86,7 +93,11 @@ function categoryLabel(category: string) {
 export function AnnouncementCard({ item }: { item: PublicAnnouncement }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-line bg-surface transition-shadow hover:shadow-md">
-      <Link href={`/news/${item.slug}`} aria-label={`Read ${item.title}`} className="block focus-visible:outline-offset-[-3px]">
+      <Link
+        href={`/news/${item.slug}`}
+        aria-label={`Read ${item.title}`}
+        className="block focus-visible:outline-offset-[-3px]"
+      >
         <CardImage src={item.cover_image} alt={`${item.title} news image`} kind="news" />
       </Link>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
@@ -101,7 +112,10 @@ export function AnnouncementCard({ item }: { item: PublicAnnouncement }) {
           )}
         </div>
         <h3 className="mt-3 text-xl font-bold leading-snug text-ink sm:text-[1.35rem]">
-          <Link className="hover:text-brand-forest focus-visible:underline" href={`/news/${item.slug}`}>
+          <Link
+            className="hover:text-brand-forest focus-visible:underline"
+            href={`/news/${item.slug}`}
+          >
             {item.title}
           </Link>
         </h3>
@@ -110,7 +124,11 @@ export function AnnouncementCard({ item }: { item: PublicAnnouncement }) {
           className="mt-5 inline-flex min-h-10 items-center gap-2 self-start text-sm font-bold text-brand-forest underline-offset-4 hover:underline"
           href={`/news/${item.slug}`}
         >
-          Read the story <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          Read the story{" "}
+          <ArrowRight
+            aria-hidden="true"
+            className="h-4 w-4 transition-transform group-hover:translate-x-1"
+          />
         </Link>
       </div>
     </article>
@@ -118,10 +136,16 @@ export function AnnouncementCard({ item }: { item: PublicAnnouncement }) {
 }
 
 export function EventCard({ item }: { item: PublicEvent }) {
-  const location = item.is_virtual ? "Online" : [item.venue, item.state_code].filter(Boolean).join(", ");
+  const location = item.is_virtual
+    ? "Online"
+    : [item.venue, item.state_code].filter(Boolean).join(", ");
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-line bg-surface transition-shadow hover:shadow-md">
-      <Link href={`/events/${item.slug}`} aria-label={`View ${item.title}`} className="block focus-visible:outline-offset-[-3px]">
+      <Link
+        href={`/events/${item.slug}`}
+        aria-label={`View ${item.title}`}
+        className="block focus-visible:outline-offset-[-3px]"
+      >
         <CardImage src={item.banner_url} alt={`${item.title} event flyer`} kind="event" />
       </Link>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
@@ -135,7 +159,10 @@ export function EventCard({ item }: { item: PublicEvent }) {
           </span>
         </div>
         <h3 className="mt-3 text-xl font-bold leading-snug text-ink sm:text-[1.35rem]">
-          <Link className="hover:text-brand-forest focus-visible:underline" href={`/events/${item.slug}`}>
+          <Link
+            className="hover:text-brand-forest focus-visible:underline"
+            href={`/events/${item.slug}`}
+          >
             {item.title}
           </Link>
         </h3>
@@ -148,7 +175,11 @@ export function EventCard({ item }: { item: PublicEvent }) {
           className="mt-4 inline-flex min-h-10 items-center gap-2 self-start text-sm font-bold text-brand-forest underline-offset-4 hover:underline"
           href={`/events/${item.slug}`}
         >
-          Learn more <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          Learn more{" "}
+          <ArrowRight
+            aria-hidden="true"
+            className="h-4 w-4 transition-transform group-hover:translate-x-1"
+          />
         </Link>
       </div>
     </article>

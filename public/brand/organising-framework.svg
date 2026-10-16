@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">A4A organising framework illustration</title>
+  <desc id="desc">A diagram connecting national coordination, state, local government, ward, student, and community participation.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7f5ed"/><stop offset="1" stop-color="#e8f0e7"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#087a43"/><stop offset="1" stop-color="#034d2d"/></linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#paper)"/>
+  <circle cx="943" cy="154" r="240" fill="#e2ecdf"/>
+  <path d="M84 0v900M1116 0v900" stroke="#d8e2d8" stroke-width="2"/>
+  <text x="96" y="117" fill="#12663c" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="4">A4A STUDENT WING</text>
+  <text x="96" y="181" fill="#17251c" font-family="Arial,sans-serif" font-size="46" font-weight="700">A framework for</text>
+  <text x="96" y="239" fill="#17251c" font-family="Arial,sans-serif" font-size="46" font-weight="700">local participation</text>
+  <text x="96" y="282" fill="#58655c" font-family="Arial,sans-serif" font-size="20">Intended structure only, not a live count of active chapters.</text>
+  <g fill="none" stroke="#8aa892" stroke-width="4"><path d="M226 415H974"/><path d="M226 415v105M410 415v105M594 415v105M778 415v105M974 415v105"/></g>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <g transform="translate(226 415)"><circle r="52" fill="url(#green)"/><text y="7" fill="#fff" font-size="16" font-weight="700">N</text><text y="92" fill="#17251c" font-size="17" font-weight="700">National</text></g>
+    <g transform="translate(410 415)"><circle r="52" fill="#fff" stroke="#9db5a2" stroke-width="3"/><text y="7" fill="#12663c" font-size="16" font-weight="700">ST</text><text y="92" fill="#17251c" font-size="17" font-weight="700">State</text></g>
+    <g transform="translate(594 415)"><circle r="52" fill="#fff" stroke="#9db5a2" stroke-width="3"/><text y="7" fill="#12663c" font-size="16" font-weight="700">LGA</text><text y="92" fill="#17251c" font-size="17" font-weight="700">Local government</text></g>
+    <g transform="translate(778 415)"><circle r="52" fill="#fff" stroke="#9db5a2" stroke-width="3"/><text y="7" fill="#12663c" font-size="16" font-weight="700">W</text><text y="92" fill="#17251c" font-size="17" font-weight="700">Ward</text></g>
+    <g transform="translate(974 415)"><circle r="52" fill="url(#green)"/><text y="7" fill="#fff" font-size="16" font-weight="700">S</text><text y="92" fill="#17251c" font-size="17" font-weight="700">Students</text></g>
+  </g>
+</svg>

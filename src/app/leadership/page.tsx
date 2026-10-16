@@ -40,15 +40,15 @@ export default async function LeadershipPage() {
             A coordinated movement with a local presence.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-7 text-muted">
-            A4A&apos;s framework describes leadership and coordination from national oversight through
-            regional, state, local government, ward, and student structures.
+            A4A&apos;s framework describes leadership and coordination from national oversight
+            through regional, state, local government, ward, and student structures.
           </p>
         </div>
         <div className="border-l-2 border-brand-ochre pl-5">
           <p className="text-sm font-bold text-ink">Public leadership directory</p>
           <p className="mt-2 text-sm leading-6 text-muted">
-            Names and biographies appear here only after they are approved for public display by
-            an authorised publisher.
+            Names and biographies appear here only after they are approved for public display by an
+            authorised publisher.
           </p>
         </div>
       </header>
@@ -57,7 +57,9 @@ export default async function LeadershipPage() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow">Directory</p>
-            <h2 id="directory-heading" className="section-title mt-2">Movement leadership</h2>
+            <h2 id="directory-heading" className="section-title mt-2">
+              Movement leadership
+            </h2>
           </div>
           <p className="text-sm text-muted">Official appointments are subject to confirmation.</p>
         </div>
@@ -76,13 +78,18 @@ export default async function LeadershipPage() {
         ) : (
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {leaders.map((leader) => (
-              <article key={leader.id} className="rounded-lg border border-line bg-surface p-5 sm:p-6">
+              <article
+                key={leader.id}
+                className="rounded-lg border border-line bg-surface p-5 sm:p-6"
+              >
                 <p className="text-xs font-bold uppercase tracking-[.12em] text-brand-ochre">
                   {leader.unit_name || "Movement leadership"}
                 </p>
                 <h3 className="mt-2 text-xl font-bold text-ink">{leader.full_name}</h3>
                 <p className="mt-1 font-semibold text-brand-forest">{leader.title}</p>
-                {leader.biography && <p className="mt-4 text-sm leading-6 text-muted">{leader.biography}</p>}
+                {leader.biography && (
+                  <p className="mt-4 text-sm leading-6 text-muted">{leader.biography}</p>
+                )}
               </article>
             ))}
           </div>
@@ -98,7 +105,9 @@ export default async function LeadershipPage() {
           {tiers.map(({ title, text, icon: Icon }, index) => (
             <article key={title} className="border-t-2 border-brand-forest pt-5">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-bold text-brand-ochre">LEVEL 0{index + 1}</span>
+                <span className="font-mono text-xs font-bold text-brand-ochre">
+                  LEVEL 0{index + 1}
+                </span>
                 <Icon aria-hidden="true" className="h-5 w-5 text-brand-forest" />
               </div>
               <h3 className="mt-5 text-lg font-bold text-ink">{title}</h3>
@@ -111,9 +120,14 @@ export default async function LeadershipPage() {
       <div className="mt-10 flex flex-col gap-4 rounded-lg bg-brand-forest p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div>
           <h2 className="text-xl font-bold">Take part in your local structure</h2>
-          <p className="mt-1 text-sm text-white/80">Register to express your interest in joining the Student Wing.</p>
+          <p className="mt-1 text-sm text-white/80">
+            Register to express your interest in joining the Student Wing.
+          </p>
         </div>
-        <Link href="/register" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-white px-4 py-2 text-sm font-bold text-brand-forest hover:bg-white/90">
+        <Link
+          href="/register"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-white px-4 py-2 text-sm font-bold text-brand-forest hover:bg-white/90"
+        >
           Register now <ArrowRight aria-hidden="true" className="h-4 w-4" />
         </Link>
       </div>

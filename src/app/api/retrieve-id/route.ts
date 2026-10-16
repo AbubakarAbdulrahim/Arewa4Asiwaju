@@ -10,7 +10,8 @@ const schema = z.object({
   identifier: z.string().trim().min(4).max(254),
   password: z.string().min(8).max(128),
 });
-const membershipNumberPattern = /^A4A-[0-9]{4}-[A-Z0-9]{2,10}-(?:[A-Z0-9]{3,5}[0-9]{3,}|[0-9]{6,})$/i;
+const membershipNumberPattern =
+  /^A4A-[0-9]{4}-[A-Z0-9]{2,10}-(?:[A-Z0-9]{3,5}[0-9]{3,}|[0-9]{6,})$/i;
 
 function respond(body: object, status = 200) {
   return NextResponse.json(body, {
@@ -36,7 +37,8 @@ export async function POST(request: NextRequest) {
     return respond({ error: "Enter your login details." }, 400);
   }
   const parsed = schema.safeParse(payload);
-  if (!parsed.success) return respond({ error: "Enter your email or membership number and password." }, 400);
+  if (!parsed.success)
+    return respond({ error: "Enter your email or membership number and password." }, 400);
 
   const identifier = parsed.data.identifier.trim();
   const normalized = identifier.toLowerCase();
@@ -70,7 +72,10 @@ export async function POST(request: NextRequest) {
         .eq("status", "active")
         .maybeSingle();
       if (membership.error || !membership.data?.profile_id) {
-        return respond({ error: "We couldn't sign you in. Check your details and try again." }, 401);
+        return respond(
+          { error: "We couldn't sign you in. Check your details and try again." },
+          401,
+        );
       }
       profileQuery = profileQuery.eq("id", membership.data.profile_id);
     }
@@ -96,7 +101,9 @@ export async function POST(request: NextRequest) {
         cookies: {
           getAll: () => request.cookies.getAll(),
           setAll: (cookies) =>
-            cookies.forEach(({ name, value, options }) => response.cookies.set(name, value, options)),
+            cookies.forEach(({ name, value, options }) =>
+              response.cookies.set(name, value, options),
+            ),
         },
       },
     );

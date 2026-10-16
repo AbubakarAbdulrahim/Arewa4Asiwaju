@@ -8,16 +8,29 @@ test("unauthenticated portal access shows no private data and links to secure si
   await expect(page.getByText("Your membership information is private.")).toBeVisible();
   await expect(page.getByText("Membership number", { exact: true })).toHaveCount(0);
   await page.getByRole("link", { name: "Go to member sign-in" }).click();
-  await expect(page).toHaveURL(/\/auth\/login/);
-  await expect(page.getByRole("heading", { name: "Sign in to your account" })).toBeVisible();
-  await expect(page.getByLabel("Email address")).toHaveAttribute("type", "email");
+  await expect(page).toHaveURL(/\/login$/);
+  await expect(page.getByRole("heading", { name: "Welcome back!" })).toBeVisible();
+  await expect(page.getByLabel("Email address or membership number")).toHaveAttribute(
+    "type",
+    "text",
+  );
+  await expect(page.getByLabel("Password")).toHaveAttribute("type", "password");
 });
 
-test("sign-in screen provides account recovery through a one-time link", async ({ page }) => {
-  await page.goto("/auth/login");
-  await expect(page.getByText(/same link can help you recover access/i)).toBeVisible();
-  await expect(page.getByRole("button", { name: "Email me a sign-in link" })).toBeEnabled();
-  await expect(page.getByRole("link", { name: "Register with A4A" })).toHaveAttribute(
+test("member sign-in uses the registered email or number and password", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("heading", { name: "Welcome back!" })).toBeVisible();
+  await expect(page.getByLabel("Email address or membership number")).toHaveAttribute(
+    "type",
+    "text",
+  );
+  await expect(page.getByLabel("Password")).toHaveAttribute("type", "password");
+  await expect(page.getByRole("button", { name: "View my ID card" })).toBeEnabled();
+  await page.getByLabel("Email address or membership number").fill("member@example.test");
+  await expect(
+    page.getByRole("button", { name: "Forgot your password? Reset it by email" }),
+  ).toBeEnabled();
+  await expect(page.getByRole("link", { name: "Register here" })).toHaveAttribute(
     "href",
     "/register",
   );
@@ -41,10 +54,14 @@ test("mobile navigation works by keyboard and the hero photo is visible", async 
 
   await expect(
     page.getByRole("heading", {
-      name: "Organising across Northern Nigeria. Making policy matter locally.",
+      name: "A student wing connecting policy and people",
     }),
   ).toBeVisible();
-  await expect(page.getByRole("img", { name: "A4A grand patron Bola Ahmed Tinubu" })).toBeVisible();
+  await expect(
+    page.getByRole("img", {
+      name: "President Bola Ahmed Tinubu, grand patron of Arewa for Asiwaju",
+    }),
+  ).toBeVisible();
   await expect(page.locator("html")).toHaveJSProperty("scrollWidth", 360);
 
   const toggle = page.getByRole("button", { name: "Open navigation menu" });
