@@ -23,8 +23,10 @@ Membership profiles and membership records
 <<<<<<< HEAD
 Use a separate Supabase project and distinct credentials for local development, staging, and production. Set `APP_ENV` to `development`, `staging`, or `production`, and set `NEXT_PUBLIC_APP_URL` for each environment. For compatibility, `APP_ENV=preview` is normalized to `staging` on Vercel Preview deployments. In Vercel, configure environment variables separately for Development, Preview (staging), and Production; production secrets must not be copied into preview deployments. Store `SUPABASE_SERVICE_ROLE_KEY` only as a server-side environment variable. Never commit `.env.local`, provider credentials, or production data.
 =======
+
 Digital ID-card generation and administrative approval workflows
->>>>>>> df66ad66cfe5bf603dbe260f9d70503332dd5db9
+
+> > > > > > > df66ad66cfe5bf603dbe260f9d70503332dd5db9
 
 Role-based access for authorised administrative users
 
@@ -143,13 +145,13 @@ Available Commands
 
 The following commands are confirmed for this repository:
 
-Command                             Purpose
+Command Purpose
 
-npm run dev                       Start the Next.js development
+npm run dev Start the Next.js development
 server, if defined in
 package.json.
 
-npm run build                     Build the application for
+npm run build Build the application for
 production.
 
 Other checks---such as linting, formatting, type checking, unit tests,
@@ -232,14 +234,14 @@ The application uses the Next.js App Router. Important locations
 include:
 
 src/
-  app/          # App Router routes, layouts, and pages
-  lib/           # Shared utilities and environment validation
+app/ # App Router routes, layouts, and pages
+lib/ # Shared utilities and environment validation
 supabase/
-  migrations/    # Version-controlled database migrations, if present
-  tests/         # Database tests, if present
+migrations/ # Version-controlled database migrations, if present
+tests/ # Database tests, if present
 .github/
-  workflows/
-    ci.yml       # GitHub Actions CI workflow
+workflows/
+ci.yml # GitHub Actions CI workflow
 
 The exact directory structure may evolve; consult the repository for the
 current layout.
