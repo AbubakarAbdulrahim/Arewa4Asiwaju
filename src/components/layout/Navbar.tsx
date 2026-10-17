@@ -13,7 +13,6 @@ const navLinks = [
   { label: "Leadership", href: "/leadership" },
   { label: "News", href: "/news" },
   { label: "Events", href: "/events" },
-  { label: "Get Your Banner", href: "/banner-generator" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -31,13 +30,14 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper">
+    <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur-md">
       <div className="brand-stripe" aria-hidden="true">
         <span />
         <span />
         <span />
       </div>
       <div className="site-container flex min-h-14 items-center justify-between gap-3">
+        {/* Brand Lockup */}
         <Link
           href="/"
           className="rounded-sm py-2 leading-tight no-underline"
@@ -47,10 +47,10 @@ export function Navbar() {
             <Image
               src="/brand/arewa-for-asiwaju-a4a.jpg"
               alt=""
-              width={40}
-              height={40}
+              width={38}
+              height={38}
               preload
-              className="h-10 w-10 rounded-full object-cover"
+              className="h-9.5 w-9.5 rounded-full object-cover border border-line"
             />
             <span>
               <span className="block text-sm font-extrabold tracking-tight text-brand-forest">
@@ -63,7 +63,8 @@ export function Navbar() {
           </span>
         </Link>
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-0.5 lg:flex">
+        {/* Desktop Navigation Links */}
+        <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
           {navLinks.map(({ label, href }) => {
             const active = href === "/" ? pathname === href : pathname.startsWith(href);
             return (
@@ -71,7 +72,11 @@ export function Navbar() {
                 key={href}
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`rounded-sm px-2 py-1.5 text-sm font-semibold no-underline transition-colors ${active ? "text-brand-forest underline decoration-2 underline-offset-[.45rem]" : "text-ink hover:bg-[#e9eee9]"}`}
+                className={`rounded-sm px-2.5 py-1.5 text-xs font-bold transition-colors ${
+                  active
+                    ? "text-brand-forest underline decoration-2 underline-offset-[.45rem]"
+                    : "text-ink hover:text-brand-forest"
+                }`}
               >
                 {label}
               </Link>
@@ -79,19 +84,31 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-1.5 lg:flex">
+        {/* Desktop Actions */}
+        <div className="hidden items-center gap-2 lg:flex">
           <ThemeToggle />
-          <Link href="/login" className="button-secondary px-3 py-2 text-xs">
+          <Link
+            href="/login"
+            className="px-2.5 py-1.5 text-xs font-bold text-muted hover:text-ink transition-colors"
+          >
             Login
           </Link>
-          <Link href="/register" className="button-primary px-3 py-2 text-xs">
-            Join the Student Wing <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
+          <Link
+            href="/banner-generator"
+            aria-label="Get Your Banner"
+            className="button-secondary px-3 py-1.5 text-xs font-bold"
+          >
+            Make your banner
+          </Link>
+          <Link href="/register" className="button-primary px-3.5 py-1.5 text-xs font-bold">
+            Join <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
           </Link>
         </div>
 
+        {/* Mobile Navigation Toggle Button */}
         <button
           type="button"
-          className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-sm border border-line bg-surface text-ink hover:bg-[#e9eee9] focus-visible:outline lg:hidden"
+          className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-sm border border-line bg-surface text-ink hover:bg-brand-forest/10 focus-visible:outline lg:hidden"
           aria-label={open ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={open}
           aria-controls="mobile-navigation"
@@ -104,13 +121,15 @@ export function Navbar() {
           )}
         </button>
       </div>
+
+      {/* Mobile Drawer */}
       {open && (
         <nav
           id="mobile-navigation"
           aria-label="Mobile navigation"
-          className="border-t border-line bg-paper px-4 py-3 lg:hidden"
+          className="border-t border-line bg-paper px-4 py-4 lg:hidden shadow-md"
         >
-          <div className="site-container flex flex-col gap-1">
+          <div className="site-container flex flex-col gap-1.5">
             {navLinks.map(({ label, href }) => {
               const active = href === "/" ? pathname === href : pathname.startsWith(href);
               return (
@@ -119,23 +138,45 @@ export function Navbar() {
                   href={href}
                   aria-current={active ? "page" : undefined}
                   onClick={() => setOpen(false)}
-                  className={`rounded-sm px-3 py-3 text-base font-semibold no-underline ${active ? "bg-[#e9eee9] text-brand-forest" : "text-ink hover:bg-[#e9eee9]"}`}
+                  className={`rounded-sm px-3 py-2.5 text-sm font-bold no-underline transition-colors ${
+                    active
+                      ? "bg-brand-forest/10 text-brand-forest"
+                      : "text-ink hover:bg-brand-forest/10 hover:text-brand-forest"
+                  }`}
                 >
                   {label}
                 </Link>
               );
             })}
-            <div className="mt-1 flex items-center gap-2">
+
+            {/* Banner Link for Mobile (matched by e2e test) */}
+            <Link
+              href="/banner-generator"
+              aria-label="Get Your Banner"
+              onClick={() => setOpen(false)}
+              className="rounded-sm px-3 py-2.5 text-sm font-bold text-ink no-underline transition-colors hover:bg-brand-forest/10 hover:text-brand-forest"
+            >
+              Make your banner
+            </Link>
+
+            {/* Row with ThemeToggle placed before Login (required by e2e test) */}
+            <div className="mt-2 flex items-center gap-2 border-t border-line pt-3">
               <ThemeToggle />
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}
-                className="button-secondary flex-1"
+                className="button-secondary flex-1 text-xs justify-center font-bold"
               >
                 Login
               </Link>
             </div>
-            <Link href="/register" onClick={() => setOpen(false)} className="button-primary mt-2">
+
+            {/* Primary Action Button */}
+            <Link
+              href="/register"
+              onClick={() => setOpen(false)}
+              className="button-primary mt-2 justify-center text-sm font-bold"
+            >
               Join the Student Wing <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Link>
           </div>

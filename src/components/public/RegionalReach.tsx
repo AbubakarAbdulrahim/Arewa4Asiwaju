@@ -1,132 +1,57 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { NORTHERN_STATES } from "@/lib/geo-data";
-
-const coverage = NORTHERN_STATES.filter((state) => state.name !== "FCT (Abuja)");
-const zones = ["North-West", "North-East", "North-Central"] as const;
-
-function useCountUp(target: number, active: boolean, duration = 850) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!active) return;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
-      const frame = window.requestAnimationFrame(() => setCount(target));
-      return () => window.cancelAnimationFrame(frame);
-    }
-
-    let frame = 0;
-    let startTime = 0;
-    const update = (time: number) => {
-      if (!startTime) startTime = time;
-      const progress = Math.min((time - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.round(target * eased));
-      if (progress < 1) frame = window.requestAnimationFrame(update);
-    };
-    frame = window.requestAnimationFrame(update);
-    return () => window.cancelAnimationFrame(frame);
-  }, [active, duration, target]);
-
-  return count;
-}
+import { NorthernMap } from "./NorthernMap";
 
 export function RegionalReach() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [active, setActive] = useState(false);
-  const stateCount = useCountUp(coverage.length, active);
-  const fctCount = useCountUp(1, active);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setActive(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section
-      ref={sectionRef}
-      className="border-y border-line bg-surface py-10 sm:py-14"
+      className="border-y border-line bg-surface py-12 sm:py-16"
       aria-labelledby="regional-reach-heading"
     >
       <div className="site-container">
-        <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-14">
-          <div>
-            <p className="eyebrow">Our regional framework</p>
-            <h2 id="regional-reach-heading" className="section-title mt-3 max-w-lg">
-              A student wing connected across Northern Nigeria
+        {/* Section Header with Server-Rendered Static Counts */}
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between border-b border-line pb-8">
+          <div className="max-w-2xl">
+            <p className="eyebrow">Regional reach</p>
+            <h2 id="regional-reach-heading" className="section-title mt-2">
+              Organised across 19 northern states and the FCT
             </h2>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-muted sm:text-base">
-              A4A&apos;s organising framework covers the 19 northern states and the Federal Capital
-              Territory, with a structure designed to connect state, local, and ward activity.
+            <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+              Explore local chapters across the North-West, North-East, and North-Central zones. Tap
+              or click any state on the map to find your campus coordinator and join the movement.
             </p>
-
-            <div className="mt-7 grid max-w-lg grid-cols-2 border-y border-line py-4 sm:py-5">
-              <div className="border-r border-line pr-4 sm:pr-6">
-                <p
-                  className="font-mono text-4xl font-bold leading-none tracking-tight text-brand-forest sm:text-5xl"
-                  aria-hidden="true"
-                >
-                  {stateCount}
-                </p>
-                <p className="mt-2 text-sm font-semibold text-ink">Northern states</p>
-                <span className="sr-only">19 northern states in scope</span>
-              </div>
-              <div className="pl-4 sm:pl-6">
-                <p
-                  className="font-mono text-4xl font-bold leading-none tracking-tight text-brand-forest sm:text-5xl"
-                  aria-hidden="true"
-                >
-                  {fctCount}
-                </p>
-                <p className="mt-2 text-sm font-semibold text-ink">Federal Capital Territory</p>
-                <span className="sr-only">1 Federal Capital Territory in scope</span>
-              </div>
-            </div>
           </div>
 
-          <div className="border-l-2 border-brand-forest bg-paper py-1 pl-5 text-ink sm:pl-7">
-            <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/20 pb-4">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[.14em] text-muted">Coverage</p>
-                <h3 className="mt-1 text-xl font-bold text-ink sm:text-2xl">
-                  States by geopolitical zone
-                </h3>
-              </div>
-              <p className="text-sm text-muted">Coverage framework</p>
+          {/* Static counts: guaranteed to render instantly on server without 0 flicker */}
+          <div className="flex shrink-0 items-center gap-6 sm:gap-8">
+            <div className="border-l-2 border-brand-forest pl-3 sm:pl-4">
+              <p className="font-mono text-3xl font-extrabold leading-none tracking-tight text-ink sm:text-4xl">
+                19
+              </p>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted">
+                Northern states
+              </p>
             </div>
-
-            <div className="mt-5 grid gap-x-5 gap-y-6 sm:grid-cols-2 xl:grid-cols-3">
-              {zones.map((zone) => {
-                const states = coverage.filter((state) => state.zone === zone);
-                return (
-                  <div key={zone}>
-                    <h4 className="text-xs font-bold uppercase tracking-[.12em] text-brand-forest">
-                      {zone}
-                    </h4>
-                    <ul className="mt-3 space-y-2 text-sm text-muted">
-                      {states.map((state) => (
-                        <li key={state.code}>{state.name}</li>
-                      ))}
-                      {zone === "North-Central" && <li>FCT (Abuja)</li>}
-                    </ul>
-                  </div>
-                );
-              })}
+            <div className="border-l-2 border-brand-forest pl-3 sm:pl-4">
+              <p className="font-mono text-3xl font-extrabold leading-none tracking-tight text-ink sm:text-4xl">
+                1
+              </p>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted">
+                FCT Abuja
+              </p>
+            </div>
+            <div className="border-l-2 border-brand-forest pl-3 sm:pl-4">
+              <p className="font-mono text-3xl font-extrabold leading-none tracking-tight text-ink sm:text-4xl">
+                419
+              </p>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted">
+                Ward chapters
+              </p>
             </div>
           </div>
+        </div>
+
+        {/* Interactive SVG Map with Inspection Panel */}
+        <div className="mt-8 sm:mt-10">
+          <NorthernMap />
         </div>
       </div>
     </section>

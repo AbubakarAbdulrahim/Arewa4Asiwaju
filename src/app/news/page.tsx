@@ -1,78 +1,87 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, CheckCircle2, Newspaper } from "lucide-react";
+import { Newspaper } from "lucide-react";
 import { AnnouncementCard } from "@/components/public/ContentCards";
-import { ContentStatus, PublicPage } from "@/components/public/PublicPage";
+import { ContentStatus, PageHeading, PublicPage } from "@/components/public/PublicPage";
 import { getAnnouncements } from "@/lib/content/public-content";
 
 export const metadata: Metadata = {
-  title: "News and announcements",
-  description: "Official news, announcements, and public updates from Arewa for Asiwaju.",
+  title: "News and student dispatches",
+  description:
+    "Student dispatches, policy updates, and verified news from the Arewa for Asiwaju Student Wing.",
   alternates: { canonical: "/news" },
-  openGraph: { title: "News and announcements | Arewa for Asiwaju" },
+  openGraph: {
+    title: "News and announcements | Arewa for Asiwaju Student Wing",
+    description: "Read the latest movement updates and policy briefs across Northern Nigeria.",
+  },
 };
 
 export default async function NewsPage() {
   const result = await getAnnouncements();
+  const items = result.state === "ready" ? result.items : [];
+  const categories = Array.from(new Set(items.map((item) => item.category)));
+
   return (
     <PublicPage>
-      <header className="grid gap-8 border-b border-line pb-9 lg:grid-cols-[1fr_.55fr] lg:items-end">
-        <div>
-          <p className="eyebrow">A4A newsroom</p>
-          <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
-            News and announcements
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg leading-7 text-muted">
-            Updates from the movement, published for members, students, and communities across the
-            region.
-          </p>
-        </div>
-        <div className="flex items-start gap-3 border-l-2 border-brand-ochre pl-4">
-          <CheckCircle2 aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-brand-forest" />
-          <p className="text-sm leading-6 text-muted">
-            News and notices are managed by authorised editors. Published items link to their full
-            story or announcement.
-          </p>
-        </div>
-      </header>
+      <PageHeading
+        eyebrow="Newsroom"
+        title="Dispatches and policy briefings"
+        intro="Read regional student updates, policy analyses of the Renewed Hope Agenda, and reports from chapters across Northern Nigeria."
+      />
 
-      <section className="py-9 sm:py-12" aria-labelledby="latest-news-heading">
-        <div className="mb-6 flex items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Latest updates</p>
-            <h2 id="latest-news-heading" className="section-title mt-2">
-              From the movement
-            </h2>
-          </div>
-          <Newspaper aria-hidden="true" className="hidden h-7 w-7 text-brand-forest sm:block" />
+      {/* Category Chips (shown only if categories exist) */}
+      {categories.length > 1 && (
+        <div className="mb-8 flex flex-wrap items-center gap-2" aria-label="News categories">
+          <span className="text-xs font-bold uppercase tracking-wider text-muted">Category:</span>
+          {categories.map((cat) => (
+            <span
+              key={cat}
+              className="rounded-xs border border-line bg-surface px-2.5 py-1 text-xs font-bold capitalize text-ink"
+            >
+              {cat.replaceAll("_", " ")}
+            </span>
+          ))}
         </div>
-        {result.state !== "ready" || result.items.length === 0 ? (
-          <ContentStatus state={result.state === "ready" ? "empty" : result.state} />
+      )}
+
+      {/* Article List / Empty State */}
+      <section aria-labelledby="articles-heading" className="pb-12">
+        <h2 id="articles-heading" className="sr-only">
+          Published articles
+        </h2>
+
+        {result.state !== "ready" || items.length === 0 ? (
+          <ContentStatus state={result.state === "ready" ? "empty" : result.state} kind="news" />
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {result.items.map((item) => (
-              <AnnouncementCard key={item.id} item={item} />
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {items.map((item, index) => (
+              <AnnouncementCard key={item.id} item={item} featured={index === 0} />
             ))}
           </div>
         )}
       </section>
 
-      <aside className="flex flex-col gap-4 rounded-lg border border-line bg-[#f1f5f1] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-        <div>
-          <h2 className="text-lg font-bold text-ink">Want to be part of the updates?</h2>
-          <p className="mt-1 text-sm leading-6 text-muted">
-            Join the Student Wing to participate in movement activities and receive relevant
-            information.
-          </p>
+      {/* WhatsApp Community Invitation Band */}
+      <section className="mt-8 rounded-md border border-line bg-surface p-6 sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-xl">
+            <h2 className="text-lg font-bold text-ink sm:text-xl">
+              Get news delivered to your phone
+            </h2>
+            <p className="mt-1 text-sm text-muted">
+              Receive breaking student updates, bursary alerts, and event notifications on WhatsApp.
+            </p>
+          </div>
+          <a
+            href="https://wa.me/2349122628654?text=Hello%2C%20I%20want%20to%20subscribe%20to%20A4A%20Student%20Wing%20news"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="button-primary inline-flex items-center gap-2 text-sm shrink-0"
+          >
+            <Newspaper aria-hidden="true" className="h-4 w-4" />
+            <span>Join WhatsApp Channel</span>
+          </a>
         </div>
-        <Link
-          href="/register"
-          className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-sm bg-brand-forest px-4 py-2 text-sm font-bold text-white hover:bg-brand-forest-dark sm:self-auto"
-        >
-          Join the Student Wing{" "}
-          <ArrowRight aria-hidden="true" className="h-4 w-4 text-white" stroke="white" />
-        </Link>
-      </aside>
+      </section>
     </PublicPage>
   );
 }

@@ -1,146 +1,168 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, FileLock2, MessageCircle, Phone, UserRound } from "lucide-react";
-import { PublicPage } from "@/components/public/PublicPage";
+import { ArrowRight, MessageCircle, Phone, ShieldCheck, HelpCircle } from "lucide-react";
+import { PublicPage, PageHeading } from "@/components/public/PublicPage";
 
 export const metadata: Metadata = {
-  title: "Contact and support",
-  description: "Contact the Arewa for Asiwaju Student Wing for membership and general support.",
+  title: "Contact and student support",
+  description:
+    "Direct WhatsApp and phone assistance for registration, membership cards, and campus coordination.",
   alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact and support | Arewa for Asiwaju Student Wing",
+    description: "Connect with the A4A student support team via WhatsApp or telephone.",
+  },
 };
 
-const contacts = [
-  { number: "09122628654", href: "tel:09122628654", label: "Primary support line" },
-  { number: "09013113304", href: "tel:09013113304", label: "Additional support line" },
+const supportTopics = [
+  {
+    title: "Registration & membership numbers",
+    detail: "Help retrieving your membership number, ID card password reset, or updating details.",
+  },
+  {
+    title: "Campus coordination & gatherings",
+    detail: "Inquire about launching a chapter on your campus or hosting a policy discussion.",
+  },
+  {
+    title: "Privacy & account management",
+    detail: "Questions about your personal data under NDPR compliance or account deletion.",
+  },
+  {
+    title: "General movement inquiries",
+    detail: "Media, strategic partnerships, and regional policy translation materials.",
+  },
 ];
 
 export default function ContactPage() {
   return (
     <PublicPage>
-      <header className="grid gap-8 border-b border-line pb-10 lg:grid-cols-[1fr_.6fr] lg:items-end">
-        <div>
-          <p className="eyebrow">We&apos;re here to help</p>
-          <h1 className="mt-3 max-w-2xl text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
-            Contact the Student Wing
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg leading-7 text-muted">
-            Reach the movement for help with registration, membership records, participation, or a
-            general enquiry.
-          </p>
-        </div>
-        <div className="flex items-start gap-3 rounded-lg bg-[#f1f5f1] p-5">
-          <MessageCircle aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-brand-forest" />
-          <p className="text-sm leading-6 text-muted">
-            For a quick message, start a WhatsApp chat with our primary support line.
-          </p>
-        </div>
-      </header>
+      <PageHeading
+        eyebrow="Help & contact"
+        title="We are here to support every student"
+        intro="Reach out directly for membership help, campus coordination inquiries, or assistance retrieving your digital card."
+      />
 
-      <section
-        className="grid gap-8 py-10 lg:grid-cols-[1.15fr_.85fr] lg:py-14"
-        aria-labelledby="support-heading"
-      >
-        <div>
-          <p className="eyebrow">Contact options</p>
-          <h2 id="support-heading" className="section-title mt-2">
-            Choose how to reach us
-          </h2>
-          <div className="mt-6 divide-y divide-line border-y border-line">
-            {contacts.map((contact) => (
+      <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start lg:gap-14">
+        {/* Left Column: WhatsApp Primary + Phone Numbers */}
+        <div className="space-y-8">
+          {/* Primary Action: WhatsApp with large tap target */}
+          <div className="rounded-md border-2 border-[#25D366] bg-surface p-6 sm:p-8 shadow-xs">
+            <div className="flex items-center gap-2.5 text-[#128C7E]">
+              <MessageCircle aria-hidden="true" className="h-6 w-6 shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-wider">Fastest response</span>
+            </div>
+            <h2 className="mt-3 text-2xl font-extrabold text-ink sm:text-3xl">
+              Message us on WhatsApp
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted sm:text-base">
+              Chat directly with our student support team for instant help with card generation,
+              registration status, and coordinator contacts.
+            </p>
+            <div className="mt-6">
               <a
-                key={contact.number}
-                href={contact.href}
-                className="group flex items-center justify-between gap-4 py-5 no-underline"
+                href="https://wa.me/2349122628654?text=Hello%2C%20I%20need%20assistance%20from%20A4A%20Student%20Wing%20support."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-13 w-full items-center justify-center gap-3 rounded-md bg-[#25D366] px-6 py-3.5 text-base font-bold text-white shadow-xs transition-colors hover:bg-[#1EBE5D] sm:w-auto"
               >
-                <span className="flex items-center gap-4">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e7f1e9] text-brand-forest">
-                    <Phone aria-hidden="true" className="h-5 w-5" />
-                  </span>
-                  <span>
-                    <span className="block text-xs font-bold uppercase tracking-[.12em] text-muted">
-                      {contact.label}
-                    </span>
-                    <span className="mt-1 block text-xl font-bold text-ink group-hover:text-brand-forest">
-                      {contact.number}
-                    </span>
-                  </span>
-                </span>
-                <ArrowUpRight aria-hidden="true" className="h-5 w-5 text-brand-forest" />
+                <MessageCircle aria-hidden="true" className="h-5 w-5" />
+                <span>Start WhatsApp chat</span>
+                <ArrowRight aria-hidden="true" className="h-4 w-4" />
               </a>
-            ))}
+            </div>
           </div>
-          <a
-            href="https://wa.me/2349122628654?text=Hello%2C%20Arewa%20for%20Asiwaju%20Student%20Wing."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-[#128c4a] px-4 py-2 text-sm font-bold text-white hover:bg-[#0d753d]"
-          >
-            <MessageCircle aria-hidden="true" className="h-4 w-4 text-white" stroke="white" />{" "}
-            Message on WhatsApp
-            <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-white" stroke="white" />
-          </a>
+
+          {/* Secondary Action: Direct Phone Lines */}
+          <section aria-labelledby="phone-lines-heading">
+            <h2
+              id="phone-lines-heading"
+              className="text-sm font-bold uppercase tracking-wider text-muted"
+            >
+              Direct telephone lines
+            </h2>
+            <div className="mt-3 divide-y divide-line rounded-md border border-line bg-surface">
+              <div className="flex items-center justify-between p-4 sm:p-5">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted">
+                    Primary desk
+                  </p>
+                  <p className="mt-0.5 font-mono text-lg font-bold text-ink sm:text-xl">
+                    0912 262 8654
+                  </p>
+                </div>
+                <a
+                  href="tel:09122628654"
+                  className="button-secondary text-xs inline-flex items-center gap-1.5"
+                >
+                  <Phone aria-hidden="true" className="h-3.5 w-3.5" />
+                  <span>Call line</span>
+                </a>
+              </div>
+              <div className="flex items-center justify-between p-4 sm:p-5">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted">
+                    Secondary desk
+                  </p>
+                  <p className="mt-0.5 font-mono text-lg font-bold text-ink sm:text-xl">
+                    0901 311 3304
+                  </p>
+                </div>
+                <a
+                  href="tel:09013113304"
+                  className="button-secondary text-xs inline-flex items-center gap-1.5"
+                >
+                  <Phone aria-hidden="true" className="h-3.5 w-3.5" />
+                  <span>Call line</span>
+                </a>
+              </div>
+            </div>
+          </section>
         </div>
 
-        <aside
-          className="rounded-lg border border-line bg-surface p-6 sm:p-7"
-          aria-labelledby="contact-topics"
-        >
-          <p className="eyebrow">How we can help</p>
-          <h2 id="contact-topics" className="mt-2 text-xl font-bold text-ink">
-            Support topics
-          </h2>
-          <ul className="mt-5 space-y-4">
-            {[
-              [
-                UserRound,
-                "Registration and membership",
-                "Help with the registration form, membership number, or ID card.",
-              ],
-              [
-                FileLock2,
-                "Personal information",
-                "Ask about accessing, correcting, or requesting removal of your personal information.",
-              ],
-              [
-                MessageCircle,
-                "Movement participation",
-                "Ask how to learn about activities and local participation routes.",
-              ],
-            ].map(([Icon, title, detail]) => {
-              const TopicIcon = Icon as typeof UserRound;
-              return (
-                <li key={title as string} className="flex gap-3 border-t border-line pt-4">
-                  <TopicIcon
-                    aria-hidden="true"
-                    className="mt-0.5 h-5 w-5 shrink-0 text-brand-forest"
-                  />
-                  <div>
-                    <h3 className="font-bold text-ink">{title as string}</h3>
-                    <p className="mt-1 text-sm leading-6 text-muted">{detail as string}</p>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-          <Link
-            href="/privacy"
-            className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-brand-forest underline-offset-4 hover:underline"
+        {/* Right Column: Support Topics as a Simple List */}
+        <div className="space-y-6">
+          <section
+            aria-labelledby="topics-heading"
+            className="rounded-md border border-line bg-surface p-6 sm:p-7 shadow-xs"
           >
-            Read the privacy notice <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
-          </Link>
-        </aside>
-      </section>
+            <h2 id="topics-heading" className="text-xl font-bold text-ink">
+              Support topics
+            </h2>
+            <p className="mt-1 text-xs text-muted">Common requests handled by our desk:</p>
 
-      <section className="border-t border-line py-9" aria-labelledby="before-contact">
-        <h2 id="before-contact" className="text-lg font-bold text-ink">
-          When contacting support
-        </h2>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
-          Tell us what you need help with and include the contact details you used to register when
-          necessary. Never send your password or one-time sign-in codes. We will use the information
-          you provide only to respond to your request, in line with the privacy notice.
-        </p>
-      </section>
+            <ul className="mt-5 space-y-4 divide-y divide-line border-t border-line">
+              {supportTopics.map(({ title, detail }) => (
+                <li key={title} className="pt-4 first:border-t-0 first:pt-0">
+                  <h3 className="font-bold text-ink text-sm sm:text-base">{title}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">{detail}</p>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-6 border-t border-line pt-4">
+              <Link
+                href="/faqs"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-forest hover:underline"
+              >
+                <HelpCircle aria-hidden="true" className="h-3.5 w-3.5" />
+                <span>Browse frequently asked questions</span>
+              </Link>
+            </div>
+          </section>
+
+          {/* Privacy Note */}
+          <div className="rounded-md border border-line bg-paper p-4 text-xs text-muted leading-relaxed">
+            <div className="flex items-center gap-2 font-bold text-ink">
+              <ShieldCheck aria-hidden="true" className="h-4 w-4 text-brand-forest" />
+              <span>Data safety reminder</span>
+            </div>
+            <p className="mt-1">
+              Never share your account password or SMS codes with anyone. Support agents will only
+              ask for your registered email address or membership ID.
+            </p>
+          </div>
+        </div>
+      </div>
     </PublicPage>
   );
 }

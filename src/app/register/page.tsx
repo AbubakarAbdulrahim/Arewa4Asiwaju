@@ -3,7 +3,16 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, Check, ShieldCheck, Upload, UserRound } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  Upload,
+  UserRound,
+} from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { getWardOptions, NORTHERN_STATES } from "@/lib/geo-data";
@@ -140,6 +149,8 @@ function RegistrationForm() {
   const [registration, setRegistration] = useState<RegistrationResult | null>(null);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const selectedState = useMemo(
     () => NORTHERN_STATES.find((state) => state.name === values.stateOfResidence),
     [values.stateOfResidence],
@@ -460,16 +471,30 @@ function RegistrationForm() {
                       <label className="field-label" htmlFor="memberPassword">
                         Create password <span aria-hidden="true">*</span>
                       </label>
-                      <input
-                        className="field-control"
-                        id="memberPassword"
-                        type="password"
-                        autoComplete="new-password"
-                        minLength={8}
-                        maxLength={128}
-                        value={values.password}
-                        onChange={(event) => update("password", event.target.value)}
-                      />
+                      <div className="relative">
+                        <input
+                          className="field-control pr-10"
+                          id="memberPassword"
+                          type={showPassword ? "text" : "password"}
+                          autoComplete="new-password"
+                          minLength={8}
+                          maxLength={128}
+                          value={values.password}
+                          onChange={(event) => update("password", event.target.value)}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((v) => !v)}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-ink focus-visible:outline-2"
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                        >
+                          {showPassword ? (
+                            <EyeOff aria-hidden="true" className="h-4 w-4" />
+                          ) : (
+                            <Eye aria-hidden="true" className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
                       <p className="mt-1 text-xs text-muted">
                         Use at least 8 characters to sign in and retrieve your card later.
                       </p>
@@ -479,16 +504,30 @@ function RegistrationForm() {
                       <label className="field-label" htmlFor="confirmMemberPassword">
                         Confirm password <span aria-hidden="true">*</span>
                       </label>
-                      <input
-                        className="field-control"
-                        id="confirmMemberPassword"
-                        type="password"
-                        autoComplete="new-password"
-                        minLength={8}
-                        maxLength={128}
-                        value={values.confirmPassword}
-                        onChange={(event) => update("confirmPassword", event.target.value)}
-                      />
+                      <div className="relative">
+                        <input
+                          className="field-control pr-10"
+                          id="confirmMemberPassword"
+                          type={showConfirmPassword ? "text" : "password"}
+                          autoComplete="new-password"
+                          minLength={8}
+                          maxLength={128}
+                          value={values.confirmPassword}
+                          onChange={(event) => update("confirmPassword", event.target.value)}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword((v) => !v)}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-ink focus-visible:outline-2"
+                          aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff aria-hidden="true" className="h-4 w-4" />
+                          ) : (
+                            <Eye aria-hidden="true" className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
                       {fieldError("confirmPassword")}
                     </div>
                     <div>

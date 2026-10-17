@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, KeyRound, ShieldCheck } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, KeyRound, ShieldCheck } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -12,6 +12,7 @@ export function MemberCardAccess() {
   const router = useRouter();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -149,19 +150,33 @@ export function MemberCardAccess() {
                 <label className="field-label" htmlFor="member-password">
                   Password
                 </label>
-                <input
-                  id="member-password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  minLength={8}
-                  maxLength={128}
-                  required
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className="field-input"
-                />
+                <div className="relative">
+                  <input
+                    id="member-password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    minLength={8}
+                    maxLength={128}
+                    required
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    className="field-input pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-ink focus-visible:outline-2"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff aria-hidden="true" className="h-4 w-4" />
+                    ) : (
+                      <Eye aria-hidden="true" className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
               </div>
               <button
                 type="submit"

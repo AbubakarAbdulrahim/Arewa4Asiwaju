@@ -8,7 +8,7 @@ import {
   type ChangeEvent,
   type PointerEvent,
 } from "react";
-import { Check, Download, RotateCcw, Sparkles } from "lucide-react";
+import { Check, Download, RotateCcw, Share2, Sparkles } from "lucide-react";
 import {
   BANNER_HEIGHT,
   BANNER_SCALE,
@@ -229,6 +229,31 @@ export function BannerGenerator() {
     nameInputRef.current?.focus();
   }
 
+  async function shareBanner() {
+    if (!generatedUrl) return;
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        const response = await fetch(generatedUrl);
+        const blob = await response.blob();
+        const file = new File([blob], getBannerFilename(name), { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: "My Arewa for Asiwaju Student Wing Banner",
+            text: "Make your official A4A Student Wing banner:",
+          });
+          return;
+        }
+      }
+    } catch {
+      // fallback to WhatsApp
+    }
+    const text = encodeURIComponent(
+      `Check out my official A4A Student Wing banner! Make yours at ${typeof window !== "undefined" ? window.location.origin : ""}/banner-generator`,
+    );
+    window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
+  }
+
   const canGenerate = Boolean(name.trim() && photo && logoReady && !isGenerating);
   const accessibleName = name.trim() ? `Banner preview for ${name.trim()}` : "Banner preview";
 
@@ -271,7 +296,9 @@ export function BannerGenerator() {
               disabled={isGenerating}
             />
             <div className="mt-1 flex justify-between gap-3 text-xs text-muted">
-              <span id="banner-name-hint">Leading and trailing spaces are removed.</span>
+              <span id="banner-name-hint">
+                Enter your full name as it will appear on the banner.
+              </span>
               <span aria-live="off">
                 {name.length}/{MAX_NAME_LENGTH}
               </span>
@@ -419,19 +446,24 @@ export function BannerGenerator() {
               </a>
             )}
             {generatedUrl && (
+              <button type="button" className="button-secondary w-full" onClick={shareBanner}>
+                <Share2 aria-hidden="true" className="h-4 w-4" /> Share banner
+              </button>
+            )}
+            {generatedUrl && (
               <button type="button" className="button-quiet w-full" onClick={createAnotherBanner}>
                 Create another banner
               </button>
             )}
           </div>
 
-          <p className="text-xs leading-relaxed text-muted">
-            Your image is processed locally in your browser. It is not sent to A4A or stored on a
-            server.
-          </p>
+          <p className="text-xs leading-relaxed text-muted">Your photo never leaves your phone.</p>
         </section>
 
-        <section aria-labelledby="banner-preview-heading" className="min-w-0">
+        <section
+          aria-labelledby="banner-preview-heading"
+          className="order-first min-w-0 lg:order-last lg:sticky lg:top-20"
+        >
           <div className="mb-3 flex items-end justify-between gap-3">
             <div>
               <p className="eyebrow">Live preview</p>

@@ -22,6 +22,7 @@ const envSchema = z
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
     APP_ENV: appEnvironment,
     NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
+    NEXT_PUBLIC_SITE_URL: optionalUrl,
     NEXT_PUBLIC_SUPABASE_URL: optionalUrl,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: optionalSecret,
     SUPABASE_SERVICE_ROLE_KEY: optionalSecret,
@@ -92,3 +93,10 @@ export const env = envSchema.parse(process.env);
 export const hasSupabaseConfig = Boolean(
   env.NEXT_PUBLIC_SUPABASE_URL && env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
 );
+export const siteUrl =
+  env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : undefined) ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
+  (env.APP_ENV === "production" ? "https://a4astudentwing.vercel.app" : env.NEXT_PUBLIC_APP_URL);
