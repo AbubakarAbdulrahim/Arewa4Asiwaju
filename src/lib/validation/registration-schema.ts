@@ -18,8 +18,8 @@ export const registrationSchema = z
       .email("Enter a valid email address")
       .max(254)
       .transform((value) => value.toLowerCase()),
-    password: z.string().min(12, "Use at least 12 characters").max(128),
-    confirmPassword: z.string().min(12).max(128),
+    password: z.string().min(8, "Use at least 8 characters").max(128),
+    confirmPassword: z.string().min(8).max(128),
     phone: z
       .string()
       .trim()

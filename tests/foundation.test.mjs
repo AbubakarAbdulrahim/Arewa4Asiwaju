@@ -54,6 +54,45 @@ test("registration validation rejects invalid email and requires explicit notice
   }
 });
 
+test("registration accepts 8-character password and rejects fewer than 8 characters", () => {
+  const shortResult = registrationSchema.safeParse({
+    firstName: "Amina",
+    lastName: "Hausa",
+    email: "amina@example.org",
+    password: "pass123",
+    confirmPassword: "pass123",
+    phone: "09123456789",
+    stateOfResidence: "Kano",
+    lgaOfResidence: "Kano Municipal",
+    ward: "Dala",
+    isStudent: "no",
+    acceptedNotice: true,
+  });
+  assert.equal(shortResult.success, false);
+  if (!shortResult.success) {
+    assert.ok(
+      shortResult.error.issues.some(
+        (issue) => issue.path[0] === "password" && issue.message.includes("8"),
+      ),
+    );
+  }
+
+  const validResult = registrationSchema.safeParse({
+    firstName: "Amina",
+    lastName: "Hausa",
+    email: "amina@example.org",
+    password: "pass1234",
+    confirmPassword: "pass1234",
+    phone: "09123456789",
+    stateOfResidence: "Kano",
+    lgaOfResidence: "Kano Municipal",
+    ward: "Dala",
+    isStudent: "no",
+    acceptedNotice: true,
+  });
+  assert.equal(validResult.success, true);
+});
+
 test("registration keeps the profile minimal and normalises the email address", () => {
   const result = registrationSchema.safeParse({
     firstName: "Amina",

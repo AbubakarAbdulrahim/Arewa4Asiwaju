@@ -17,8 +17,8 @@ export function MemberPasswordResetForm() {
     const form = new FormData(event.currentTarget);
     const password = String(form.get("new-password") ?? "");
     const confirmation = String(form.get("confirm-password") ?? "");
-    if (password.length < 12) {
-      setError("Use a password with at least 12 characters.");
+    if (password.length < 8) {
+      setError("Use a password with at least 8 characters.");
       setBusy(false);
       return;
     }
@@ -51,7 +51,7 @@ export function MemberPasswordResetForm() {
         </p>
         <h1 className="mt-3 text-3xl font-bold tracking-tight">Set a new password</h1>
         <p className="mt-3 text-sm leading-6 text-muted">
-          Choose a password of at least 12 characters for your member account.
+          Choose a password of at least 8 characters for your member account.
         </p>
         <form className="mt-7 space-y-4" onSubmit={submit}>
           <div>
@@ -64,7 +64,7 @@ export function MemberPasswordResetForm() {
               type="password"
               autoComplete="new-password"
               required
-              minLength={12}
+              minLength={8}
               maxLength={128}
               className="field-input"
             />
@@ -79,7 +79,7 @@ export function MemberPasswordResetForm() {
               type="password"
               autoComplete="new-password"
               required
-              minLength={12}
+              minLength={8}
               maxLength={128}
               className="field-input"
             />

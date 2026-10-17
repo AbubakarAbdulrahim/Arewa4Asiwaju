@@ -210,8 +210,8 @@ function RegistrationForm() {
       if (values.lastName.trim().length < 2) nextErrors.lastName = "Enter your last name.";
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim()))
         nextErrors.email = "Enter a valid email address.";
-      if (values.password.length < 12)
-        nextErrors.password = "Use a password with at least 12 characters.";
+      if (values.password.length < 8)
+        nextErrors.password = "Use a password with at least 8 characters.";
       if (values.password !== values.confirmPassword)
         nextErrors.confirmPassword = "The passwords do not match.";
       if (!/^\+?[0-9 ()-]{7,30}$/.test(values.phone.trim()))
@@ -465,13 +465,13 @@ function RegistrationForm() {
                         id="memberPassword"
                         type="password"
                         autoComplete="new-password"
-                        minLength={12}
+                        minLength={8}
                         maxLength={128}
                         value={values.password}
                         onChange={(event) => update("password", event.target.value)}
                       />
                       <p className="mt-1 text-xs text-muted">
-                        Use at least 12 characters to sign in and retrieve your card later.
+                        Use at least 8 characters to sign in and retrieve your card later.
                       </p>
                       {fieldError("password")}
                     </div>
@@ -484,7 +484,7 @@ function RegistrationForm() {
                         id="confirmMemberPassword"
                         type="password"
                         autoComplete="new-password"
-                        minLength={12}
+                        minLength={8}
                         maxLength={128}
                         value={values.confirmPassword}
                         onChange={(event) => update("confirmPassword", event.target.value)}
