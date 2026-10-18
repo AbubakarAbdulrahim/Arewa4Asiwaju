@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, MapPin, MessageCircle, Phone } from "lucide-react";
+import { CurrentYear } from "@/components/layout/CurrentYear";
 
 const footerLinkClass =
   "inline-flex min-h-7 items-center text-xs text-white/75 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:text-white";
@@ -180,7 +181,9 @@ export function Footer({
             reserveFloatingActionSpace ? "pb-20" : ""
           }`}
         >
-          <p>© {new Date().getFullYear()} Arewa for Asiwaju Student Wing. All rights reserved.</p>
+          <p>
+            © <CurrentYear /> Arewa for Asiwaju Student Wing. All rights reserved.
+          </p>
           <p className="text-[0.6875rem]">
             Compliant with Nigeria Data Protection Act (NDPA/NDPR).
           </p>

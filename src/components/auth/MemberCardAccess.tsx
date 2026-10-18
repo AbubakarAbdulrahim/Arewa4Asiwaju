@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Eye, EyeOff, KeyRound, ShieldCheck } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 
 export function MemberCardAccess() {
   const router = useRouter();
@@ -67,7 +66,7 @@ export function MemberCardAccess() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f7f4]">
+    <div className="flex flex-1 flex-col bg-[#f4f7f4]">
       <Navbar />
       <main id="main-content" className="site-container flex flex-1 items-center py-8 sm:py-12">
         <div className="mx-auto grid w-full max-w-5xl overflow-hidden rounded-xl border border-line bg-white shadow-[0_20px_60px_-40px_rgba(0,30,15,.45)] lg:grid-cols-[.9fr_1.1fr]">
@@ -240,7 +239,6 @@ export function MemberCardAccess() {
           </section>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const navLinks = [
@@ -88,20 +88,14 @@ export function Navbar() {
         <div className="hidden items-center gap-2 lg:flex">
           <ThemeToggle />
           <Link
-            href="/login"
-            className="px-2.5 py-1.5 text-xs font-bold text-muted hover:text-ink transition-colors"
-          >
-            Login
-          </Link>
-          <Link
             href="/banner-generator"
             aria-label="Get Your Banner"
             className="button-secondary px-3 py-1.5 text-xs font-bold"
           >
             Make your banner
           </Link>
-          <Link href="/register" className="button-primary px-3.5 py-1.5 text-xs font-bold">
-            Join <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
+          <Link href="/login" className="button-primary px-3.5 py-1.5 text-xs font-bold">
+            Login
           </Link>
         </div>
 
@@ -165,20 +159,11 @@ export function Navbar() {
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}
-                className="button-secondary flex-1 text-xs justify-center font-bold"
+                className="button-primary flex-1 text-xs justify-center font-bold"
               >
                 Login
               </Link>
             </div>
-
-            {/* Primary Action Button */}
-            <Link
-              href="/register"
-              onClick={() => setOpen(false)}
-              className="button-primary mt-2 justify-center text-sm font-bold"
-            >
-              Join the Student Wing <ArrowRight aria-hidden="true" className="h-4 w-4" />
-            </Link>
           </div>
         </nav>
       )}
