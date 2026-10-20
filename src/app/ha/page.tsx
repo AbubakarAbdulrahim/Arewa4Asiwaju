@@ -24,7 +24,7 @@ export default function HausaHomePage() {
             <p className="eyebrow">Arewa for Asiwaju · A4A</p>
             <h1 className="display-title mt-5 max-w-4xl text-ink">{t.heroTitle}</h1>
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-muted">{t.heroIntro}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="responsive-cta-group mt-8 flex gap-3">
               <Link className="button-primary" href="/register">
                 {t.participation}
                 <ArrowRight aria-hidden="true" className="h-4 w-4" />
@@ -45,7 +45,7 @@ export default function HausaHomePage() {
             ɗalibai su shiga ayyukan al&apos;umma. An gina wannan bayani bisa takardar tsarin
             ƙungiyar da aka bayar.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="responsive-cta-group mt-6 flex gap-3">
             <Link className="button-secondary" href="/mission">
               Ƙarin bayani kan manufa
             </Link>

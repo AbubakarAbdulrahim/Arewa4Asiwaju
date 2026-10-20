@@ -27,7 +27,7 @@ export default function Error({
         Please try again. Your account and personal information have not been included in this error
         message.
       </p>
-      <div className="flex flex-wrap gap-3">
+      <div className="responsive-cta-group flex gap-3">
         <button className="button-primary" type="button" onClick={reset}>
           Try again
         </button>

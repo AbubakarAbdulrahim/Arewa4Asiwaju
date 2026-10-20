@@ -189,9 +189,9 @@ export default function HomePage() {
                 Organising students across 19 northern states and the FCT through grassroots civic
                 engagement, policy translation, and direct youth participation.
               </p>
-              <div className="mt-7 flex flex-wrap items-center gap-3">
+              <div className="responsive-cta-group mt-7 flex gap-3">
                 <Link className="button-primary" href="/register">
-                  Join the Student Wing <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                  Join the Student Wing
                 </Link>
                 <Link className="button-secondary" href="/about">
                   Discover the Movement
@@ -345,7 +345,7 @@ export default function HomePage() {
               </p>
             </div>
             <Link className="button-primary button-on-dark shrink-0 font-bold" href="/register">
-              Join the Student Wing <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              Join the Student Wing
             </Link>
           </div>
         </section>

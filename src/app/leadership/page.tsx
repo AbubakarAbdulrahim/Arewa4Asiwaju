@@ -192,7 +192,7 @@ export default async function LeadershipPage() {
               Nigeria.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="responsive-cta-group flex gap-3">
             <Link
               href="/contact?subject=Coordinator-Enquiry"
               className="button-primary button-on-dark font-bold text-sm"

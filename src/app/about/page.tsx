@@ -192,9 +192,9 @@ export default function AboutPage() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center gap-3">
+        <div className="responsive-cta-group mt-10 flex gap-3">
           <Link href="/register" className="button-primary">
-            Join the Student Wing <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            Join the Student Wing
           </Link>
           <Link href="/leadership" className="button-secondary">
             View Leadership Structure
