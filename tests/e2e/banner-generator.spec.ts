@@ -5,6 +5,17 @@ const onePixelPng = Buffer.from(
   "base64",
 );
 
+test("banner generator allows vertical scrolling on mobile over the preview", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/banner-generator");
+
+  const canvas = page.locator("canvas");
+  await expect(canvas).toHaveCSS("touch-action", "pan-y");
+  expect(
+    await page.evaluate(() => document.documentElement.scrollHeight > window.innerHeight),
+  ).toBe(true);
+});
+
 test("generator previews a local image and downloads the matching high-resolution PNG", async ({
   page,
 }) => {

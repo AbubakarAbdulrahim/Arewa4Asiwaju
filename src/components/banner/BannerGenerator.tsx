@@ -481,7 +481,7 @@ export function BannerGenerator() {
               role="img"
               aria-label={accessibleName}
               className={`block h-auto w-full select-none ${photo ? "cursor-grab active:cursor-grabbing" : ""}`}
-              style={{ touchAction: "none", aspectRatio: `${BANNER_WIDTH} / ${BANNER_HEIGHT}` }}
+              style={{ touchAction: "pan-y", aspectRatio: `${BANNER_WIDTH} / ${BANNER_HEIGHT}` }}
               onPointerDown={startPhotoDrag}
               onPointerMove={movePhoto}
               onPointerUp={finishPhotoDrag}
