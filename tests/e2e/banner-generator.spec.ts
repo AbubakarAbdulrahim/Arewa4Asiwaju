@@ -9,6 +9,14 @@ test("banner generator allows vertical scrolling on mobile over the preview", as
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/banner-generator");
 
+  const controlsHeading = page.getByRole("heading", { name: "Personalize your banner" });
+  const previewHeading = page.getByRole("heading", { name: "Your banner", exact: true });
+  const controlsBox = await controlsHeading.boundingBox();
+  const previewBox = await previewHeading.boundingBox();
+  expect(controlsBox).not.toBeNull();
+  expect(previewBox).not.toBeNull();
+  expect(controlsBox!.y).toBeLessThan(previewBox!.y);
+
   const canvas = page.locator("canvas");
   await expect(canvas).toHaveCSS("touch-action", "pan-y");
   expect(

@@ -462,7 +462,7 @@ export function BannerGenerator() {
 
         <section
           aria-labelledby="banner-preview-heading"
-          className="order-first min-w-0 lg:order-last lg:sticky lg:top-20"
+          className="min-w-0 lg:order-last lg:sticky lg:top-20"
         >
           <div className="mb-3 flex items-end justify-between gap-3">
             <div>
