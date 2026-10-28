@@ -179,9 +179,6 @@ export default function HomePage() {
         <section className="border-b border-line bg-paper py-8 sm:py-12 lg:py-14">
           <div className="site-container grid items-center gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14">
             <div className="max-w-2xl">
-              <span className="inline-block rounded-xs bg-[#e8f2ea] px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-brand-forest">
-                Arewa for Asiwaju Student Wing
-              </span>
               <h1 className="display-title home-hero-title mt-4 max-w-2xl text-ink">
                 Connect Northern Students with Policy for Renewed Hope Agenda 2027
               </h1>
