@@ -104,7 +104,7 @@ export function ContentStatus({
 
   return (
     <div className="rounded-md border-l-4 border-brand-ochre bg-surface p-5 sm:p-6 shadow-xs">
-      <h3 className="font-bold text-ink">Updates are refreshing.</h3>
+      <h3 className="font-bold text-ink">Community updates are available.</h3>
       <p className="mt-1 text-sm text-muted">
         Connect directly with student coordinators on WhatsApp for live movement notices.
       </p>

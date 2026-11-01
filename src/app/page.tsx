@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
@@ -9,7 +8,13 @@ import { HeroSlider, type HeroSlide } from "@/components/public/HeroSlider";
 import { ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { ContentStatus } from "@/components/public/PublicPage";
 import { AnnouncementCard, EventCard } from "@/components/public/ContentCards";
-import { getAnnouncements, getEvents, getPublicContentTime } from "@/lib/content/public-content";
+import {
+  getAnnouncements,
+  getEvents,
+  getPublicContentTime,
+  getPublicLeadership,
+} from "@/lib/content/public-content";
+import { buildCoordinatorDirectoryFromLeadership } from "@/lib/content/coordinator-directory";
 
 const priorities = [
   {
@@ -60,6 +65,10 @@ const heroSlides: HeroSlide[] = [
   {
     src: "/brand/grand-patron-tinubu-760w.jpg",
     alt: "President Bola Ahmed Tinubu, grand patron of Arewa for Asiwaju",
+  },
+  {
+    src: "/brand/tinubu-nelfund.jpg",
+    alt: "President Bola Ahmed Tinubu",
   },
   {
     src: "/brand/badaru.jpg",
@@ -157,20 +166,10 @@ async function HomeUpdates() {
   );
 }
 
-function HomeUpdatesLoading() {
-  return (
-    <section className="bg-paper py-14 sm:py-20" aria-busy="true">
-      <div className="site-container">
-        <p className="eyebrow">News & activities</p>
-        <h2 className="section-title mt-2">Updates from campus chapters</h2>
-        <p className="mt-3 text-sm text-muted">Loading latest dispatches...</p>
-        <div className="mt-6 h-1 w-full max-w-sm animate-pulse bg-line" />
-      </div>
-    </section>
-  );
-}
+export default async function HomePage() {
+  const leaders = await getPublicLeadership();
+  const featuredCoordinators = buildCoordinatorDirectoryFromLeadership(leaders).slice(0, 3);
 
-export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
@@ -180,11 +179,10 @@ export default function HomePage() {
           <div className="site-container grid items-center gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14">
             <div className="max-w-2xl">
               <h1 className="display-title home-hero-title mt-4 max-w-2xl text-ink">
-                Connect Northern Students with Policy for Renewed Hope Agenda 2027
+                <span className="text-brand-forest">2 Million</span> target for Arewa students&apos; support for Asiwaju
               </h1>
               <p className="mt-4 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-                Organising students across 19 northern states and the FCT through grassroots civic
-                engagement, policy translation, and direct youth participation.
+                Organising a digital membership and student support initiative aimed at connecting and mobilising a 2 million student support target across the 19 Northern States and the FCT in support of President Asiwaju Bola Ahmed Tinubu ahead of the 2027 general elections. Beyond politics, we stand for impact—championing student welfare, educational development, empowerment, and life-changing opportunities that translate support into meaningful progress for Northern Nigerian students.
               </p>
               <div className="responsive-cta-group mt-7 flex gap-3">
                 <Link className="button-primary" href="/register">
@@ -203,6 +201,72 @@ export default function HomePage() {
 
         {/* Northern Nigeria Interactive Map & Regional Reach */}
         <RegionalReach />
+
+        {/* State coordinators section */}
+        <section className="border-b border-line bg-paper py-12 sm:py-16" aria-labelledby="state-coordinators-heading">
+          <div className="site-container">
+            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="eyebrow">Leadership network</p>
+                <h2 id="state-coordinators-heading" className="section-title mt-2">
+                  State coordinators across the North
+                </h2>
+              </div>
+              <Link href="/state-coordinators" className="inline-flex items-center gap-2 text-sm font-bold text-brand-forest hover:underline">
+                Explore directory <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="mt-8 rounded-md border border-line bg-surface p-6 sm:p-8">
+              <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-forest">
+                    Community leadership
+                  </p>
+                  <h3 className="mt-3 text-2xl font-extrabold text-ink sm:text-3xl">
+                    Our movement is built on state-level coordination.
+                  </h3>
+                  <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted sm:text-base">
+                    From university chapters to state-level leadership, A4A connects student delegates, coordinators, and community organisers across Northern Nigeria.
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-md border border-line bg-paper p-4">
+                    <p className="text-xs uppercase tracking-[0.18em] text-muted">Coverage</p>
+                    <p className="mt-2 text-3xl font-extrabold text-ink">19</p>
+                    <p className="mt-1 text-sm text-muted">Northern states + FCT</p>
+                  </div>
+                  <div className="rounded-md border border-line bg-paper p-4">
+                    <p className="text-xs uppercase tracking-[0.18em] text-muted">Structure</p>
+                    <p className="mt-2 text-3xl font-extrabold text-ink">Zonal</p>
+                    <p className="mt-1 text-sm text-muted">Campus and state chapters</p>
+                  </div>
+                </div>
+              </div>
+
+              {featuredCoordinators.length > 0 && (
+                <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {featuredCoordinators.map((coordinator) => (
+                    <article key={coordinator.id} className="rounded-md border border-line bg-paper p-4 sm:p-5">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-forest">
+                        {coordinator.unit_name ?? "Movement leadership"}
+                      </p>
+                      <h4 className="mt-2 text-lg font-bold text-ink">{coordinator.full_name}</h4>
+                      <p className="mt-1 text-sm font-medium text-muted">{coordinator.title}</p>
+                      <p className="mt-3 text-sm text-muted">{coordinator.state}</p>
+                      <Link
+                        href={`/state-coordinators?highlight=${coordinator.id}`}
+                        className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-brand-forest hover:underline"
+                      >
+                        Contact coordinator <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                      </Link>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
 
         {/* Compact Three-Line Priorities */}
         <section
@@ -325,9 +389,7 @@ export default function HomePage() {
         </section>
 
         {/* Dynamic News and Events Preview */}
-        <Suspense fallback={<HomeUpdatesLoading />}>
-          <HomeUpdates />
-        </Suspense>
+        <HomeUpdates />
 
         {/* Bottom Call to Action */}
         <section className="border-t border-line bg-brand-forest py-12 text-white sm:py-14">

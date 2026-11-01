@@ -194,6 +194,12 @@ export default async function LeadershipPage() {
           </div>
           <div className="responsive-cta-group flex gap-3">
             <Link
+              href="/state-coordinators"
+              className="button-secondary button-on-green text-sm"
+            >
+              <span>View state coordinators</span>
+            </Link>
+            <Link
               href="/contact?subject=Coordinator-Enquiry"
               className="button-primary button-on-dark font-bold text-sm"
             >

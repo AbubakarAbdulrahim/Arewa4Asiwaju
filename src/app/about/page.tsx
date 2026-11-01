@@ -87,15 +87,10 @@ export default function AboutPage() {
       <section className="border-b border-line pb-12 sm:pb-16" aria-label="Movement background">
         <div className="max-w-3xl space-y-5 text-base leading-relaxed text-muted sm:text-lg sm:leading-8">
           <p>
-            Northern Nigeria is home to the country’s largest youth cohort, with millions of
-            undergraduates and vocational scholars seeking practical educational support, modern
-            infrastructure, and long-term economic security.
+            The Project 2 million Arewa Students' Support for Asiwaju is a digital membership and student support initiative aimed at connecting and mobilising 2 million Northern Nigerian students across the 19 Northern States and the FCT in support of President Asiwaju Bola Ahmed Tinubu ahead of the 2027 general elections.
           </p>
           <p>
-            A4A Student Wing builds a direct bridge between these students and federal policy. By
-            establishing structured leadership from the national executive down to campus unions and
-            local government councils, the movement turns national policies into local,
-            understandable initiatives.
+            Beyond politics, we stand for impact—championing student welfare, educational development, empowerment, and life-changing opportunities that translate support into meaningful progress for Northern Nigerian students.
           </p>
         </div>
       </section>
@@ -119,9 +114,7 @@ export default function AboutPage() {
               </h2>
             </div>
             <blockquote className="mt-4 text-xl font-bold leading-snug text-ink sm:text-2xl">
-              “To organise and empower students and young people across Northern Nigeria, connect
-              them with civic and policy conversations, and make public priorities clear and
-              relevant to local communities.”
+              “To connect and mobilise 2 million Northern Nigerian students through a network that promotes student welfare, educational development, empowerment, and voluntary support for President Asiwaju Bola Ahmed Tinubu ahead of the 2027 general elections.”
             </blockquote>
           </div>
 
@@ -132,8 +125,7 @@ export default function AboutPage() {
               <h3 className="text-xs font-bold uppercase tracking-wider">Our vision</h3>
             </div>
             <blockquote className="mt-4 text-xl font-bold leading-snug text-ink sm:text-2xl">
-              “A connected, informed, and active generation of northern students contributing to
-              stronger communities and a more prosperous future for the region.”
+              “To build a united, empowered, and progressive Northern student community where political participation translates into meaningful educational reforms, improved student welfare, and life-changing opportunities.”
             </blockquote>
           </div>
         </div>
