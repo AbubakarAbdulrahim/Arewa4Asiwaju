@@ -63,7 +63,7 @@ const achievements = [
 
 const heroSlides: HeroSlide[] = [
   {
-    src: "/brand/grand-patron-tinubu-760w.jpg",
+    src: "/brand/grand-patron-tinubu-760w.webp",
     alt: "President Bola Ahmed Tinubu, grand patron of Arewa for Asiwaju",
   },
   {

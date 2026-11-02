@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Activity,
   CalendarDays,
   FileText,
-  Image,
+  Image as ImageIcon,
   LayoutDashboard,
   LockKeyhole,
   Map,
@@ -102,7 +103,7 @@ const links: {
     href: "/admin/media",
     roles: ["super_admin", "content_editor"],
     group: "Publishing",
-    icon: Image,
+    icon: ImageIcon,
   },
   {
     label: "Support requests",
@@ -162,9 +163,13 @@ export function AdminShell({
       <header className="border-b border-line bg-white">
         <div className="site-container flex min-h-[4.5rem] items-center justify-between gap-4">
           <Link href="/admin" className="flex items-center gap-3 no-underline">
-            <span className="flex h-9 w-9 items-center justify-center rounded-md bg-brand-forest text-sm font-extrabold text-white">
-              A4A
-            </span>
+            <Image
+              src="/brand/arewa-for-asiwaju-a4a.jpg"
+              alt=""
+              width={38}
+              height={38}
+              className="h-9.5 w-9.5 rounded-full border border-line object-cover"
+            />
             <span>
               <span className="block text-sm font-bold text-ink">A4A workspace</span>
               <span className="block text-xs text-muted">Administration</span>
@@ -187,7 +192,7 @@ export function AdminShell({
                   key={href}
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={`rounded-md px-3 py-2 text-sm font-semibold no-underline ${active ? "bg-brand-forest text-white" : "border border-line bg-white text-ink"}`}
+                  className={`rounded-md px-3 py-2 text-sm font-semibold no-underline ${active ? "bg-brand-forest !text-white hover:!text-white" : "border border-line bg-white text-ink"}`}
                 >
                   {label}
                 </Link>

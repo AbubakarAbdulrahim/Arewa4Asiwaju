@@ -1,8 +1,8 @@
 "use client";
-import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient as createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { getTotpQrDataUrl } from "@/lib/auth/totp-qr";
 
 export function AdminMfaGate() {
   const router = useRouter();
@@ -11,10 +11,13 @@ export function AdminMfaGate() {
   const [verifiedFactor, setVerifiedFactor] = useState(false);
   const [secret, setSecret] = useState("");
   const [qrCode, setQrCode] = useState("");
+  const [qrError, setQrError] = useState(false);
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
+  const [loginSuccessful, setLoginSuccessful] = useState(false);
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
+  const continueButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     void supabase.auth.mfa.listFactors().then(({ data, error }) => {
@@ -49,7 +52,8 @@ export function AdminMfaGate() {
       if (error) throw new Error("Could not begin authenticator setup.");
       setFactorId(data.id);
       setSecret(data.totp.secret);
-      setQrCode(`data:image/svg+xml;utf-8,${encodeURIComponent(data.totp.qr_code)}`);
+      setQrError(false);
+      setQrCode(getTotpQrDataUrl(data.totp.qr_code));
     } catch {
       setMessage(
         "Authenticator setup could not be started. Try again or contact the system administrator.",
@@ -70,7 +74,7 @@ export function AdminMfaGate() {
         code: code.replace(/\s/g, ""),
       });
       if (error) throw new Error("Invalid or expired code.");
-      router.refresh();
+      setLoginSuccessful(true);
     } catch {
       setMessage("That code could not be verified. Check your authenticator and try again.");
     } finally {
@@ -78,6 +82,10 @@ export function AdminMfaGate() {
       setCode("");
     }
   }
+
+  useEffect(() => {
+    if (loginSuccessful) continueButtonRef.current?.focus();
+  }, [loginSuccessful]);
 
   return (
     <main id="main-content" className="site-container min-h-[75vh] py-12 sm:py-16">
@@ -131,14 +139,22 @@ export function AdminMfaGate() {
           ) : (
             <>
               {qrCode && (
-                <Image
+                // This provider-generated data URL is already an image and must bypass optimization.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
                   src={qrCode}
-                  width={220}
-                  height={220}
-                  unoptimized
+                  width="220"
+                  height="220"
                   alt="Authenticator enrollment QR code"
-                  className="mt-4 border border-line p-2"
+                  onError={() => setQrError(true)}
+                  className="mt-4 h-[220px] w-[220px] border border-line bg-white p-2"
                 />
+              )}
+              {qrError && (
+                <p role="status" className="mt-2 text-sm text-danger">
+                  The QR code could not be displayed. You can still add the account by entering the
+                  setup secret below.
+                </p>
               )}
               <label className="mt-4 block text-sm font-semibold">
                 Setup secret
@@ -178,6 +194,37 @@ export function AdminMfaGate() {
         <p role="status" className="mt-4 max-w-xl border border-[#d7a5a5] bg-white p-3 text-sm">
           {message}
         </p>
+      )}
+      {loginSuccessful && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="admin-login-success-title"
+            className="w-full max-w-sm rounded-lg border border-line bg-white p-6 text-center shadow-xl"
+          >
+            <div
+              aria-hidden="true"
+              className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#eaf2eb] text-2xl font-bold text-brand-forest"
+            >
+              ✓
+            </div>
+            <h2 id="admin-login-success-title" className="mt-4 text-xl font-bold text-ink">
+              Login successful
+            </h2>
+            <p className="mt-2 text-sm text-muted">
+              Your authenticator code was verified. You can now continue to the admin dashboard.
+            </p>
+            <button
+              ref={continueButtonRef}
+              type="button"
+              onClick={() => router.refresh()}
+              className="button-primary mt-5 w-full"
+            >
+              Continue to dashboard
+            </button>
+          </section>
+        </div>
       )}
     </main>
   );

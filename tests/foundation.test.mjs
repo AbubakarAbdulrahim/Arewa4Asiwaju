@@ -4,6 +4,8 @@ import test from "node:test";
 import { formatMembershipNumber } from "../src/lib/utils.ts";
 import { registrationSchema } from "../src/lib/validation/registration-schema.ts";
 import { inspectMemberPhoto } from "../src/lib/security/member-photo.ts";
+import { isTrustedOrigin } from "../src/lib/security/origin-policy.ts";
+import { getTotpQrDataUrl } from "../src/lib/auth/totp-qr.ts";
 
 test("Vercel Preview APP_ENV maps to staging without accepting unknown environments", () => {
   const preview = spawnSync(
@@ -31,6 +33,45 @@ test("Vercel Preview APP_ENV maps to staging without accepting unknown environme
     },
   );
   assert.notEqual(invalid.status, 0);
+});
+
+test("origin policy accepts the request origin when the configured app URL differs", () => {
+  assert.equal(
+    isTrustedOrigin("https://a4astudentwing.vercel.app", "https://a4astudentwing.vercel.app", [
+      "http://localhost:3000",
+    ]),
+    true,
+  );
+});
+
+test("origin policy still rejects cross-site and malformed origins", () => {
+  assert.equal(
+    isTrustedOrigin("https://attacker.example", "https://a4astudentwing.vercel.app", [
+      "http://localhost:3000",
+    ]),
+    false,
+  );
+  assert.equal(
+    isTrustedOrigin(
+      "https://a4astudentwing.vercel.app/path",
+      "https://a4astudentwing.vercel.app",
+      [],
+    ),
+    false,
+  );
+  assert.equal(isTrustedOrigin(null, "https://a4astudentwing.vercel.app", []), false);
+});
+
+test("TOTP QR data is encoded as an SVG data URL without double-prefixing", () => {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg"><text>A&B</text></svg>';
+  assert.equal(
+    getTotpQrDataUrl(svg),
+    `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
+  );
+  const existingDataUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+  assert.equal(getTotpQrDataUrl(existingDataUrl), existingDataUrl);
+  const utf8DataUrl = `data:image/svg+xml;utf-8,${encodeURIComponent(svg)}`;
+  assert.equal(getTotpQrDataUrl(utf8DataUrl), utf8DataUrl);
 });
 
 test("membership number display is stable and normalised", () => {
