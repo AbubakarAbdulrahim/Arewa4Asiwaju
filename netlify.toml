@@ -1,0 +1,4 @@
+[build.environment]
+  # These values are intentionally public and may appear in Next.js output.
+  # Keep private credentials (including CRON_SECRET and service-role keys) scanned.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_APP_URL,NEXT_PUBLIC_SITE_URL"
